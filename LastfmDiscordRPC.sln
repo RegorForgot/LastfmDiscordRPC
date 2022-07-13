@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{AA657FB2-FE78-4FCA-B745-9E611A83A916}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LastfmDiscordRPC", "LastfmDiscordRPC\LastfmDiscordRPC.csproj", "{AA657FB2-FE78-4FCA-B745-9E611A83A916}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

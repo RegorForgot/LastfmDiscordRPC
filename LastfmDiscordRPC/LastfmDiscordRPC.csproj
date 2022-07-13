@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ApplicationIcon>icon.ico</ApplicationIcon>
+    
+        <PackageVersion>1.0.0</PackageVersion>
+        <Title>Last.fm Discord Rich Presence</Title>
+        <Authors>RegorForgotTheirPassword</Authors>
+        <Description>A simple rich presence application to connect to a user's last.fm account</Description>
+        <Copyright>Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</Copyright>
+        <RepositoryUrl>https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC</RepositoryUrl>
+        <RepositoryType>Github</RepositoryType>
+        <RootNamespace>LastfmDiscordRPC</RootNamespace>
+        <PackageId>LastfmDiscordRPC</PackageId>
+        <Product>Last.fm Discord Rich Presence</Product>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="restsharp" Version="108.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="System.Drawing.Common">
+        <HintPath>C:\Program Files\dotnet\sdk\6.0.301\System.Drawing.Common.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Windows.Extensions">
+        <HintPath>C:\Program Files\dotnet\sdk\6.0.301\System.Windows.Extensions.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Windows.Forms">
+        <HintPath>C:\Program Files\dotnet\sdk\6.0.301\System.Windows.Forms.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Include="icon.ico">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
