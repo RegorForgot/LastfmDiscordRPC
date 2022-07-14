@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
         <UseWindowsForms>true</UseWindowsForms>
-        <ApplicationIcon>icon.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
     
         <PackageVersion>1.0.0</PackageVersion>
         <Title>Last.fm Discord Rich Presence</Title>
@@ -39,17 +39,17 @@
     </ItemGroup>
     
     <ItemGroup>
-      <EmbeddedResource Update="Resources.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Include="icon.ico">
+      <EmbeddedResource Include="Resources\icon.ico">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\TrayIcon.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>TrayIcon.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
     
     <ItemGroup>
-      <Compile Update="Resources.Designer.cs">
+      <Compile Update="Resources\TrayIcon.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>

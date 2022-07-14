@@ -7,14 +7,14 @@ namespace LastfmDiscordRPC
 {
 
     /// <summary>
-    /// Interaction logic for AppWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class AppWindow : Window
+    public partial class MainWindow : Window
     {
-        public AppWindow()
+        public MainWindow()
         {
             InitializeComponent();
-            ResourceManager resourceManager = new ResourceManager(typeof(Resources));
+            ResourceManager resourceManager = new ResourceManager(typeof(Resources.TrayIcon));
             
             System.Windows.Forms.NotifyIcon icon = new System.Windows.Forms.NotifyIcon();
             icon.Icon = (Icon) resourceManager.GetObject("Icon")!;
