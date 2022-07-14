@@ -18,7 +18,7 @@ public static class APIConnector
         Client.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 1.0.0");
     }
 
-    public static IResponse CallAPI(string username, string apiKey, string method)
+    public static async Task<IResponse> CallAPI(string username, string apiKey, string method)
     {
         RestRequest request = new RestRequest();
         
@@ -29,7 +29,7 @@ public static class APIConnector
         
         if (method == GetTracks) request.AddParameter("limit", "1");
 
-        RestResponse response = Client.Execute(request);
+        RestResponse response = await Client.ExecuteAsync(request);
         
         if (response.Content != null) return GetResponse(response.Content, method);
         throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);

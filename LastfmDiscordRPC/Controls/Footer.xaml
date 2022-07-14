@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="LastfmDiscordRPC.Controls.Footer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:LastfmDiscordRPC.Controls"
+             mc:Ignorable="d"
+             Height="50"
+             Background="#EEEEEE">
+    
+    <Border BorderThickness="0, 2, 0, 0"
+            BorderBrush="Black">
+        <Button Name="SourceButton"
+                Width="Auto"
+                Height="50"
+                Padding="4"
+                Margin="0"
+                Style="{StaticResource StartupControlStyle}"
+                HorizontalAlignment="Right"
+                Click="SourceButton_OnClick">
+            Github Source
+        </Button>
+    </Border>
+</UserControl>

@@ -28,13 +28,13 @@ public class TrackResponse : IResponse
 
 public class Track
 {
-    [JsonProperty("name")] public string Name { get; set; } = null!;
+    [JsonProperty("name")] public string Name { get; set; } = Empty;
     [JsonProperty("artist")] public TrackArtist Artist { get; set; } = null!;
     [JsonProperty("album")] public TrackAlbum Album { get; set; } = null!;
     [JsonProperty("@attr")] public TrackNowPlaying? NowPlaying { get; set; }
     [JsonProperty("date")] public PlayDate? Date { get; set; }
-    
-    public string? ImageURL { get; private set; }
+
+    public string ImageURL { get; private set; } = @"https://lastfm.freetls.fastly.net/i/u/174s/4128a6eb29f94943c9d206c08e625904.jpg";
     
     private List<AlbumImage> _images = null!;
     [JsonProperty("image")] public List<AlbumImage> Images 
@@ -44,44 +44,32 @@ public class Track
         {
             _images = value;
             // Get large image
-            ImageURL = _images[2].URL;
+            if (_images[3].URL != "") ImageURL = _images[3].URL.Replace(@"\", "");
         } 
     }
 
     public class TrackArtist
     {
-        [JsonProperty("#text")] public string Name { get; set; } = null!;
+        [JsonProperty("#text")] public string Name { get; set; } = Empty;
     }
 
     public class TrackAlbum
     {
-        private string? _name;
-        [JsonProperty("#text")]
-        public string? Name
-        {
-            get => _name;
-            set => _name = value != Empty ? value : null;
-        }
+        [JsonProperty("#text")] public string Name { get; set; } = Empty;
     }
 
     public class AlbumImage
     {
-        private string? _url;
-        [JsonProperty("#text")]
-        public string? URL
-        {
-            get => _url;
-            set => _url = value != Empty ? value : null;
-        }
+        [JsonProperty("#text")] public string URL { get; set; } = Empty;
     }
 
     public class TrackNowPlaying
     {
-        [JsonProperty("nowplaying")] public string State { get; set; } = null!;
+        [JsonProperty("nowplaying")] public string State { get; set; } = Empty;
     }
 
     public class PlayDate
     {
-        [JsonProperty("uts")] public string Timestamp { get; set; } = null!;
+        [JsonProperty("uts")] public string Timestamp { get; set; } = Empty;
     }
 }

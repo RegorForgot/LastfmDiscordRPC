@@ -17,11 +17,11 @@ public class UserTest
     { }
 
     [Test]
-    public void CorrectPlaycount()
+    public async Task CorrectPlaycount()
     {
         try
         {
-            _response = (UserResponse) CallAPI(Username, APIKey, GetUser);
+            _response = (UserResponse) await CallAPI(Username, APIKey, GetUser);
             Assert.That(_response.PlayCount, Is.EqualTo("59109"));
         } catch (LastfmException)
         {
@@ -33,11 +33,11 @@ public class UserTest
     }
     
     [Test]
-    public void IncorrectUser()
+    public async Task IncorrectUser()
     {
         try
         {
-            _response = (UserResponse) CallAPI(Username, APIKey, GetUser); 
+            _response = (UserResponse) await CallAPI(Username, APIKey, GetUser); 
             Assert.Fail();
         } catch (LastfmException e)
         {

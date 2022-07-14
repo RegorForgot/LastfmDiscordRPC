@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 using LastfmAPI.Exceptions;
 using LastfmAPI.Responses;
@@ -14,15 +15,15 @@ public class ActivateCommand : CommandBase
         _viewModel = viewModel;
     }
     
-    public override void Execute(object? parameter)
+    public override async void Execute(object? parameter)
     {
         string username = _viewModel.Username;
         string apiKey = _viewModel.APIKey;
+        PreviewViewModel previewViewModel = _viewModel.PreviewViewModel;
 
         try
         {
-            UserResponse userResponse = (UserResponse) CallAPI(username, apiKey, GetUser);
-            TrackResponse trackResponse = (TrackResponse) CallAPI(username, apiKey, GetTracks);
+            TrackResponse trackResponse = (TrackResponse) await CallAPI(username, apiKey, GetTracks);
 
             Track? track = trackResponse.Track;
             if (track == null)
@@ -31,8 +32,10 @@ public class ActivateCommand : CommandBase
                 return; 
             }
 
-            UserObject user = userResponse.User;
-            MessageBox.Show($"{track.Artist.Name} - {track.Album.Name} - {track.Name}", $"{username}: {user.PlayCount} plays");
+            previewViewModel.Name = track.Name;
+            previewViewModel.AlbumName = track.Album.Name;
+            previewViewModel.ArtistName = track.Artist.Name;
+            previewViewModel.ImageURL = track.ImageURL;
         } catch (LastfmException e)
         {
             MessageBox.Show(e.Message, e.ErrorCode.ToString());

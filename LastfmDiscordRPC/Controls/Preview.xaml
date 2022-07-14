@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="LastfmDiscordRPC.Controls.Preview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:gif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
+             mc:Ignorable="d"
+             Width="600" Height="200" d:DataContext="{d:DesignInstance }">
+
+    <Grid>
+    
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+    
+        <Border CornerRadius="20"
+                Margin="10">
+            <Border.Background>
+                <ImageBrush Stretch="Uniform" 
+                            gif:ImageBehavior.AnimatedSource="{Binding ImageURL}"
+                            gif:ImageBehavior.AutoStart="True"/>
+            </Border.Background>
+        </Border>
+        
+        <Image Grid.Column="0" Margin="10" 
+               VerticalAlignment="Center" 
+               HorizontalAlignment="Center" 
+               Stretch="Uniform" 
+               Source="{Binding ImageURL}"
+               gif:ImageBehavior.AnimatedSource="{Binding ImageURL}">
+            <Image.Clip>
+                <RectangleGeometry RadiusX="20"
+                                   RadiusY="20"
+                                   Rect="0,0,180,180"/>
+            </Image.Clip>
+        </Image>
+    
+        <StackPanel Grid.Column="1"
+                    VerticalAlignment="Center">
+            
+            <Label Style="{StaticResource StartupControlStyle}"
+                   FontWeight="Bold"
+                   FontSize="32">
+                <TextBlock Text="Music"
+                           TextTrimming="CharacterEllipsis">
+                </TextBlock>
+            </Label>
+            
+            <Label Style="{StaticResource StartupControlStyle}">
+                <TextBlock Text="{Binding Name}"
+                           TextTrimming="CharacterEllipsis">
+                </TextBlock>
+            </Label>
+        
+            <Label Style="{StaticResource StartupControlStyle}">
+                <TextBlock TextTrimming="CharacterEllipsis"
+                           Text="{Binding ArtistName}"/>
+            </Label>
+        
+            <Label Style="{StaticResource StartupControlStyle}">
+                <TextBlock TextTrimming="CharacterEllipsis"
+                           Text="{Binding AlbumName}"/>
+            </Label>
+        </StackPanel>
+    </Grid>
+</UserControl>

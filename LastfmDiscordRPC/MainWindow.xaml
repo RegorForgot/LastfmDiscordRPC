@@ -3,54 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:c="clr-namespace:LastfmDiscordRPC.Controls"
         mc:Ignorable="d"
         Title="Last.fm Discord Rich Presence"
-        Height="500" Width="900"
+        Height="600" Width="900"
         ResizeMode="CanMinimize" 
         d:DataContext="{d:DesignInstance}">
-
-    <Grid IsSharedSizeScope="True">
+    
+    <Window.Background>
+        <LinearGradientBrush EndPoint="1.0, 0.5" StartPoint="0.0, 0.0">
+            <GradientStop Color="#9094a5"/>
+            <GradientStop Color="#56595f" Offset="2"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-
-        <Label Content="Username"
-               Style="{StaticResource ContentStyle}"
-               Width="Auto" />
-        <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource ContentStyle}"
-                 Grid.Row="0"
-                 Grid.Column="1"/>
         
-        <Label Content="API Key (advanced)"
-               Style="{StaticResource ContentStyle}"
-               Width="Auto" 
-               Grid.Row="1" 
-               Grid.Column="0" />
-        <TextBox Text="{Binding APIKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource ContentStyle}" 
-                 Grid.Column="1"
-                 Grid.Row="1"/>
-        
-        <StackPanel Grid.Row="2"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"> 
-            <Button Command="{Binding ActivateCommand}" 
-                    Content="Activate"
-                    Style="{StaticResource ContentStyle}"/>
-            <Button Command="{Binding SaveCommand}" 
-                    Content="Save Settings"
-                    Style="{StaticResource ContentStyle}"/>
-            <Button Click="CloseButton_OnClick"
-                    Content="Close"
-                    Style="{StaticResource ContentStyle}"/>
-        </StackPanel>
+        <c:Header/>
+        <c:Body Grid.Row="1"/>
+        <c:Footer Grid.Row="2"
+                  VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

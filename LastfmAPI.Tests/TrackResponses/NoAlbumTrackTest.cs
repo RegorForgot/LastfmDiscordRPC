@@ -1,5 +1,6 @@
 ﻿using LastfmAPI.Exceptions;
 using LastfmAPI.Responses;
+using static System.String;
 using static LastfmAPI.APIConnector;
 
 namespace LastfmAPI.Tests.TrackResponses;
@@ -11,11 +12,11 @@ public class NoAlbumTrackTest
     private const string APIKey = "05467a3191853eb8da38dfb38ed3c733";
 
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
         try
         {
-            _response = (TrackResponse) CallAPI(Username, APIKey, GetTracks);
+            _response = (TrackResponse) await CallAPI(Username, APIKey, GetTracks);
         } catch (LastfmException)
         {
             Assert.Fail();
@@ -45,7 +46,7 @@ public class NoAlbumTrackTest
     [Test]
     public void Album()
     {
-        string? actualArtist = null;
+        string? actualArtist = Empty;
         string? respondedTrackArtist = _response.Track?.Album.Name;
         Assert.That(actualArtist, Is.EqualTo(respondedTrackArtist));
     }
@@ -61,7 +62,7 @@ public class NoAlbumTrackTest
     [Test]
     public void Timestamp()
     {
-        string? actualTimestamp = null;
+        string? actualTimestamp = Empty;
         string? respondedTimestamp = _response.Track?.Date?.Timestamp;
         Assert.That(actualTimestamp, Is.EqualTo(respondedTimestamp));
     }
@@ -69,7 +70,7 @@ public class NoAlbumTrackTest
     [Test]
     public void Image()
     {
-        string? actualImage = null;
+        string? actualImage = @"https://lastfm.freetls.fastly.net/i/u/174s/4128a6eb29f94943c9d206c08e625904.jpg";
         string? respondedImage = _response.Track?.ImageURL;
         Assert.That(actualImage, Is.EqualTo(respondedImage));
     }

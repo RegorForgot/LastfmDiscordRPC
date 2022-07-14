@@ -9,8 +9,7 @@ namespace LastfmDiscordRPC;
 public static class SaveAppData
 {
     public static AppData SavedData { get; private set; }
-    private const string DefaultUsername = "default";
-    private const string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
+    public const string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
     private readonly static string FolderPath;
     private readonly static string FilePath;
 
@@ -55,14 +54,14 @@ public static class SaveAppData
         {
             appData ??= new AppData
             {
-                Username = DefaultUsername, APIKey = DefaultAPIKey
+                Username = "default", APIKey = DefaultAPIKey
             };
         }
 
         return appData;
     }
 
-    public static void SaveData(string username = DefaultUsername, string apiKey = DefaultAPIKey)
+    public static void SaveData(string username = "default", string apiKey = DefaultAPIKey)
     {
         CreateFileIfNotExist();
         

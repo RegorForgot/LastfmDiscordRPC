@@ -40,6 +40,9 @@ public sealed class ViewModel : INotifyPropertyChanged
     
     public ICommand ActivateCommand { get; }
     public ICommand SaveCommand { get; }
+    public ICommand DefaultKeyCommand { get; }
+    
+    public PreviewViewModel PreviewViewModel { get; }
     
     public ViewModel(string username, string apiKey)
     {
@@ -47,5 +50,7 @@ public sealed class ViewModel : INotifyPropertyChanged
         _apiKey = apiKey;
         ActivateCommand = new ActivateCommand(this);
         SaveCommand = new SaveCommand(this);
+        DefaultKeyCommand = new DefaultKeyCommand(this);
+        PreviewViewModel = new PreviewViewModel();
     }
 }

@@ -15,12 +15,12 @@ public class ResponseStatusTest
     { }
 
     [Test]
-    public void NoError()
+    public async Task NoError()
     {
         // Test ran correctly when ran with correct parameters.
         try
         {
-            CallAPI(Username, APIKey, GetTracks);
+            await CallAPI(Username, APIKey, GetTracks);
             Assert.Pass();
         } catch (LastfmException)
         {
@@ -32,12 +32,12 @@ public class ResponseStatusTest
     }
 
     [Test]
-    public void InvalidKey()
+    public async Task InvalidKey()
     {
         // Test ran correctly when ran with correct parameters.
         try
         {
-            CallAPI(Username, APIKey, GetTracks);
+            await CallAPI(Username, APIKey, GetTracks);
             Assert.Fail();
         } catch (LastfmException e)
         {
@@ -49,12 +49,12 @@ public class ResponseStatusTest
     }
 
     [Test]
-    public void UserNotExist()
+    public async Task UserNotExist()
     {
         // Test ran correctly when ran with correct parameters.
         try
         {
-            CallAPI(Username, APIKey, GetTracks);
+            await CallAPI(Username, APIKey, GetTracks);
             Assert.Fail();
         } catch (LastfmException e)
         {
@@ -66,12 +66,12 @@ public class ResponseStatusTest
     }
 
     [Test]
-    public void NoInternet()
+    public async Task NoInternet()
     {
         // Test ran correctly when run in correct conditions.
         try
         {
-            CallAPI(Username, APIKey, GetTracks);
+            await CallAPI(Username, APIKey, GetTracks);
             Assert.Fail();
         } catch (LastfmException)
         {

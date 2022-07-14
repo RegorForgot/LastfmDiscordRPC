@@ -12,11 +12,11 @@ public class CompleteInfoTrackTest
     private const string APIKey = "05467a3191853eb8da38dfb38ed3c733";
 
     [SetUp]
-    public void Setup()
+    public async Task Setup()
     {
         try
         {
-            _response = (TrackResponse) CallAPI(Username, APIKey, GetTracks);
+            _response = (TrackResponse) await CallAPI(Username, APIKey, GetTracks);
         } catch (LastfmException)
         {
             Assert.Fail();
@@ -61,7 +61,7 @@ public class CompleteInfoTrackTest
     [Test]
     public void Timestamp()
     {
-        string? actualTimestamp = null;
+        string? actualTimestamp =  @"https://lastfm.freetls.fastly.net/i/u/174s/4128a6eb29f94943c9d206c08e625904.jpg";
         string? respondedTimestamp = _response.Track?.Date?.Timestamp;
         Assert.That(actualTimestamp, Is.EqualTo(respondedTimestamp));
     }
