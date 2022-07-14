@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 
-namespace LastfmDiscordRPC.Controls;
+namespace LastfmDiscordRPC.MVVM.Views;
 
 public partial class Footer : UserControl
 {

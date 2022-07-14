@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:c="clr-namespace:LastfmDiscordRPC.Controls"
+        xmlns:views="clr-namespace:LastfmDiscordRPC.MVVM.Views"
         mc:Ignorable="d"
         Title="Last.fm Discord Rich Presence"
         Height="600" Width="900"
@@ -23,9 +23,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <c:Header/>
-        <c:Body Grid.Row="1"/>
-        <c:Footer Grid.Row="2"
+        <views:Header/>
+        <views:Body Grid.Row="1"/>
+        <views:Footer Grid.Row="2"
                   VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

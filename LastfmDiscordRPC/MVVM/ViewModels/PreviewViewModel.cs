@@ -1,18 +1,9 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using static System.String;
+﻿using static System.String;
 
-namespace LastfmDiscordRPC;
+namespace LastfmDiscordRPC.MVVM.ViewModels;
 
-public class PreviewViewModel : INotifyPropertyChanged
+public sealed class PreviewViewModel : ViewModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-    [NotifyPropertyChangedInvocator]
-    virtual protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
     private string _imageURL;
     public string ImageURL
     {

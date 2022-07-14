@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using LastfmDiscordRPC.Exceptions;
+using LastfmDiscordRPC.MVVM.Exceptions;
 using Newtonsoft.Json;
 
-namespace LastfmDiscordRPC;
+namespace LastfmDiscordRPC.MVVM.Models;
 
 public static class SaveAppData
 {

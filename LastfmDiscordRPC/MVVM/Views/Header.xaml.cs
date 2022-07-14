@@ -1,4 +1,4 @@
-﻿namespace LastfmDiscordRPC.Controls;
+﻿namespace LastfmDiscordRPC.MVVM.Views;
 
 public partial class Header
 {

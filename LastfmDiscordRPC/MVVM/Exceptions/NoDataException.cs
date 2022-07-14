@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LastfmDiscordRPC.Exceptions;
+namespace LastfmDiscordRPC.MVVM.Exceptions;
 
 public class NoDataException : Exception
 { }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace LastfmDiscordRPC.Commands;
+namespace LastfmDiscordRPC.MVVM.Commands;
 
 public abstract class CommandBase : ICommand
 {

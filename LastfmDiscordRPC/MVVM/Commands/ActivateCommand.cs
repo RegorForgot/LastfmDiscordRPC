@@ -1,25 +1,25 @@
 ﻿using System.Net.Http;
-using System.Threading.Tasks;
 using System.Windows;
 using LastfmAPI.Exceptions;
 using LastfmAPI.Responses;
+using LastfmDiscordRPC.MVVM.ViewModels;
 using static LastfmAPI.APIConnector;
 
-namespace LastfmDiscordRPC.Commands;
+namespace LastfmDiscordRPC.MVVM.Commands;
 
 public class ActivateCommand : CommandBase
 {
-    private readonly ViewModel _viewModel;
-    public ActivateCommand(ViewModel viewModel)
+    private readonly MainViewModel _mainViewModel;
+    public ActivateCommand(MainViewModel mainViewModel)
     {
-        _viewModel = viewModel;
+        _mainViewModel = mainViewModel;
     }
     
     public override async void Execute(object? parameter)
     {
-        string username = _viewModel.Username;
-        string apiKey = _viewModel.APIKey;
-        PreviewViewModel previewViewModel = _viewModel.PreviewViewModel;
+        string username = _mainViewModel.Username;
+        string apiKey = _mainViewModel.APIKey;
+        PreviewViewModel previewViewModel = _mainViewModel.PreviewViewModel;
 
         try
         {

@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="LastfmDiscordRPC.Controls.Body"
+﻿<UserControl x:Class="LastfmDiscordRPC.MVVM.Views.Body"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:LastfmDiscordRPC.Controls"
+             xmlns:views="clr-namespace:LastfmDiscordRPC.MVVM.Views"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="650">
     <Grid>
@@ -62,7 +62,7 @@
                 CornerRadius="30"
                 BorderBrush="#AAAAAA"
                 BorderThickness="1">
-            <local:Preview DataContext="{Binding PreviewViewModel}"
+            <views:Preview DataContext="{Binding PreviewViewModel}"
                            Margin="0"/>
         </Border>
     </Grid>

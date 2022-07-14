@@ -1,6 +1,7 @@
 ﻿using System.Windows;
+using LastfmDiscordRPC.MVVM.ViewModels;
 using static System.Net.WebRequest;
-
+using static LastfmDiscordRPC.MVVM.Models.SaveAppData;
 
 namespace LastfmDiscordRPC;
 
@@ -17,7 +18,7 @@ public partial class App
     {
         MainWindow = new MainWindow
         {
-            DataContext = new ViewModel(SaveAppData.SavedData.Username, SaveAppData.SavedData.APIKey)
+            DataContext = new MainViewModel(SavedData.Username, SavedData.APIKey)
         };
         MainWindow.Show();
     }

@@ -1,21 +1,13 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using LastfmDiscordRPC.Commands;
+﻿using System.Windows.Input;
+using LastfmDiscordRPC.MVVM.Commands;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace LastfmDiscordRPC;
+namespace LastfmDiscordRPC.MVVM.ViewModels;
 
-public sealed class ViewModel : INotifyPropertyChanged
+public sealed class MainViewModel : ViewModelBase
 {
-    public event PropertyChangedEventHandler? PropertyChanged;
-    [NotifyPropertyChangedInvocator]
-    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    
     private string _username;
     public string Username
     {
@@ -44,7 +36,7 @@ public sealed class ViewModel : INotifyPropertyChanged
     
     public PreviewViewModel PreviewViewModel { get; }
     
-    public ViewModel(string username, string apiKey)
+    public MainViewModel(string username, string apiKey)
     {
         _username = username;
         _apiKey = apiKey;

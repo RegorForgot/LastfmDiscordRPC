@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LastfmDiscordRPC;
+namespace LastfmDiscordRPC.MVVM.Models;
 
 public class AppData
 {
