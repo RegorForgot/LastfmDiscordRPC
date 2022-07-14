@@ -13,17 +13,8 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-    
-        <Border CornerRadius="20"
-                Margin="10">
-            <Border.Background>
-                <ImageBrush Stretch="Uniform" 
-                            gif:ImageBehavior.AnimatedSource="{Binding ImageURL}"
-                            gif:ImageBehavior.AutoStart="True"/>
-            </Border.Background>
-        </Border>
         
-        <Image Grid.Column="0" Margin="10" 
+        <Image Margin="10" 
                VerticalAlignment="Center" 
                HorizontalAlignment="Center" 
                Stretch="Uniform" 
@@ -35,7 +26,7 @@
                                    Rect="0,0,180,180"/>
             </Image.Clip>
         </Image>
-    
+        
         <StackPanel Grid.Column="1"
                     VerticalAlignment="Center">
             
