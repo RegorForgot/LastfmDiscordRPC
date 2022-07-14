@@ -2,10 +2,12 @@
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using LastfmDiscordRPC.Commands;
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace LastfmDiscordRPC;
 
-public sealed class AppViewModel : INotifyPropertyChanged
+public sealed class ViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
     [NotifyPropertyChangedInvocator]
@@ -35,11 +37,11 @@ public sealed class AppViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(APIKey));
         }
     }
-
-    public ICommand ActivateCommand { get; private set; }
-    public ICommand SaveCommand { get; private set; }
     
-    public AppViewModel(string username, string apiKey)
+    public ICommand ActivateCommand { get; }
+    public ICommand SaveCommand { get; }
+    
+    public ViewModel(string username, string apiKey)
     {
         _username = username;
         _apiKey = apiKey;

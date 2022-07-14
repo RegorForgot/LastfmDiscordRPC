@@ -23,7 +23,6 @@
     <ItemGroup>
       <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="restsharp" Version="108.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -54,6 +53,10 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\LastfmAPI\LastfmAPI.csproj" />
     </ItemGroup>
 
 </Project>

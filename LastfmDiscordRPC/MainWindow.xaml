@@ -6,15 +6,8 @@
         mc:Ignorable="d"
         Title="Last.fm Discord Rich Presence"
         Height="500" Width="900"
-        ResizeMode="CanMinimize">
-
-    <Window.Resources>
-        <Style TargetType="Control" x:Key="contentStyle">
-            <Setter Property="FontSize" Value="30" />
-            <Setter Property="Width" Value="600" />
-            <Setter Property="Height" Value="50" />
-        </Style>
-    </Window.Resources>
+        ResizeMode="CanMinimize" 
+        d:DataContext="{d:DesignInstance}">
 
     <Grid IsSharedSizeScope="True">
         <Grid.RowDefinitions>
@@ -29,29 +22,35 @@
         </Grid.ColumnDefinitions>
 
         <Label Content="Username"
-               Style="{StaticResource contentStyle}"
+               Style="{StaticResource ContentStyle}"
                Width="Auto" />
         <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource contentStyle}" 
+                 Style="{StaticResource ContentStyle}"
+                 Grid.Row="0"
                  Grid.Column="1"/>
         
         <Label Content="API Key (advanced)"
-               Style="{StaticResource contentStyle}"
+               Style="{StaticResource ContentStyle}"
                Width="Auto" 
-               Grid.Row="1"/>
+               Grid.Row="1" 
+               Grid.Column="0" />
         <TextBox Text="{Binding APIKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource contentStyle}" 
+                 Style="{StaticResource ContentStyle}" 
                  Grid.Column="1"
                  Grid.Row="1"/>
         
         <StackPanel Grid.Row="2"
-                    Grid.ColumnSpan="2">
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"> 
             <Button Command="{Binding ActivateCommand}" 
                     Content="Activate"
-                    Style="{StaticResource contentStyle}"/>
+                    Style="{StaticResource ContentStyle}"/>
             <Button Command="{Binding SaveCommand}" 
                     Content="Save Settings"
-                    Style="{StaticResource contentStyle}"/>
+                    Style="{StaticResource ContentStyle}"/>
+            <Button Click="CloseButton_OnClick"
+                    Content="Close"
+                    Style="{StaticResource ContentStyle}"/>
         </StackPanel>
     </Grid>
 </Window>

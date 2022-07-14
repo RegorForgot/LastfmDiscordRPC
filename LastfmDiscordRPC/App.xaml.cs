@@ -2,15 +2,14 @@
 
 namespace LastfmDiscordRPC;
 
-public partial class App : Application
+public partial class App
 {
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        this.MainWindow = new MainWindow()
+        MainWindow = new MainWindow
         {
-            DataContext = new AppViewModel(SaveAppData.SavedData.Username, 
-                SaveAppData.SavedData.APIKey)
+            DataContext = new ViewModel(SaveAppData.SavedData.Username, SaveAppData.SavedData.APIKey)
         };
         MainWindow.Show();
     }

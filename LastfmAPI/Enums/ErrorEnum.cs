@@ -1,7 +1,9 @@
-﻿namespace LastfmAPI.Enum;
+﻿// ReSharper disable All
+namespace LastfmAPI.Enums;
 
 public enum ErrorEnum
 {
+    OK = 0,
     InvalidService = 2,
     InvalidMethod = 3,
     AuthFailed = 4,

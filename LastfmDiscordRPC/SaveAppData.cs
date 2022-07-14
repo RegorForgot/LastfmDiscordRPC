@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using LastfmDiscordRPC.JSONSchemas;
+using LastfmDiscordRPC.Exceptions;
 using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC;
@@ -9,40 +9,76 @@ namespace LastfmDiscordRPC;
 public static class SaveAppData
 {
     public static AppData SavedData { get; private set; }
+    private const string DefaultUsername = "default";
+    private const string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
+    private readonly static string FolderPath;
     private readonly static string FilePath;
 
     static SaveAppData()
     {
-        string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\LastfmDiscordRPC";
-        FilePath = folderPath + "\\config.json";
-        if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
-        if (!File.Exists(FilePath)) CreateDefaultFile();
-        else 
+        FolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\LastfmDiscordRPC";
+        FilePath = FolderPath + "\\config.json";
+
+        CreateFileIfNotExist();
+        SavedData = ReadData();
+    }
+
+    private static void CreateFileIfNotExist()
+    {
+        if (!Directory.Exists(FolderPath)) Directory.CreateDirectory(FolderPath);
+        if (!File.Exists(FilePath)) File.Create(FilePath).Close();
+    }
+
+    private static AppData ReadData()
+    {
+        AppData? appData = null;
+
+        try
         {
-            try
+            string json = File.ReadAllText(FilePath);
+            appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new NoDataException();
+        } catch (JsonException e)
+        {
+            string errorMessage = $"Error deserializing! {e.Message}\n Defaulting values.";
+            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            SaveData();
+        } catch (NoDataException e)
+        {
+            string errorMessage = $"No data found! {e.Message}\n Defaulting values.";
+            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            SaveData();
+        } catch (IOException e)
+        {
+            string errorMessage = $"Error reading from file! {e.Message}\n Defaulting values.";
+            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+        } finally
+        {
+            appData ??= new AppData
             {
-                SavedData = JsonConvert.DeserializeObject<AppData>(File.ReadAllText(FilePath))!;
-            } catch (JsonException e)
-            {
-                string errorMessage = $"Error! {e.Message}\n Defaulting values.";
-                MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                CreateDefaultFile();
-            }
+                Username = DefaultUsername, APIKey = DefaultAPIKey
+            };
         }
+
+        return appData;
     }
 
-    private static void CreateDefaultFile()
+    public static void SaveData(string username = DefaultUsername, string apiKey = DefaultAPIKey)
     {
-        SaveData("default", "05467a3191853eb8da38dfb38ed3c733");
-    }
-
-    public static void SaveData(string username, string apiKey)
-    {
-        AppData appData = new AppData()
+        CreateFileIfNotExist();
+        
+        AppData appData = new AppData
         {
             Username = username, APIKey = apiKey
         };
         SavedData = appData;
-        File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
+
+        try
+        {
+            File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
+        } catch (IOException e)
+        {
+            string errorMessage = $"Error writing to file! {e.Message}\n Aborting write.";
+            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }

@@ -6,7 +6,8 @@ namespace LastfmAPI.Responses;
 public class TrackResponse : IResponse
 {
     public Track? Track { get; private set; }
-    private RecentTrackList _recentTracks;
+    
+    private RecentTrackList _recentTracks = null!;
     
     [JsonProperty("recenttracks")] 
     public RecentTrackList RecentTracks 
@@ -21,21 +22,21 @@ public class TrackResponse : IResponse
     
     public class RecentTrackList
     {
-        [JsonProperty("track")] public List<Track> Tracks { get; set; }
+        [JsonProperty("track")] public List<Track> Tracks { get; set; } = null!;
     }
 }
 
 public class Track
 {
-    [JsonProperty("name")] public string Name { get; set; }
-    [JsonProperty("artist")] public TrackArtist Artist { get; set; }
-    [JsonProperty("album")] public TrackAlbum Album { get; set; }
+    [JsonProperty("name")] public string Name { get; set; } = null!;
+    [JsonProperty("artist")] public TrackArtist Artist { get; set; } = null!;
+    [JsonProperty("album")] public TrackAlbum Album { get; set; } = null!;
     [JsonProperty("@attr")] public TrackNowPlaying? NowPlaying { get; set; }
     [JsonProperty("date")] public PlayDate? Date { get; set; }
     
     public string? ImageURL { get; private set; }
     
-    private List<AlbumImage> _images;
+    private List<AlbumImage> _images = null!;
     [JsonProperty("image")] public List<AlbumImage> Images 
     { 
         get => _images;
@@ -49,7 +50,7 @@ public class Track
 
     public class TrackArtist
     {
-        [JsonProperty("#text")] public string Name { get; set; }
+        [JsonProperty("#text")] public string Name { get; set; } = null!;
     }
 
     public class TrackAlbum
@@ -76,11 +77,11 @@ public class Track
 
     public class TrackNowPlaying
     {
-        [JsonProperty("nowplaying")] public string State { get; set; }
+        [JsonProperty("nowplaying")] public string State { get; set; } = null!;
     }
 
     public class PlayDate
     {
-        [JsonProperty("uts")] public string Timestamp { get; set; }
+        [JsonProperty("uts")] public string Timestamp { get; set; } = null!;
     }
 }

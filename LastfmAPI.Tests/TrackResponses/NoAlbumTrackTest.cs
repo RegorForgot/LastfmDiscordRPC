@@ -1,33 +1,45 @@
-﻿using LastfmAPI.Responses;
+﻿using LastfmAPI.Exceptions;
+using LastfmAPI.Responses;
+using static LastfmAPI.APIConnector;
 
-namespace LastfmAPI.Tests;
+namespace LastfmAPI.Tests.TrackResponses;
 
 public class NoAlbumTrackTest
 {
-    private TrackResponse _response;
+    private TrackResponse _response = null!;
+    private const string Username = "mabdi36";
+    private const string APIKey = "05467a3191853eb8da38dfb38ed3c733";
 
     [SetUp]
     public void Setup()
     {
-        string username = "mabdi36";
-        string apiKey = "05467a3191853eb8da38dfb38ed3c733";
-        _response = (TrackResponse)APIConnector.CallAPI(username, apiKey, APIConnector.GetTracks);
+        try
+        {
+            _response = (TrackResponse) CallAPI(Username, APIKey, GetTracks);
+        } catch (LastfmException)
+        {
+            Assert.Fail();
+        } catch (HttpRequestException)
+        {
+            Assert.Fail();
+        }
     }
+
 
     [Test]
     public void Name()
     {
-        string actualTrack = "Wicked (Confidence)";
+        const string actualTrack = "Wicked (Confidence)";
         string? respondedTrackName = _response.Track?.Name;
-        Assert.That(actualTrack, Is.EqualTo(respondedTrackName));
+        Assert.That(respondedTrackName, Is.EqualTo(actualTrack));
     }
 
     [Test]
     public void Artist()
     {
-        string actualArtist = "Rems";
+        const string actualArtist = "Rems";
         string? respondedTrackArtist = _response.Track?.Artist.Name;
-        Assert.That(actualArtist, Is.EqualTo(respondedTrackArtist));
+        Assert.That(respondedTrackArtist, Is.EqualTo(actualArtist));
     }
 
     [Test]
@@ -41,9 +53,9 @@ public class NoAlbumTrackTest
     [Test]
     public void NowPlaying()
     {
-        string actualNowPlaying = "true";
+        const string actualNowPlaying = "true";
         string? respondedNowPlaying = _response.Track?.NowPlaying?.State;
-        Assert.That(actualNowPlaying, Is.EqualTo(respondedNowPlaying));
+        Assert.That(respondedNowPlaying, Is.EqualTo(actualNowPlaying));
     }
 
     [Test]

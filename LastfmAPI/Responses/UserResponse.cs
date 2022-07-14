@@ -4,22 +4,22 @@ namespace LastfmAPI.Responses;
 
 public class UserResponse : IResponse
 {
-    public string PlayCount { get; set; }
-    private User _user;
+    public string PlayCount { get; private set; } = null!;
+    private UserObject _user = null!;
 
     [JsonProperty("user")]
-    public User user
+    public UserObject User
     {
         get => _user ;
         set
         {
             _user = value;
-            PlayCount = _user.playCount;
+            PlayCount = _user.PlayCount;
         }
     }
-    
-    public class User
-    {
-        [JsonProperty("playcount")] public string playCount { get; set; }
-    }
+}
+
+public class UserObject
+{
+    [JsonProperty("playcount")] public string PlayCount { get; set; } = null!;
 }

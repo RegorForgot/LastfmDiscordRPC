@@ -1,11 +1,12 @@
-﻿using System.Net;
+﻿using LastfmAPI.Enums;
+using LastfmAPI.Exceptions;
 using LastfmAPI.Responses;
 using Newtonsoft.Json;
 using RestSharp;
 
 namespace LastfmAPI;
 
-public class APIConnector
+public static class APIConnector
 {
     private readonly static RestClient Client;
     public const string GetTracks = "user.getrecenttracks";
@@ -29,23 +30,23 @@ public class APIConnector
         if (method == GetTracks) request.AddParameter("limit", "1");
 
         RestResponse response = Client.Execute(request);
-        return response.Content != null ? GetResponse(response.Content, method) : new HTTPError(response.StatusCode);
+        
+        if (response.Content != null) return GetResponse(response.Content, method);
+        throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
     }
 
     private static IResponse GetResponse(string response, string method)
     {
-        LastfmError? e = IsLastfmError(response);
-        if (e != null) return e;
-        
-        if (method == GetTracks)
-            return JsonConvert.DeserializeObject<TrackResponse>(response);
-        return JsonConvert.DeserializeObject<UserResponse>(response);
+        IsLastfmError(response);
+        if (method == GetTracks) return JsonConvert.DeserializeObject<TrackResponse>(response)!;
+        return JsonConvert.DeserializeObject<UserResponse>(response)!;
     }
     
     // Returns the LastfmError if true, null if not.
-    private static LastfmError? IsLastfmError(string response)
+    private static void IsLastfmError(string response)
     {
-        LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response);
-        return e.Message != null ? e : null;
+        LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response)!;
+        if (e.Error == ErrorEnum.OK) return;
+        throw new LastfmException(e.Message!, e.Error);
     }
 }
