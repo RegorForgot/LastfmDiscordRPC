@@ -63,6 +63,7 @@ public sealed class PreviewViewModel : ViewModelBase
     public PreviewViewModel()
     {
         _imageURL = Empty;
+        _highResURL = Empty;
         _name = Empty;
         _artistName = Empty;
         _albumName = Empty;
