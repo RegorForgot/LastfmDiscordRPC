@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using LastfmDiscordRPC.MVVM.Exceptions;
 using Newtonsoft.Json;
+using static System.String;
 
 namespace LastfmDiscordRPC.MVVM.Models;
 

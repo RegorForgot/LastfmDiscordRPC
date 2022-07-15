@@ -47,6 +47,8 @@
         <LastGenOutput>TrayIcon.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <Resource Include="Resources\icon.png" />
+      <None Remove="Resources\githubLogo.png" />
+      <Resource Include="Resources\githubLogo.png" />
     </ItemGroup>
     
     <ItemGroup>

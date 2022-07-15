@@ -5,54 +5,70 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:gif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
              mc:Ignorable="d"
-             Width="600" Height="200" d:DataContext="{d:DesignInstance }">
+             d:DataContext="{d:DesignInstance }">
 
-    <Grid>
-    
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        
-        <Image Margin="10" 
-               VerticalAlignment="Center" 
-               HorizontalAlignment="Center" 
-               Stretch="Uniform" 
-               Source="{Binding ImageURL}"
-               gif:ImageBehavior.AnimatedSource="{Binding ImageURL}">
-            <Image.Clip>
-                <RectangleGeometry RadiusX="20"
-                                   RadiusY="20"
-                                   Rect="0,0,180,180"/>
-            </Image.Clip>
-        </Image>
-        
-        <StackPanel Grid.Column="1"
-                    VerticalAlignment="Center">
+    <Border Width="600"
+            Height="Auto"
+            Background="#263238"
+            CornerRadius="30"
+            BorderBrush="#AAAAAA"
+            BorderThickness="1">
+        <Grid Width="600" 
+              Height="200">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             
-            <Label Style="{StaticResource StartupControlStyle}"
-                   FontWeight="Bold"
-                   FontSize="32">
-                <TextBlock Text="Music"
-                           TextTrimming="CharacterEllipsis">
-                </TextBlock>
+            <Label Margin="0"
+                   Padding="0">
+                <Hyperlink Name="AlbumCover"
+                           TextDecorations=""
+                           NavigateUri="{Binding HighResURL}"
+                           RequestNavigate="AlbumCover_OnRequestNavigate">
+                    <Image Margin="10" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Center" 
+                           Stretch="Uniform" 
+                           Source="{Binding ImageURL}"
+                           gif:ImageBehavior.AnimatedSource="{Binding ImageURL}">
+                        <Image.Clip>
+                            <RectangleGeometry RadiusX="20"
+                                               RadiusY="20"
+                                               Rect="0,0,180,180"> 
+                            </RectangleGeometry>
+                        </Image.Clip>
+                    </Image>
+                </Hyperlink>
             </Label>
             
-            <Label Style="{StaticResource StartupControlStyle}">
-                <TextBlock Text="{Binding Name}"
-                           TextTrimming="CharacterEllipsis">
-                </TextBlock>
-            </Label>
-        
-            <Label Style="{StaticResource StartupControlStyle}">
-                <TextBlock TextTrimming="CharacterEllipsis"
-                           Text="{Binding ArtistName}"/>
-            </Label>
-        
-            <Label Style="{StaticResource StartupControlStyle}">
-                <TextBlock TextTrimming="CharacterEllipsis"
-                           Text="{Binding AlbumName}"/>
-            </Label>
-        </StackPanel>
-    </Grid>
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center">
+                
+                <Label Style="{StaticResource GeneralStyle}"
+                       FontWeight="Bold"
+                       FontSize="32">
+                    <TextBlock Text="Last.fm"
+                               TextTrimming="CharacterEllipsis">
+                    </TextBlock>
+                </Label>
+                
+                <Label Style="{StaticResource GeneralStyle}">
+                    <TextBlock Text="{Binding Name}"
+                               TextTrimming="CharacterEllipsis">
+                    </TextBlock>
+                </Label>
+            
+                <Label Style="{StaticResource GeneralStyle}">
+                    <TextBlock TextTrimming="CharacterEllipsis"
+                               Text="{Binding ArtistName}"/>
+                </Label>
+            
+                <Label Style="{StaticResource GeneralStyle}">
+                    <TextBlock TextTrimming="CharacterEllipsis"
+                               Text="{Binding AlbumName}"/>
+                </Label>
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

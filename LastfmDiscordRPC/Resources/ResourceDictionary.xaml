@@ -5,37 +5,43 @@
         pack://application,,,/Resources/Fonts/#Roboto
     </FontFamily>
     
-    <Style x:Key="StartupControlStyle"
+    <Style x:Key="BackgroundStyle"
+           TargetType="UserControl">
+        <Setter Property="Background" Value="#263238"/>
+    </Style>
+    
+    <Style x:Key="GeneralStyle"
            TargetType="Control">
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Height" Value="40" />
         <Setter Property="Margin" Value="0, 5, 0, 5" />
-        <Setter Property="FontSize" Value="25" />
+        <Setter Property="FontSize" Value="20" />
         <Setter Property="FontFamily" Value="{StaticResource Roboto}"/>
         <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    <Style x:Key="StartupHeaders"
+    <Style x:Key="HeaderStyle"
            TargetType="Label">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="FontSize" Value="45" />
+        <Setter Property="FontSize" Value="40" />
         <Setter Property="FontFamily" Value="{StaticResource Roboto}"/>
         <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="White"/>
     </Style>
-
-    <Style x:Key="StartupButtons"
+    
+    <Style x:Key="ButtonStyle"
            TargetType="Button"
-           BasedOn="{StaticResource StartupControlStyle}">
-        <Setter Property="Foreground" Value="#79ca38" />
-        <Setter Property="Background" Value="Transparent" />
+           BasedOn="{StaticResource GeneralStyle}">
+        <Setter Property="Background" Value="#1f292e" />
         <Setter Property="Height" Value="45" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border BorderThickness="4,4,0,4"
-                            BorderBrush="#79ca38"
+                    <Border BorderThickness="4,4,4,4"
+                            BorderBrush="#314549"
                             CornerRadius="20, 20, 20, 20"
                             Background="{TemplateBinding Background}">
                         <ContentPresenter HorizontalAlignment="Center"
@@ -44,9 +50,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background"
-                                    Value="#79ca38" />
-                            <Setter Property="Foreground"
-                                    Value="White" />
+                                    Value="#314549" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -54,11 +58,11 @@
         </Setter>
     </Style>
     
-    <Style x:Key="PlaceholderStyle"
-           TargetType="Label"
-           BasedOn="{StaticResource StartupControlStyle}">
-        <Setter Property="IsHitTestVisible" Value="False"/>
-        <Setter Property="Foreground" Value="Gray"/>
+    <Style BasedOn="{StaticResource GeneralStyle}"
+           TargetType="Control"
+           x:Key="TextBoxStyle">
+        <Setter Property="Background" Value="#1f292e"/>
+        <Setter Property="BorderBrush" Value="#32424a"/>
     </Style>
     
 </ResourceDictionary>

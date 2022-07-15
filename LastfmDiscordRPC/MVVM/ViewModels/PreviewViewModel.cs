@@ -11,7 +11,19 @@ public sealed class PreviewViewModel : ViewModelBase
         set
         {
             _imageURL = value;
+            HighResURL = _imageURL.Replace(@"/300x300", "");
             OnPropertyChanged(nameof(ImageURL));
+        }
+    }
+    
+    private string _highResURL;
+    public string HighResURL
+    {
+        get => _highResURL;
+        set
+        {
+            _highResURL = value;
+            OnPropertyChanged(nameof(HighResURL));
         }
     }
 

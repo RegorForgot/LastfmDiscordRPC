@@ -28,7 +28,7 @@ public class ActivateCommand : CommandBase
             Track? track = trackResponse.Track;
             if (track == null)
             {
-                MessageBox.Show("No track found", username);
+                _mainViewModel.OutputText += "\n [+] No tracks found for user.";
                 return; 
             }
 
@@ -36,12 +36,14 @@ public class ActivateCommand : CommandBase
             previewViewModel.AlbumName = track.Album.Name;
             previewViewModel.ArtistName = track.Artist.Name;
             previewViewModel.ImageURL = track.ImageURL;
+
+            _mainViewModel.OutputText += "\n [+] Current track successfully received!";
         } catch (LastfmException e)
         {
-            MessageBox.Show(e.Message, e.ErrorCode.ToString());
+            _mainViewModel.OutputText += $"\n [+] Error '{e.ErrorCode}' from Last.fm: {e.Message}";
         } catch (HttpRequestException e)
         {
-            MessageBox.Show(e.Message, e.StatusCode.ToString());
+            _mainViewModel.OutputText += $"\n [+] HTTP Error '{e.StatusCode}': {e.Message}";
         }
     }
 }

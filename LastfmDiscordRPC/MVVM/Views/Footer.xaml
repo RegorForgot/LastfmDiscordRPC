@@ -5,19 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              Height="50"
-             Background="#EEEEEE">
-    
+             Style="{StaticResource BackgroundStyle}">
+
     <Border BorderThickness="0, 2, 0, 0"
-            BorderBrush="Black">
-        <Button Name="SourceButton"
-                Width="Auto"
-                Height="50"
-                Padding="4"
-                Margin="0"
-                Style="{StaticResource StartupControlStyle}"
-                HorizontalAlignment="Right"
-                Click="SourceButton_OnClick">
-            Github Source
-        </Button>
+            BorderBrush="#1f292e">
+        <Label HorizontalAlignment="Right"
+               Margin="0">
+            <Hyperlink Name="SourceLink"
+                       TextDecorations=""
+                       NavigateUri="https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC"
+                       RequestNavigate="SourceLink_OnRequestNavigate">
+                <Image Source="/Resources/githubLogo.png"
+                       Stretch="Uniform" />
+                <Label Content="Github Source"
+                       Style="{StaticResource GeneralStyle}"
+                       Margin="0"/>
+            </Hyperlink>
+        </Label>
     </Border>
+
 </UserControl>

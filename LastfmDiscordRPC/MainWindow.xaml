@@ -6,16 +6,11 @@
         xmlns:views="clr-namespace:LastfmDiscordRPC.MVVM.Views"
         mc:Ignorable="d"
         Title="Last.fm Discord Rich Presence"
-        Height="600" Width="900"
+        Height="700" Width="900"
         ResizeMode="CanMinimize" 
-        d:DataContext="{d:DesignInstance}">
+        d:DataContext="{d:DesignInstance}"
+        Background="#192024">
     
-    <Window.Background>
-        <LinearGradientBrush EndPoint="1.0, 0.5" StartPoint="0.0, 0.0">
-            <GradientStop Color="#9094a5"/>
-            <GradientStop Color="#56595f" Offset="2"/>
-        </LinearGradientBrush>
-    </Window.Background>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

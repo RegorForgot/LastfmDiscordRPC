@@ -29,6 +29,17 @@ public sealed class MainViewModel : ViewModelBase
             OnPropertyChanged(nameof(APIKey));
         }
     }
+
+    private string _outputText;
+    public string OutputText
+    {
+        get => _outputText;
+        set
+        {
+            _outputText = value;
+            OnPropertyChanged(nameof(OutputText));
+        }
+    }
     
     public ICommand ActivateCommand { get; }
     public ICommand SaveCommand { get; }
@@ -40,6 +51,7 @@ public sealed class MainViewModel : ViewModelBase
     {
         _username = username;
         _apiKey = apiKey;
+        _outputText = " [+] Started!";
         ActivateCommand = new ActivateCommand(this);
         SaveCommand = new SaveCommand(this);
         DefaultKeyCommand = new DefaultKeyCommand(this);

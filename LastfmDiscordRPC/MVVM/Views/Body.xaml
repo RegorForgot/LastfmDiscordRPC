@@ -7,63 +7,89 @@
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="650">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.6*"/>
+            <ColumnDefinition Width="0.4*" />
+        </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-
-        <Label Content="Username"
-               Style="{StaticResource StartupControlStyle}"/>
-        <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource StartupControlStyle}"
-                 MaxLength="15"
-                 Grid.Row="0"
-                 Grid.Column="1"/>
+        <Grid Margin="20, 10, 0, 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             
-        <Label Content="API Key (advanced)"
-               Style="{StaticResource StartupControlStyle}"
-               Grid.Row="1" 
-               Grid.Column="0" />
-        <TextBox Text="{Binding APIKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource StartupControlStyle}" 
-                 Grid.Column="1"
-                 Grid.Row="1"/>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             
-        <StackPanel Grid.Row="2"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Orientation="Horizontal"> 
+            <Label Content="Username"
+                   Style="{StaticResource GeneralStyle}"
+                   Margin="10, 0, 10, 0"
+                   Grid.Row="0" 
+                   Grid.Column="0"/>
+            <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource TextBoxStyle}"
+                     MaxLength="15"
+                     Grid.Row="0"
+                     Grid.Column="1"/>
+            
+            <Label Content="API Key"
+                   Style="{StaticResource GeneralStyle}"
+                   Margin="10, 0, 10, 0"
+                   Grid.Row="1"
+                   Grid.Column="0" />
+            <TextBox Text="{Binding APIKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource TextBoxStyle}" 
+                     Grid.Row="1" 
+                     Grid.Column="1"/>
+        </Grid>
+        
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              Grid.RowSpan="2">
+            <Border Name="SizePlaceholder"
+                    Margin="10, 10, 20, 10"/>
+            <TextBox Name="OutputBox"
+                     Text="{Binding OutputText}"
+                     Style="{StaticResource TextBoxStyle}"
+                     Height="{Binding ActualHeight, ElementName=SizePlaceholder}"
+                     Width="{Binding ActualWidth, ElementName=SizePlaceholder}"
+                     VerticalScrollBarVisibility="Visible"
+                     VerticalContentAlignment="Top"
+                     TextWrapping="Wrap"
+                     IsReadOnly="True"
+                     TextChanged="OutputBox_OnTextChanged"/>
+        </Grid>
+            
+        <StackPanel Orientation="Vertical"
+                    Margin="20, 0, 0, 10"
+                    Grid.Row="1"
+                    Grid.Column="0"> 
             <Button Command="{Binding ActivateCommand}" 
                     Content="Activate"
-                    Style="{StaticResource StartupControlStyle}"/>
+                    Style="{StaticResource ButtonStyle}"/>
             <Button Command="{Binding SaveCommand}" 
                     Content="Save Settings"
-                    Style="{StaticResource StartupControlStyle}"/>
+                    Style="{StaticResource ButtonStyle}"/>
             <Button Command="{Binding DefaultKeyCommand}"
                     Content="Load Default API Key"
-                    Style="{StaticResource StartupControlStyle}"/>
+                    Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
         
-        <Border Width="600"
-                Height="Auto"
-                VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                Grid.Row="3" 
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Background="#EBEBEB"
-                CornerRadius="30"
-                BorderBrush="#AAAAAA"
-                BorderThickness="1">
-            <views:Preview DataContext="{Binding PreviewViewModel}"
-                           Margin="0"/>
-        </Border>
+        
+        <views:Preview DataContext="{Binding PreviewViewModel}"
+                       Margin="0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Grid.Row="2" 
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2" />
     </Grid>
 </UserControl>

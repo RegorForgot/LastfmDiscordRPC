@@ -1,19 +1,18 @@
 ﻿using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace LastfmDiscordRPC.MVVM.Views;
 
-public partial class Footer : UserControl
+public partial class Footer
 {
     public Footer()
     {
         InitializeComponent();
     }
 
-    private void SourceButton_OnClick(object sender, RoutedEventArgs e)
+    private void SourceLink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
     {
-        const string url = @"https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC";
+        string url = SourceLink.NavigateUri.AbsoluteUri;
         ProcessStartInfo sInfo = new ProcessStartInfo(url)
         {
             UseShellExecute = true
