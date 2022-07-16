@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
-using System.Windows;
 using LastfmAPI.Exceptions;
 using LastfmAPI.Responses;
+using LastfmDiscordRPC.MVVM.Models;
 using LastfmDiscordRPC.MVVM.ViewModels;
 using static LastfmAPI.APIConnector;
 
@@ -23,27 +23,32 @@ public class ActivateCommand : CommandBase
 
         try
         {
+            UserResponse userResponse = (UserResponse)await CallAPI(username, apiKey, GetUser);
+            _mainViewModel.OutputText = "\n+ User found... collecting tracks";
+            
             TrackResponse trackResponse = (TrackResponse) await CallAPI(username, apiKey, GetTracks);
 
-            Track? track = trackResponse.Track;
-            if (track == null)
+            if (trackResponse.Track == null)
             {
-                _mainViewModel.OutputText += "\n [+] No tracks found for user.";
+                _mainViewModel.OutputText += "\n+ No tracks found for user.";
                 return; 
             }
 
+            UserObject user = userResponse.User;
+            Track track = trackResponse.Track;
             previewViewModel.Name = track.Name;
             previewViewModel.AlbumName = track.Album.Name;
             previewViewModel.ArtistName = track.Artist.Name;
             previewViewModel.ImageURL = track.ImageURL;
 
-            _mainViewModel.OutputText += "\n [+] Current track successfully received!";
+            _mainViewModel.OutputText += "\n+ Current track successfully received!";
+            _mainViewModel.Client.InitialiseClient(userResponse.User, track);
         } catch (LastfmException e)
         {
-            _mainViewModel.OutputText += $"\n [+] Error '{e.ErrorCode}' from Last.fm: {e.Message}";
+            _mainViewModel.OutputText += $"\n+ Error '{e.ErrorCode}' from Last.fm: {e.Message}";
         } catch (HttpRequestException e)
         {
-            _mainViewModel.OutputText += $"\n [+] HTTP Error '{e.StatusCode}': {e.Message}";
+            _mainViewModel.OutputText += $"\n+ HTTP Error '{e.StatusCode}': {e.Message}";
         }
     }
 }

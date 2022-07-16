@@ -10,6 +10,7 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _imageURL;
         set
         {
+            if (value == _imageURL) return;
             _imageURL = value;
             HighResURL = _imageURL.Replace(@"/300x300", "");
             OnPropertyChanged(nameof(ImageURL));
@@ -22,7 +23,8 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _highResURL;
         set
         {
-            _highResURL = value;
+            if (value == _highResURL) return;
+            _highResURL = value == @"https://lastfm.freetls.fastly.net/i/u/4128a6eb29f94943c9d206c08e625904.jpg" ? Empty : value;
             OnPropertyChanged(nameof(HighResURL));
         }
     }
@@ -33,6 +35,7 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _name;
         set
         {
+            if (value == _name) return;
             _name = value;
             OnPropertyChanged(nameof(Name));
         }
@@ -44,6 +47,7 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _artistName;
         set
         {
+            if (value == _artistName) return;
             _artistName = value;
             OnPropertyChanged(nameof(ArtistName));
         }
@@ -55,6 +59,7 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _albumName;
         set
         {
+            if (value == _albumName) return;
             _albumName = value;
             OnPropertyChanged(nameof(AlbumName));
         }

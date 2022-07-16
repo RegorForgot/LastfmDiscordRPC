@@ -13,11 +13,9 @@ namespace LastfmDiscordRPC;
 public partial class MainWindow
 {
     private NotifyIcon? _trayIcon;
-    
+
     public MainWindow()
     {
-        InitializeComponent();
-        
         ResourceManager resourceManager = new ResourceManager(typeof(Resources.TrayIcon));
 
         _trayIcon = new NotifyIcon();
@@ -25,19 +23,15 @@ public partial class MainWindow
         _trayIcon.Text = @"Last.fm Rich Presence";
         _trayIcon.Visible = true;
         _trayIcon.Click += TrayIcon_OnClick;
+        
+        InitializeComponent();
     }
 
-    private void TrayIcon_OnClick(object? sender, EventArgs e)
+    protected override void OnClosing(CancelEventArgs e)
     {
-        if (Visibility == Visibility.Hidden)
-        {
-            Show();
-            BringIntoView();
-            WindowState = WindowState.Normal;
-        } else
-        {
-            Hide();
-        }
+        _trayIcon.Visible = false;
+        _trayIcon = null;
+        base.OnClosing(e);
     }
 
     protected override void OnStateChanged(EventArgs e)
@@ -45,11 +39,13 @@ public partial class MainWindow
         if (WindowState == WindowState.Minimized) Hide();
         base.OnStateChanged(e);
     }
-
-    protected override void OnClosing(CancelEventArgs e)
+    
+    private void TrayIcon_OnClick(object? sender, EventArgs e)
     {
-        _trayIcon!.Visible = false;
-        _trayIcon = null;
-        base.OnClosing(e);
+        if (Visibility == Visibility.Hidden)
+        {
+            Show();
+            WindowState = WindowState.Normal;
+        } else Hide();
     }
 }
