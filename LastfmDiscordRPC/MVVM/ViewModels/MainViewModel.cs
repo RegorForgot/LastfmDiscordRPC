@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using LastfmDiscordRPC.MVVM.Commands;
+using LastfmDiscordRPC.MVVM.Models;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -14,8 +15,9 @@ public sealed class MainViewModel : ViewModelBase
         get => _username;
         set
         {
+            if (value == _username) return;
             _username = value;
-            OnPropertyChanged(nameof(Username));
+            OnPropertyChanged(nameof(Username)); 
         }
     }
 
@@ -25,8 +27,21 @@ public sealed class MainViewModel : ViewModelBase
         get => _apiKey;
         set
         {
+            if (value == _apiKey) return;
             _apiKey = value;
             OnPropertyChanged(nameof(APIKey));
+        }
+    }
+    
+    private string _appKey;
+    public string AppKey
+    {
+        get => _appKey;
+        set
+        {
+            if (value == _appKey) return;
+            _appKey = value;
+            OnPropertyChanged(nameof(AppKey));
         }
     }
 
@@ -36,6 +51,7 @@ public sealed class MainViewModel : ViewModelBase
         get => _outputText;
         set
         {
+            if (value == OutputText) return;
             _outputText = value;
             OnPropertyChanged(nameof(OutputText));
         }
@@ -46,12 +62,15 @@ public sealed class MainViewModel : ViewModelBase
     public ICommand DefaultKeyCommand { get; }
     
     public PreviewViewModel PreviewViewModel { get; }
+    public readonly DiscordClient Client;
     
-    public MainViewModel(string username, string apiKey)
+    public MainViewModel(string username, string apiKey, string appKey, DiscordClient client)
     {
         _username = username;
         _apiKey = apiKey;
-        _outputText = " [+] Started!";
+        _appKey = appKey;
+        Client = client;
+        _outputText = "+ Started!";
         ActivateCommand = new ActivateCommand(this);
         SaveCommand = new SaveCommand(this);
         DefaultKeyCommand = new DefaultKeyCommand(this);

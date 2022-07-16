@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using LastfmDiscordRPC.MVVM.Exceptions;
 using Newtonsoft.Json;
-using static System.String;
 
 namespace LastfmDiscordRPC.MVVM.Models;
 
@@ -16,8 +14,8 @@ public static class SaveAppData
 
     static SaveAppData()
     {
-        FolderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\LastfmDiscordRPC";
-        FilePath = FolderPath + "\\config.json";
+        FolderPath  = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\LastfmDiscordRPC";
+        FilePath = FolderPath + @"\config.json";
 
         CreateFileIfNotExist();
         SavedData = ReadData();
@@ -55,20 +53,20 @@ public static class SaveAppData
         {
             appData ??= new AppData
             {
-                Username = "default", APIKey = DefaultAPIKey
+                Username = "default", APIKey = DefaultAPIKey, AppKey = ""
             };
         }
 
         return appData;
     }
 
-    public static void SaveData(string username = "default", string apiKey = DefaultAPIKey)
+    public static void SaveData(string username = "", string apiKey = DefaultAPIKey, string appKey = "997756398664421446")
     {
         CreateFileIfNotExist();
         
         AppData appData = new AppData
         {
-            Username = username, APIKey = apiKey
+            Username = username, APIKey = apiKey, AppKey = appKey
         };
         SavedData = appData;
 
@@ -81,4 +79,13 @@ public static class SaveAppData
             MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
+    private class NoDataException : Exception { }
+}
+
+public class AppData
+{
+    [JsonProperty] public string Username { get; set; }
+    [JsonProperty] public string APIKey { get; set; }
+    [JsonProperty] public string AppKey { get; set; }
 }

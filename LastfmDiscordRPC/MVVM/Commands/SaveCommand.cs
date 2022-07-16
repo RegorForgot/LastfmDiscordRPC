@@ -13,6 +13,6 @@ public class SaveCommand : CommandBase
     
     public override void Execute(object? parameter)
     {
-        SaveAppData.SaveData(_mainViewModel.Username, _mainViewModel.APIKey);
+        SaveAppData.SaveData(_mainViewModel.Username, _mainViewModel.APIKey, _mainViewModel.AppKey);
     }
 }
