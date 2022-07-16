@@ -45,9 +45,9 @@
       <EmbeddedResource Include="Resources\icon.ico">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\TrayIcon.resx">
+      <EmbeddedResource Update="Resources\EmbeddedImages.resx">
         <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>TrayIcon.Designer.cs</LastGenOutput>
+        <LastGenOutput>EmbeddedImages.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <Resource Include="Resources\icon.png" />
       <None Remove="Resources\githubLogo.png" />
@@ -55,7 +55,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Compile Update="Resources\TrayIcon.Designer.cs">
+      <Compile Update="Resources\EmbeddedImages.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>

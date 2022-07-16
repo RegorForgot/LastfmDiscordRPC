@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Resources;
+using System.Windows;
 using LastfmDiscordRPC.Models;
 using LastfmDiscordRPC.ViewModels;
 using static System.Net.WebRequest;
@@ -9,6 +10,7 @@ namespace LastfmDiscordRPC;
 public partial class App : Application
 {
     private DiscordClient _client;
+    private ResourceManager _manager;
 
     public App()
     {
@@ -17,8 +19,9 @@ public partial class App : Application
     
     protected override void OnStartup(StartupEventArgs e)
     {
+        _manager = new ResourceManager(typeof(Resources.EmbeddedImages));
         _client = new DiscordClient(SavedData.AppKey);
-        MainWindow = new MainWindow
+        MainWindow = new MainWindow(_manager)
         {
             DataContext = new MainViewModel(SavedData.Username, SavedData.APIKey, SavedData.AppKey, _client)
         };

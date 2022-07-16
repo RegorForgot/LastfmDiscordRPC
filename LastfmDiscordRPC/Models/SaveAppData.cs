@@ -54,14 +54,14 @@ public static class SaveAppData
         {
             appData ??= new AppData
             {
-                Username = "", APIKey = DefaultAPIKey, AppKey = "997756398664421446"
+                Username = "", APIKey = DefaultAPIKey, AppKey = ""
             };
         }
 
         return appData;
     }
 
-    public static void SaveData(string username = "", string apiKey = DefaultAPIKey, string appKey = "997756398664421446")
+    public static void SaveData(string username = "", string apiKey = DefaultAPIKey, string appKey = "")
     {
         CreateFileIfNotExist();
         

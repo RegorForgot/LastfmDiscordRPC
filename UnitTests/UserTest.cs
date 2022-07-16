@@ -13,7 +13,7 @@ public class UserTest
         try
         {
             _response = await CallAPI(Username, APIKey);
-            Assert.That(_response.UserInfo.Playcount, Is.EqualTo("59109"));
+            Assert.That(_response.Playcount, Is.EqualTo("59109"));
         } catch (LastfmException)
         {
             Assert.Fail();

@@ -9,7 +9,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.6*"/>
-            <ColumnDefinition Width="0.4*" />
+            <ColumnDefinition Width="0.5*" />
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
@@ -25,6 +25,7 @@
             </Grid.ColumnDefinitions>
             
             <Grid.RowDefinitions>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -48,6 +49,16 @@
             <TextBox Text="{Binding APIKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource TextBoxStyle}" 
                      Grid.Row="1" 
+                     Grid.Column="1"/>
+            
+            <Label Content="Application Key (needs restart)"
+                   Style="{StaticResource GeneralStyle}"
+                   Margin="10, 0, 10, 0"
+                   Grid.Row="2"
+                   Grid.Column="0" />
+            <TextBox Text="{Binding AppKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource TextBoxStyle}" 
+                     Grid.Row="2" 
                      Grid.Column="1"/>
         </Grid>
         

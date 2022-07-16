@@ -21,18 +21,19 @@ public class LastfmResponse
         {
             _recentTracks = value;
             Track = _recentTracks.Tracks.Count == 0 ? null : _recentTracks.Tracks[0];
+            Playcount = _recentTracks.Footer.Playcount;
         }
     }
-
-    [JsonProperty("@attr")] public ResponseFooter UserInfo { get; set; }
-
+    
     public Track? Track { get; private set; }
+    public string Playcount { get; private set; }
 
     public class RecentTrackList
     {
         [JsonProperty("track")] public List<Track> Tracks { get; set; }
+        [JsonProperty("@attr")] public ResponseFooter Footer { get; set; }
     }
-
+    
     public class ResponseFooter
     {
         [JsonProperty("total")] public string Playcount { get; set; }
@@ -67,11 +68,11 @@ public class Track
 
     public class TrackNowPlaying
     {
-        [JsonProperty("nowplaying")] public string State { get; set; } = "false";
+        [JsonProperty("nowplaying")] public string State { get; set; }
     }
 
     public class PlayDate
     {
-        [JsonProperty("uts")] public string Timestamp { get; set; } = Empty;
+        [JsonProperty("uts")] public string Timestamp { get; set; }
     }
 }

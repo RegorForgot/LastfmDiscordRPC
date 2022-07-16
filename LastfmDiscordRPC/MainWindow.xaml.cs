@@ -14,12 +14,10 @@ public partial class MainWindow
 {
     private NotifyIcon? _trayIcon;
 
-    public MainWindow()
+    public MainWindow(ResourceManager manager)
     {
-        ResourceManager resourceManager = new ResourceManager(typeof(Resources.TrayIcon));
-
         _trayIcon = new NotifyIcon();
-        _trayIcon.Icon = (Icon)resourceManager.GetObject("Icon")!;
+        _trayIcon.Icon = (Icon)manager.GetObject("AppIcon")!;
         _trayIcon.Text = @"Last.fm Rich Presence";
         _trayIcon.Visible = true;
         _trayIcon.Click += TrayIcon_OnClick;
