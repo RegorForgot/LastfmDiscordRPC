@@ -21,12 +21,15 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <PackageReference Include="DiscordRichPresence" Version="1.0.175" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="RestSharp" Version="108.0.1" />
       <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="DiscordRPC">
+        <HintPath>Assemblies\DiscordRPC.dll</HintPath>
+      </Reference>
       <Reference Include="System.Drawing.Common">
         <HintPath>C:\Program Files\dotnet\sdk\6.0.301\System.Drawing.Common.dll</HintPath>
       </Reference>
@@ -57,9 +60,5 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\LastfmAPI\LastfmAPI.csproj" />
     </ItemGroup>
 </Project>

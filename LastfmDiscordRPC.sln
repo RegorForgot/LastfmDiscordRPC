@@ -2,9 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LastfmDiscordRPC", "LastfmDiscordRPC\LastfmDiscordRPC.csproj", "{AA657FB2-FE78-4FCA-B745-9E611A83A916}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LastfmAPI", "LastfmAPI\LastfmAPI.csproj", "{C039BBDB-FC81-4EEC-BB6B-D40024EA5BF0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LastfmAPI.Tests", "LastfmAPI.Tests\LastfmAPI.Tests.csproj", "{10E14B60-9730-40CD-A0F0-A2F87F22BE72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{10E14B60-9730-40CD-A0F0-A2F87F22BE72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,10 +14,6 @@ Global
 		{AA657FB2-FE78-4FCA-B745-9E611A83A916}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA657FB2-FE78-4FCA-B745-9E611A83A916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA657FB2-FE78-4FCA-B745-9E611A83A916}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C039BBDB-FC81-4EEC-BB6B-D40024EA5BF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C039BBDB-FC81-4EEC-BB6B-D40024EA5BF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C039BBDB-FC81-4EEC-BB6B-D40024EA5BF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C039BBDB-FC81-4EEC-BB6B-D40024EA5BF0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10E14B60-9730-40CD-A0F0-A2F87F22BE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{10E14B60-9730-40CD-A0F0-A2F87F22BE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10E14B60-9730-40CD-A0F0-A2F87F22BE72}.Release|Any CPU.ActiveCfg = Release|Any CPU

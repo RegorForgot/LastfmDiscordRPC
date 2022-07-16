@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using LastfmDiscordRPC.MVVM.Models;
-using LastfmDiscordRPC.MVVM.ViewModels;
+using LastfmDiscordRPC.Models;
+using LastfmDiscordRPC.ViewModels;
 using static System.Net.WebRequest;
-using static LastfmDiscordRPC.MVVM.Models.SaveAppData;
+using static LastfmDiscordRPC.Models.SaveAppData;
 
 namespace LastfmDiscordRPC;
 
@@ -13,19 +13,18 @@ public partial class App : Application
     public App()
     {
         DefaultWebProxy = null;
-        InitializeComponent();
     }
     
     protected override void OnStartup(StartupEventArgs e)
     {
-        base.OnStartup(e);
         _client = new DiscordClient(SavedData.AppKey);
         MainWindow = new MainWindow
         {
             DataContext = new MainViewModel(SavedData.Username, SavedData.APIKey, SavedData.AppKey, _client)
         };
-
         MainWindow.Show();
+        
+        base.OnStartup(e);
     }
 
     protected override void OnExit(ExitEventArgs e)
