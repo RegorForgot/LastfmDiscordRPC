@@ -1,5 +1,4 @@
-﻿using LastfmDiscordRPC.Models;
-using static System.String;
+﻿using static System.String;
 
 namespace LastfmDiscordRPC.ViewModels;
 

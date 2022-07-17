@@ -4,19 +4,19 @@
         xmlns:views="clr-namespace:LastfmDiscordRPC.Views"
         Title="Last.fm Discord Rich Presence"
         Height="730" Width="1000"
-        ResizeMode="CanMinimize" 
+        ResizeMode="CanMinimize"
         Background="#192024">
-    
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        
-        <views:Header/>
-        <views:Body Grid.Row="1"/>
-        <views:Footer Grid.Row="2"
-                  VerticalAlignment="Bottom"/>
-    </Grid>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <views:Header />
+    <views:Body Grid.Row="1" />
+    <views:Footer Grid.Row="2"
+                  VerticalAlignment="Bottom" />
+  </Grid>
 </Window>

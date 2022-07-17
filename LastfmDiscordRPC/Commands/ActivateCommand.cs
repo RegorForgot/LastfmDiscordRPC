@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading;
-using LastfmDiscordRPC.Exceptions;
 using LastfmDiscordRPC.Models;
 using LastfmDiscordRPC.ViewModels;
 using static LastfmDiscordRPC.Models.LastfmClient;
@@ -13,7 +12,7 @@ public class ActivateCommand : CommandBase, IDisposable
 {
     private readonly MainViewModel _mainViewModel;
     private PeriodicTimer? _timer;
-    public bool IsWorking { get; set; }
+    private bool _isWorking;
 
     public ActivateCommand(MainViewModel mainViewModel) => _mainViewModel = mainViewModel;
     
@@ -21,13 +20,13 @@ public class ActivateCommand : CommandBase, IDisposable
     {
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
         bool firstSuccess = false;
-        IsWorking = true;
+        _isWorking = true;
         RaiseCanExecuteChanged();
 
         while (await _timer.WaitForNextTickAsync()) {
             try
             {
-                IsWorking = true;
+                _isWorking = true;
                 LastfmResponse trackResponse = await CallAPI(username, apiKey);
 
                 if (trackResponse.Track == null)
@@ -67,20 +66,20 @@ public class ActivateCommand : CommandBase, IDisposable
 
     public override bool CanExecute(object? parameter)
     {
-        return !_mainViewModel.Client.HasPresence() && !IsWorking;
+        return !_mainViewModel.Client.HasPresence() && !_isWorking;
     }
 
     public override void Execute(object? parameter)
     { 
         _mainViewModel.Client.ClearPresence();
-        TimedPresenceUpdater(_mainViewModel.Username, _mainViewModel.APIKey);
+        if (!_isWorking) TimedPresenceUpdater(_mainViewModel.Username, _mainViewModel.APIKey);
     } 
 
     public void Dispose()
     {
         _mainViewModel.Client.ClearPresence();
+        _isWorking = false;
         _timer?.Dispose();
-        IsWorking = false;
         RaiseCanExecuteChanged();
     } 
 }

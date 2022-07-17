@@ -15,6 +15,7 @@ public class DeactivateCommand : CommandBase
     {
         ((ActivateCommand) _mainViewModel.ActivateCommand).Dispose();
         RaiseCanExecuteChanged();
+        _mainViewModel.OutputText += "\n+ Presence deactivated";
     }
 
     public override bool CanExecute(object? paramater)

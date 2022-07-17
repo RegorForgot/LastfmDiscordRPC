@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using LastfmDiscordRPC.Exceptions;
 using Newtonsoft.Json;
 using RestSharp;
-using static LastfmDiscordRPC.Exceptions.LastfmException;
+using static LastfmDiscordRPC.Models.LastfmException;
 
 namespace LastfmDiscordRPC.Models;
 

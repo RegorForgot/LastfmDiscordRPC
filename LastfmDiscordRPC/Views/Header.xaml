@@ -6,16 +6,16 @@
              mc:Ignorable="d"
              Height="80"
              Style="{StaticResource BackgroundStyle}">
-    
-    <Border BorderThickness="0, 0, 0, 4"
-            BorderBrush="#1f292e">
-        <StackPanel Orientation="Horizontal">
-            <Image Source="/Resources/icon.png"
-                   Margin="8"/>
-            <Label VerticalAlignment="Center"
-                   Style="{StaticResource HeaderStyle}"
-                   Content="Last.fm Discord Rich Presence"/>
-        </StackPanel>
-    </Border>
-    
+
+  <Border BorderThickness="0, 0, 0, 4"
+          BorderBrush="#1f292e">
+    <StackPanel Orientation="Horizontal">
+      <Image Source="/Resources/icon.png"
+             Margin="8" />
+      <Label VerticalAlignment="Center"
+             Style="{StaticResource HeaderStyle}"
+             Content="Last.fm Discord Rich Presence" />
+    </StackPanel>
+  </Border>
+
 </UserControl>

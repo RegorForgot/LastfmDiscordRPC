@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Shapes;
 using DiscordRPC;
 using DiscordRPC.Logging;
 using static System.String;

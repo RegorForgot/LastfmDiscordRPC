@@ -7,21 +7,21 @@
              Height="50"
              Style="{StaticResource BackgroundStyle}">
 
-    <Border BorderThickness="0, 2, 0, 0"
-            BorderBrush="#1f292e">
-        <Label HorizontalAlignment="Right"
-               Margin="0">
-            <Hyperlink Name="SourceLink"
-                       TextDecorations=""
-                       NavigateUri="https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC"
-                       RequestNavigate="SourceLink_OnRequestNavigate">
-                <Image Source="/Resources/githubLogo.png"
-                       Stretch="Uniform" />
-                <Label Content="Github Source"
-                       Style="{StaticResource GeneralStyle}"
-                       Margin="0"/>
-            </Hyperlink>
-        </Label>
-    </Border>
+  <Border BorderThickness="0, 2, 0, 0"
+          BorderBrush="#1f292e">
+    <Label HorizontalAlignment="Right"
+           Margin="0">
+      <Hyperlink Name="SourceLink"
+                 TextDecorations=""
+                 NavigateUri="https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC"
+                 RequestNavigate="SourceLink_OnRequestNavigate">
+        <Image Source="/Resources/githubLogo.png"
+               Stretch="Uniform" />
+        <Label Content="Github Source"
+               Style="{StaticResource GeneralStyle}"
+               Margin="0" />
+      </Hyperlink>
+    </Label>
+  </Border>
 
 </UserControl>

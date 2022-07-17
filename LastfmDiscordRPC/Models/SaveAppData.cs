@@ -12,7 +12,7 @@ public static class SaveAppData
     public const string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
     public readonly static string FolderPath;
     private readonly static string FilePath;
-    private static object _lock = new object();
+    private readonly static object Lock = new object();
 
     static SaveAppData()
     {
@@ -29,7 +29,7 @@ public static class SaveAppData
         try
         {
             string json;
-            lock (_lock) json = File.ReadAllText(FilePath);
+            lock (Lock) json = File.ReadAllText(FilePath);
             appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new NoDataException();
         } catch (JsonException e)
         {
@@ -66,7 +66,7 @@ public static class SaveAppData
 
         try
         {
-            lock(_lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
+            lock(Lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
         } catch (IOException e)
         {
             string errorMessage = $"Error writing to file! {e.Message}\n Aborting write.";
