@@ -27,6 +27,7 @@ public class DiscordClient : IDisposable
     /// Sets the discord presence of the user to the response that was received from Last.fm
     /// </summary>
     /// <param name="response">The API response received from last.fm</param>
+    /// <param name="username">The username provided by user</param>
     public void SetPresence(LastfmResponse response, string username)
     {
         // Null ignore - handling done in ActivateCommand's Execute method.
@@ -59,7 +60,7 @@ public class DiscordClient : IDisposable
             Url = @$"https://www.last.fm/user/{username}/"
         };
         
-        RichPresence presence = new RichPresence()
+        RichPresence presence = new RichPresence
         {
             Details = track.Name,
             State = $"By {track.Artist.Name}{albumString}",
@@ -85,9 +86,14 @@ public class DiscordClient : IDisposable
         }
     }
 
+    public bool HasPresence()
+    {
+        return _client.CurrentPresence != null;
+    }
+
     public void ClearPresence()
     {
-        if (_client.CurrentPresence != null) _client.ClearPresence();  
+        if (HasPresence()) _client.ClearPresence();  
     }
     
     /// <inheritdoc />

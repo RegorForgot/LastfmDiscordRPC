@@ -89,9 +89,19 @@
                     Margin="20, 0, 0, 10"
                     Grid.Row="1"
                     Grid.Column="0"> 
-            <Button Command="{Binding ActivateCommand}" 
-                    Content="Activate"
-                    Style="{StaticResource ButtonStyle}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Command="{Binding ActivateCommand}" 
+                        Content="Activate"
+                        Style="{StaticResource ButtonStyle}"/>
+                <Button Command="{Binding DeactivateCommand}" 
+                        Content="Deactivate"
+                        Style="{StaticResource ButtonStyle}"
+                        Grid.Column="1"/>
+            </Grid>
             <Button Command="{Binding SaveCommand}" 
                     Content="Save Settings"
                     Style="{StaticResource ButtonStyle}"/>

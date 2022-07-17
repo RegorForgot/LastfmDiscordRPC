@@ -8,7 +8,7 @@ namespace LastfmDiscordRPC.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
-    private string _username;
+    private string _username = null!;
     public string Username
     {
         get => _username;
@@ -21,7 +21,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    private string _apiKey;
+    private string _apiKey = null!;
     public string APIKey
     {
         get => _apiKey;
@@ -34,7 +34,7 @@ public class MainViewModel : ViewModelBase
         }
     }
     
-    private string _appKey;
+    private string _appKey = null!;
     public string AppKey
     {
         get => _appKey;
@@ -47,7 +47,7 @@ public class MainViewModel : ViewModelBase
         }
     }
 
-    private string _outputText;
+    private string _outputText = null!;
     public string OutputText
     {
         get => _outputText;
@@ -96,6 +96,7 @@ public class MainViewModel : ViewModelBase
     }
     
     public ICommand ActivateCommand { get; }
+    public ICommand DeactivateCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand DefaultKeyCommand { get; }
     
@@ -108,8 +109,9 @@ public class MainViewModel : ViewModelBase
         APIKey = apiKey;
         AppKey = appKey;
         Client = client;
-        _outputText = "+ Started!";
+        OutputText = "+ Started!";
         ActivateCommand = new ActivateCommand(this);
+        DeactivateCommand = new DeactivateCommand(this);
         SaveCommand = new SaveCommand(this);
         DefaultKeyCommand = new DefaultKeyCommand(this);
         PreviewViewModel = new PreviewViewModel();

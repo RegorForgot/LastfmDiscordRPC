@@ -1,5 +1,6 @@
 ﻿using System.Resources;
 using System.Windows;
+using LastfmDiscordRPC.Commands;
 using LastfmDiscordRPC.Models;
 using LastfmDiscordRPC.ViewModels;
 using static System.Net.WebRequest;
@@ -11,6 +12,7 @@ public partial class App : Application
 {
     private DiscordClient _client;
     private ResourceManager _manager;
+    private MainViewModel _mainViewModel;
 
     public App()
     {
@@ -21,9 +23,10 @@ public partial class App : Application
     {
         _manager = new ResourceManager(typeof(Resources.EmbeddedImages));
         _client = new DiscordClient(SavedData.AppKey);
+        _mainViewModel = new MainViewModel(SavedData.Username, SavedData.APIKey, SavedData.AppKey, _client);
         MainWindow = new MainWindow(_manager)
         {
-            DataContext = new MainViewModel(SavedData.Username, SavedData.APIKey, SavedData.AppKey, _client)
+            DataContext = _mainViewModel
         };
         MainWindow.Show();
         
@@ -33,6 +36,7 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         _client.Dispose();
+        ((ActivateCommand) _mainViewModel.ActivateCommand).Dispose();
         base.OnExit(e);
     }
 }
