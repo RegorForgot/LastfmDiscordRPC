@@ -39,7 +39,7 @@ public class ActivateCommand : CommandBase
             previewViewModel.ImageURL = track.Images[3].URL;
 
             _mainViewModel.OutputText += "\n+ Current track successfully received!";
-            _mainViewModel.Client.SetPresence(trackResponse);
+            _mainViewModel.Client.SetPresence(trackResponse, username);
         } catch (LastfmException e)
         {
             _mainViewModel.OutputText += $"\n+ Error '{e.ErrorCode}' from Last.fm: {e.Message}";

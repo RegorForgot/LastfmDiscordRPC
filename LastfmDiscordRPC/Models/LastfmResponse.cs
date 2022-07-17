@@ -63,7 +63,16 @@ public class Track
 
     public class AlbumImage
     {
-        [JsonProperty("#text")] public string URL { get; set; } =  DefaultCover;
+        private string _url = DefaultCover;
+        [JsonProperty("#text")]
+        public string URL
+        {
+            get => _url;
+            set
+            {
+                if (!IsNullOrEmpty(value)) _url = value;
+            }
+        }
     }
 
     public class TrackNowPlaying

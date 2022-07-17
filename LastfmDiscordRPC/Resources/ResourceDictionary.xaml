@@ -65,4 +65,12 @@
         <Setter Property="BorderBrush" Value="#32424a"/>
     </Style>
     
+    <Style BasedOn="{StaticResource GeneralStyle}"
+           TargetType="Label"
+           x:Key="PlaceholderStyle">
+        <Setter Property="Foreground" Value="#AAAAAA"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Setter Property="Margin" Value="0,0,0,0"/>
+    </Style>
+    
 </ResourceDictionary>

@@ -30,15 +30,6 @@
       <Reference Include="DiscordRPC">
         <HintPath>Assemblies\DiscordRPC.dll</HintPath>
       </Reference>
-      <Reference Include="System.Drawing.Common">
-        <HintPath>C:\Program Files\dotnet\sdk\6.0.301\System.Drawing.Common.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Windows.Extensions">
-        <HintPath>C:\Program Files\dotnet\sdk\6.0.301\System.Windows.Extensions.dll</HintPath>
-      </Reference>
-      <Reference Include="System.Windows.Forms">
-        <HintPath>C:\Program Files\dotnet\sdk\6.0.301\System.Windows.Forms.dll</HintPath>
-      </Reference>
     </ItemGroup>
     
     <ItemGroup>

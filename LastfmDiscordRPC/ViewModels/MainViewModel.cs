@@ -1,13 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using LastfmDiscordRPC.Commands;
 using LastfmDiscordRPC.Models;
-
-// ReSharper disable UnusedAutoPropertyAccessor.Global
-// ReSharper disable MemberCanBePrivate.Global
+using static System.String;
 
 namespace LastfmDiscordRPC.ViewModels;
 
-public sealed class MainViewModel : ViewModelBase
+public class MainViewModel : ViewModelBase
 {
     private string _username;
     public string Username
@@ -17,6 +16,7 @@ public sealed class MainViewModel : ViewModelBase
         {
             if (value == _username) return;
             _username = value;
+            UsernamePlaceholder = IsNullOrEmpty(_username) ? Visibility.Visible : Visibility.Hidden;
             OnPropertyChanged(nameof(Username)); 
         }
     }
@@ -29,6 +29,7 @@ public sealed class MainViewModel : ViewModelBase
         {
             if (value == _apiKey) return;
             _apiKey = value;
+            APIKeyPlaceholder = IsNullOrEmpty(_apiKey) ? Visibility.Visible : Visibility.Hidden;
             OnPropertyChanged(nameof(APIKey));
         }
     }
@@ -41,6 +42,7 @@ public sealed class MainViewModel : ViewModelBase
         {
             if (value == _appKey) return;
             _appKey = value;
+            AppKeyPlaceholder = IsNullOrEmpty(_appKey) ? Visibility.Visible : Visibility.Hidden;
             OnPropertyChanged(nameof(AppKey));
         }
     }
@@ -56,6 +58,42 @@ public sealed class MainViewModel : ViewModelBase
             OnPropertyChanged(nameof(OutputText));
         }
     }
+
+    private Visibility _usernamePlaceholder;
+    public Visibility UsernamePlaceholder
+    {
+        get => _usernamePlaceholder;
+        set
+        {
+            if (value == _usernamePlaceholder) return;
+            _usernamePlaceholder = value;
+            OnPropertyChanged(nameof(UsernamePlaceholder));
+        }
+    }
+
+    private Visibility _apiKeyPlaceholder;
+    public Visibility APIKeyPlaceholder
+    {
+        get => _apiKeyPlaceholder;
+        set
+        {
+            if (value == _apiKeyPlaceholder) return;
+            _apiKeyPlaceholder = value;
+            OnPropertyChanged(nameof(APIKeyPlaceholder));
+        }
+    }
+
+    private Visibility _appKeyPlaceholder;
+    public Visibility AppKeyPlaceholder
+    {
+        get => _appKeyPlaceholder;
+        set
+        {
+            if (value == _appKeyPlaceholder) return;
+            _appKeyPlaceholder = value;
+            OnPropertyChanged(nameof(AppKeyPlaceholder));
+        }
+    }
     
     public ICommand ActivateCommand { get; }
     public ICommand SaveCommand { get; }
@@ -66,9 +104,9 @@ public sealed class MainViewModel : ViewModelBase
     
     public MainViewModel(string username, string apiKey, string appKey, DiscordClient client)
     {
-        _username = username;
-        _apiKey = apiKey;
-        _appKey = appKey;
+        Username = username;
+        APIKey = apiKey;
+        AppKey = appKey;
         Client = client;
         _outputText = "+ Started!";
         ActivateCommand = new ActivateCommand(this);

@@ -8,7 +8,7 @@
              d:DesignHeight="500" d:DesignWidth="650">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.6*"/>
+            <ColumnDefinition Width="0.4*"/>
             <ColumnDefinition Width="0.5*" />
         </Grid.ColumnDefinitions>
         
@@ -19,64 +19,70 @@
         </Grid.RowDefinitions>
 
         <Grid Margin="20, 10, 0, 10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             
-            <Label Content="Username"
-                   Style="{StaticResource GeneralStyle}"
-                   Margin="10, 0, 10, 0"
-                   Grid.Row="0" 
-                   Grid.Column="0"/>
             <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource TextBoxStyle}"
                      MaxLength="15"
-                     Grid.Row="0"
-                     Grid.Column="1"/>
+                     Grid.Row="0"/>
+            <Label Content="Last.fm Username"
+                   Style="{StaticResource PlaceholderStyle}"
+                   Visibility="{Binding UsernamePlaceholder}"
+                   Grid.Row="0"/>
             
-            <Label Content="API Key"
-                   Style="{StaticResource GeneralStyle}"
-                   Margin="10, 0, 10, 0"
-                   Grid.Row="1"
-                   Grid.Column="0" />
             <TextBox Text="{Binding APIKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource TextBoxStyle}" 
-                     Grid.Row="1" 
-                     Grid.Column="1"/>
+                     MaxLength="32"
+                     Grid.Row="1"/>
+            <Label Content="Last.fm API Key"
+                   Style="{StaticResource PlaceholderStyle}"
+                   Visibility="{Binding APIKeyPlaceholder}"
+                   Grid.Row="1"/>
             
-            <Label Content="Application Key (needs restart)"
-                   Style="{StaticResource GeneralStyle}"
-                   Margin="10, 0, 10, 0"
-                   Grid.Row="2"
-                   Grid.Column="0" />
             <TextBox Text="{Binding AppKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      Style="{StaticResource TextBoxStyle}" 
-                     Grid.Row="2" 
-                     Grid.Column="1"/>
+                     MaxLength="19"
+                     Grid.Row="2"/>
+            <Label Content="Discord App Key (restart req.)"
+                   Style="{StaticResource PlaceholderStyle}"
+                   Visibility="{Binding AppKeyPlaceholder}"
+                   Grid.Row="2"/>
         </Grid>
         
         <Grid Grid.Row="0"
               Grid.Column="1"
-              Grid.RowSpan="2">
+              Grid.RowSpan="2"
+              Margin="10, 10, 20, 10">
+            
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
             <Border Name="SizePlaceholder"
-                    Margin="10, 10, 20, 10"/>
+                    Margin="0, 5, 0, 5"
+                    Grid.Row="0"/>
             <TextBox Name="OutputBox"
                      Text="{Binding OutputText}"
                      Style="{StaticResource TextBoxStyle}"
                      Height="{Binding ActualHeight, ElementName=SizePlaceholder}"
                      Width="{Binding ActualWidth, ElementName=SizePlaceholder}"
+                     TextChanged="OutputBox_OnTextChanged"
                      VerticalScrollBarVisibility="Visible"
                      VerticalContentAlignment="Top"
                      TextWrapping="Wrap"
                      IsReadOnly="True"
-                     TextChanged="OutputBox_OnTextChanged"/>
+                     Grid.Row="0"/>
+            <Button Name="LogFileButton"
+                    Style="{StaticResource ButtonStyle}"
+                    Content="Open Discord RPC log file"
+                    Click="LogFileButton_OnClick"
+                    Margin="10, 5, 20, 5"
+                    Grid.Row="1"/>
         </Grid>
             
         <StackPanel Orientation="Vertical"

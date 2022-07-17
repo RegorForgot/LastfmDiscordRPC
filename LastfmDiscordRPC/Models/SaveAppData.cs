@@ -10,22 +10,16 @@ public static class SaveAppData
 {
     public static AppData SavedData { get; private set; }
     public const string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
-    private readonly static string FolderPath;
+    public readonly static string FolderPath;
     private readonly static string FilePath;
+    private static object _lock = new object();
 
     static SaveAppData()
     {
-        FolderPath  = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\LastfmDiscordRPC";
+        FolderPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\LastfmDiscordRPC";
         FilePath = $@"{FolderPath}\config.json";
 
-        CreateFileIfNotExist();
         SavedData = ReadData();
-    }
-
-    private static void CreateFileIfNotExist()
-    {
-        if (!Directory.Exists(FolderPath)) Directory.CreateDirectory(FolderPath);
-        if (!File.Exists(FilePath)) File.Create(FilePath).Close();
     }
 
     private static AppData ReadData()
@@ -34,7 +28,8 @@ public static class SaveAppData
 
         try
         {
-            string json = File.ReadAllText(FilePath);
+            string json;
+            lock (_lock) json = File.ReadAllText(FilePath);
             appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new NoDataException();
         } catch (JsonException e)
         {
@@ -54,17 +49,15 @@ public static class SaveAppData
         {
             appData ??= new AppData
             {
-                Username = "", APIKey = DefaultAPIKey, AppKey = ""
+                Username = "", APIKey = "", AppKey = ""
             };
         }
 
         return appData;
     }
 
-    public static void SaveData(string username = "", string apiKey = DefaultAPIKey, string appKey = "")
+    public static void SaveData(string username = "", string apiKey = "", string appKey = "")
     {
-        CreateFileIfNotExist();
-        
         AppData appData = new AppData
         {
             Username = username, APIKey = apiKey, AppKey = appKey
@@ -73,7 +66,7 @@ public static class SaveAppData
 
         try
         {
-            File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
+            lock(_lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
         } catch (IOException e)
         {
             string errorMessage = $"Error writing to file! {e.Message}\n Aborting write.";
@@ -81,7 +74,8 @@ public static class SaveAppData
         }
     }
 
-    private class NoDataException : Exception { }
+    private class NoDataException : Exception
+    { }
 }
 
 public class AppData
