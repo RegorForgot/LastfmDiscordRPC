@@ -75,7 +75,7 @@ public partial class App
     {
         _trayIcon.Dispose();
         _client.Dispose();
-        ((ActivateCommand)_mainViewModel.ActivateCommand).Dispose();
+        ((SetPresenceCommand)_mainViewModel.SetPresenceCommand).Dispose();
         base.OnExit(e);
     }
 

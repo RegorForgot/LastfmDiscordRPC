@@ -3,7 +3,7 @@
 public class UserTest
 {
     // All tests completed at the time they were completed
-    private LastfmResponse _response;
+    private LastfmResponse? _response;
     private const string Username = "mabdi3";
     private const string APIKey = "05467a3191853eb8da38dfb38ed3c733";
     

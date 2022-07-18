@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows;
 using Newtonsoft.Json;
 using static System.String;
 
@@ -24,37 +23,22 @@ public static class SaveAppData
 
     private static AppData ReadData()
     {
-        AppData? appData = null;
+        AppData appData;
 
         try
         {
             string json;
             lock (Lock) json = File.ReadAllText(FilePath);
-            appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new NoDataException();
-        } catch (JsonException e)
-        {
-            string errorMessage = $"Error deserializing! {e.Message}\n Defaulting values.";
-            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            SaveData();
-        } catch (NoDataException e)
-        {
-            string errorMessage = $"No data found! {e.Message}\n Defaulting values.";
-            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-            SaveData();
-        } catch (IOException e)
-        {
-            string errorMessage = $"Error reading from file! {e.Message}\n Defaulting values.";
-            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-        } finally
-        {
-            appData ??= new AppData
-            {
-                Username = "", APIKey = "", AppKey = ""
-            };
-        }
+            appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new Exception();
 
-        return appData;
+            return appData;
+        } catch (Exception)
+        {
+            return new AppData();
+        }
     }
+
+    private static void SaveData(AppData appData) => SaveData(appData.Username, appData.APIKey, appData.AppKey);
 
     public static void SaveData(string username = "", string apiKey = "", string appKey = "")
     {
@@ -66,16 +50,22 @@ public static class SaveAppData
 
         try
         {
-            lock(Lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
-        } catch (IOException e)
+            lock (Lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
+        } catch (IOException)
         {
-            string errorMessage = $"Error writing to file! {e.Message}\n Aborting write.";
-            MessageBox.Show(errorMessage, "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (CheckFolderExists()) throw;
+            Directory.CreateDirectory(FolderPath);
+            SaveData(appData);
         }
     }
 
-    private class NoDataException : Exception
-    { }
+    public static bool CheckFolderExists()
+    {
+        if (Directory.Exists(FolderPath)) return true;
+        Directory.CreateDirectory(FolderPath);
+
+        return false;
+    }
 }
 
 public class AppData

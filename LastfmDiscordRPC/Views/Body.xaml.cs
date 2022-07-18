@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using LastfmDiscordRPC.Models;
@@ -22,11 +23,18 @@ public partial class Body
     private void LogFileButton_OnClick(object sender, RoutedEventArgs e)
     {
         string logFilePath = $@"{SaveAppData.FolderPath}\RPClog.log";
+        SaveAppData.CheckFolderExists();
+
+        if (!File.Exists(logFilePath))
+        {
+            using FileStream fs = File.Create(logFilePath);
+        }
         ProcessStartInfo sInfo = new ProcessStartInfo(logFilePath)
         {
             UseShellExecute = true
         };
-        Process.Start(sInfo);
+        Process.Start(sInfo); 
+
     }
 
     private void UsernameTextBox_OnTextChanged(object sender, TextChangedEventArgs e) =>

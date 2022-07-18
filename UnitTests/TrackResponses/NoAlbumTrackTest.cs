@@ -4,7 +4,7 @@ namespace UnitTests.TrackResponses;
 
 public class NoAlbumTrackTest
 {
-    private LastfmResponse _response;
+    private LastfmResponse? _response;
     private const string Username = "mabdi36";
     private const string APIKey = "05467a3191853eb8da38dfb38ed3c733";
 

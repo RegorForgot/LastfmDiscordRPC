@@ -1,10 +1,12 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Collections;
+using System.Windows.Input;
 using LastfmDiscordRPC.Commands;
 using LastfmDiscordRPC.Models;
 
 namespace LastfmDiscordRPC.ViewModels;
 
-public class MainViewModel : ViewModelBase
+public partial class MainViewModel : ViewModelBase
 {
     private string _username = null!;
     public string Username
@@ -14,6 +16,7 @@ public class MainViewModel : ViewModelBase
         {
             if (value == _username) return;
             _username = value;
+            ValidateUsername();
             OnPropertyChanged(nameof(Username)); 
         }
     }
@@ -26,6 +29,7 @@ public class MainViewModel : ViewModelBase
         {
             if (value == _apiKey) return;
             _apiKey = value;
+            ValidateAPIKey();
             OnPropertyChanged(nameof(APIKey));
         }
     }
@@ -38,6 +42,7 @@ public class MainViewModel : ViewModelBase
         {
             if (value == _appKey) return;
             _appKey = value;
+            ValidateAppKey();
             OnPropertyChanged(nameof(AppKey));
         }
     }
@@ -53,26 +58,26 @@ public class MainViewModel : ViewModelBase
             OnPropertyChanged(nameof(OutputText));
         }
     }
+    
+    public void WriteToOutput(string text) => OutputText += text;
 
-    public ICommand ActivateCommand { get; }
-    public ICommand DeactivateCommand { get; }
+    public ICommand SetPresenceCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand DefaultKeyCommand { get; }
-    
+
     public PreviewViewModel PreviewViewModel { get; }
     public readonly DiscordClient Client;
     
     public MainViewModel(string username, string apiKey, string appKey, DiscordClient client)
     {
+        SetPresenceCommand = new SetPresenceCommand(this);
+        SaveCommand = new SaveCommand(this);
+        DefaultKeyCommand = new DefaultKeyCommand(this);
+        PreviewViewModel = new PreviewViewModel();
         Username = username;
         APIKey = apiKey;
         AppKey = appKey;
         Client = client;
-        OutputText = "+ Started!";
-        ActivateCommand = new ActivateCommand(this);
-        DeactivateCommand = new DeactivateCommand(this);
-        SaveCommand = new SaveCommand(this);
-        DefaultKeyCommand = new DefaultKeyCommand(this);
-        PreviewViewModel = new PreviewViewModel();
+        OutputText = "+ Started!\n";
     }
 }

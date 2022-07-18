@@ -17,7 +17,7 @@ public static class LastfmClient
         Client.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 1.0.0");
     }
 
-    public static async Task<LastfmResponse> CallAPI(string username, string apiKey)
+    public static async Task<LastfmResponse?> CallAPI(string username, string apiKey)
     {
         RestRequest request = new RestRequest();
 
@@ -26,6 +26,7 @@ public static class LastfmClient
         request.AddParameter("limit", "1");
         request.AddParameter("user", username);
         request.AddParameter("api_key", apiKey);
+        request.Timeout = 5;
 
         RestResponse response = await Client.ExecuteAsync(request);
         if (response.Content != null) return GetResponse(response.Content);

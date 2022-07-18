@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:LastfmDiscordRPC.Views"
-             xmlns:m="clr-namespace:LastfmDiscordRPC.Models"
+             xmlns:viewModels="clr-namespace:LastfmDiscordRPC.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="650">
   <Grid>
@@ -27,18 +27,12 @@
       </Grid.RowDefinitions>
 
       <TextBox Name="UsernameTextBox"
+               Text="{Binding Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                      Path=Username, ValidatesOnNotifyDataErrors=True}"
                Style="{StaticResource InputTextBoxStyle}"
                TextChanged="UsernameTextBox_OnTextChanged"
                MaxLength="15"
                Grid.Row="0">
-        <TextBox.Text>
-          <Binding Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"
-                   Path="Username">
-            <Binding.ValidationRules>
-              <m:UsernameRule />
-            </Binding.ValidationRules>
-          </Binding>
-        </TextBox.Text>
       </TextBox>
       <Label Name="UsernamePlaceholder"
              Content="Last.fm Username"
@@ -46,38 +40,24 @@
              Grid.Row="0" />
 
       <TextBox Name="APIKeyTextBox"
+               Text="{Binding Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                      Path=APIKey, ValidatesOnNotifyDataErrors=True}"
                Style="{StaticResource InputTextBoxStyle}"
                TextChanged="APIKeyTextBox_OnTextChanged"
                MaxLength="32"
-               Grid.Row="1">
-        <TextBox.Text>
-          <Binding Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"
-                   Path="APIKey">
-            <Binding.ValidationRules>
-              <m:APIKeyRule />
-            </Binding.ValidationRules>
-          </Binding>
-        </TextBox.Text>
-      </TextBox>
+               Grid.Row="1" />
       <Label Name="APIKeyPlaceholder"
              Content="Last.fm API Key"
              Style="{StaticResource PlaceholderStyle}"
              Grid.Row="1" />
 
       <TextBox Name="AppKeyTextBox"
+               Text="{Binding Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                      Path=AppKey, ValidatesOnNotifyDataErrors=True}"
                Style="{StaticResource InputTextBoxStyle}"
                TextChanged="AppKeyTextBox_OnTextChanged"
                MaxLength="19"
-               Grid.Row="2">
-        <TextBox.Text>
-          <Binding Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"
-                   Path="AppKey">
-            <Binding.ValidationRules>
-              <m:ApplicationKeyRule />
-            </Binding.ValidationRules>
-          </Binding>
-        </TextBox.Text>
-      </TextBox>
+               Grid.Row="2" />
       <Label Name="AppKeyPlaceholder"
              Content="Discord App Key (restart req.)"
              Style="{StaticResource PlaceholderStyle}"
@@ -120,19 +100,9 @@
                 Margin="20, 0, 0, 10"
                 Grid.Row="1"
                 Grid.Column="0">
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition />
-          <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Button Command="{Binding ActivateCommand}"
-                Content="Activate"
-                Style="{StaticResource ButtonStyle}" />
-        <Button Command="{Binding DeactivateCommand}"
-                Content="Deactivate"
-                Style="{StaticResource ButtonStyle}"
-                Grid.Column="1" />
-      </Grid>
+      <Button Command="{Binding SetPresenceCommand}"
+              Content="Set Presence"
+              Style="{StaticResource ButtonStyle}" />
       <Button Command="{Binding SaveCommand}"
               Content="Save Settings"
               Style="{StaticResource ButtonStyle}" />

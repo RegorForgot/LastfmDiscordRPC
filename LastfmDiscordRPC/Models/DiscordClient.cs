@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using DiscordRPC;
 using DiscordRPC.Logging;
+using DiscordRPC.Message;
 using static System.String;
 
 namespace LastfmDiscordRPC.Models;
@@ -9,17 +11,21 @@ namespace LastfmDiscordRPC.Models;
 public class DiscordClient : IDisposable
 {
     private readonly DiscordRpcClient _client;
+    private RichPresence? _presence;
     private const string PauseIconURL = @"https://i.imgur.com/AOYINL0.png";
-    private const string PlayIconURL =  @"https://i.imgur.com/wvTxH0t.png";
-    
+    private const string PlayIconURL = @"https://i.imgur.com/wvTxH0t.png";
+
+    public bool IsInitialised { get; }
+
     public DiscordClient(string appID)
     {
+        if (IsNullOrEmpty(appID)) return;
         _client = new DiscordRpcClient(appID)
         {
-            Logger = new FileLoggerTimed($@"{SaveAppData.FolderPath}\RPClog.log", LogLevel.Info),
-            SkipIdenticalPresence = true
+            Logger = new FileLoggerTimed(SaveAppData.FolderPath, "RPClog.log", LogLevel.Warning), SkipIdenticalPresence = true
         };
         _client.Initialize();
+        IsInitialised = _client.IsInitialized;
     }
 
     /// <summary>
@@ -29,12 +35,12 @@ public class DiscordClient : IDisposable
     /// <param name="username">The username provided by user</param>
     public void SetPresence(LastfmResponse response, string username)
     {
-        // Null ignore - handling done in ActivateCommand's Execute method.
+        // Null ignore - handling done in SetPresenceCommand's Execute method.
         Track track = response.Track!;
         string smallImage;
         string smallText;
         string albumString = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
-        
+
         if (response.Track!.NowPlaying.State == "true")
         {
             smallImage = PlayIconURL;
@@ -55,11 +61,10 @@ public class DiscordClient : IDisposable
 
         Button button = new Button
         {
-            Label = $"{response.Playcount} scrobbles", 
-            Url = @$"https://www.last.fm/user/{username}/"
+            Label = $"{response.Playcount} scrobbles", Url = @$"https://www.last.fm/user/{username}/"
         };
-        
-        RichPresence presence = new RichPresence
+
+        _presence = new RichPresence
         {
             Details = track.Name,
             State = $"By {track.Artist.Name}{albumString}",
@@ -70,9 +75,13 @@ public class DiscordClient : IDisposable
                 SmallImageKey = smallImage,
                 SmallImageText = smallText
             },
-            Buttons = new [] {button}
+            Buttons = new[]
+            {
+                button
+            }
         };
-        _client.SetPresence(presence);
+        _client.SetPresence(_presence);
+        _presence = null;
 
         string GetTimeString(TimeSpan timeSince)
         {
@@ -90,79 +99,70 @@ public class DiscordClient : IDisposable
         return _client.CurrentPresence != null;
     }
 
-    public void ClearPresence()
-    {
-        if (HasPresence()) _client.ClearPresence();  
-    }
-    
     /// <inheritdoc />
     public void Dispose()
     {
-        if (_client.IsDisposed) return;
-            
-        try
+        if (IsInitialised)
         {
-            _client.ClearPresence();
-            _client.Deinitialize();
-            _client.Dispose();
-        } catch (ObjectDisposedException)
-        { }
+            if (_client.IsDisposed) return;
+
+            try
+            {
+                _client.ClearPresence();
+                _client.Deinitialize();
+                _client.Dispose();
+            } catch (ObjectDisposedException)
+            { }
+        }
+
+        GC.SuppressFinalize(this);
     }
 
-    public class FileLoggerTimed : ILogger
+    ~DiscordClient()
+    {
+        Dispose();
+    }
+
+    private class FileLoggerTimed : ILogger
     {
         private readonly object _fileLock;
+        private readonly string _filePath;
+        private readonly string _folderPath;
         public LogLevel Level { get; set; }
-        public string File { get; set; }
-        
-        
-        public FileLoggerTimed(string path, LogLevel level)
+
+        public FileLoggerTimed(string folder, string name, LogLevel level)
         {
             Level = level;
-            File = path;
+            _folderPath = folder;
+            _filePath = @$"{folder}\{name}";
             _fileLock = new object();
         }
 
+        private void WriteToFile(string errorLevel, LogLevel level, string message, params object[] args)
+        {
+            if (Level > level)
+                return;
+            SaveAppData.CheckFolderExists();
+            lock (_fileLock)
+            {
+                if (File.Exists(_filePath)) File.AppendAllText(_filePath,
+                    $"\r\n[{GetCurrentTimeString()}] {errorLevel}: {(args.Length != 0 ? Format(message, args) : message)}");
+                else File.WriteAllText(_filePath,
+                    $"\r\n[{GetCurrentTimeString()}] {errorLevel}: {(args.Length != 0 ? Format(message, args) : message)}");
+            }
+        }
+        
         private string GetCurrentTimeString()
         {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
         
-        public void Trace(string message, params object[] args)
-        {
-            if (Level > LogLevel.Trace)
-                return;
-            lock (_fileLock)
-                System.IO.File.AppendAllText(File, 
-                $"\r\n[{GetCurrentTimeString()}] TRCE: " + (args.Length != 0 ? Format(message, args) : message));
-        }
+        public void Trace(string message, params object[] args) => WriteToFile("TRCE:", LogLevel.Trace, message, args);
 
-        public void Info(string message, params object[] args)
-        {
-            if (Level > LogLevel.Info)
-                return;
-            lock (_fileLock)
-                System.IO.File.AppendAllText(File, 
-                $"\r\n[{GetCurrentTimeString()}] INFO: " + (args.Length != 0 ? Format(message, args) : message));
-        }
+        public void Info(string message, params object[] args) => WriteToFile("INFO:", LogLevel.Info, message, args);
 
-        public void Warning(string message, params object[] args)
-        {
-            if (Level > LogLevel.Warning)
-                return;
-            lock (_fileLock)
-                System.IO.File.AppendAllText(File, 
-                $"\r\n[{GetCurrentTimeString()}] WARN: " + (args.Length != 0 ? Format(message, args) : message));
-        }
+        public void Warning(string message, params object[] args) => WriteToFile("WARN:", LogLevel.Warning, message, args);
 
-        public void Error(string message, params object[] args)
-        {
-            if (Level > LogLevel.Error)
-                return;
-            lock (_fileLock)
-                System.IO.File.AppendAllText(File, 
-                $"\r\n[{GetCurrentTimeString()}] ERR : " + (args.Length != 0 ? Format(message, args) : message));
-        }
-
+        public void Error(string message, params object[] args) => WriteToFile("ERR :", LogLevel.Error, message, args);
     }
 }

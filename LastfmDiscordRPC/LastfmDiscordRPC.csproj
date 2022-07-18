@@ -25,12 +25,6 @@
       <PackageReference Include="RestSharp" Version="108.0.1" />
       <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="DiscordRPC">
-        <HintPath>Assemblies\DiscordRPC.dll</HintPath>
-      </Reference>
-    </ItemGroup>
     
     <ItemGroup>
       <EmbeddedResource Include="Resources\icon.ico">
@@ -51,5 +45,11 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Resources.resx</DependentUpon>
       </Compile>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Reference Include="DiscordRPC">
+        <HintPath>DiscordRPC.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

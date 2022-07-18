@@ -1,18 +1,27 @@
-﻿using LastfmDiscordRPC.Models;
+﻿using System.IO;
+using LastfmDiscordRPC.Models;
 using LastfmDiscordRPC.ViewModels;
 
 namespace LastfmDiscordRPC.Commands;
 
 public class SaveCommand : CommandBase
 {
-    private readonly MainViewModel _mainViewModel;
-    public SaveCommand(MainViewModel mainViewModel)
-    {
-        _mainViewModel = mainViewModel;
-    }
-    
+    public SaveCommand(MainViewModel mainViewModel) : base(mainViewModel)
+    { }
+
     public override void Execute(object? parameter)
     {
-        SaveAppData.SaveData(_mainViewModel.Username, _mainViewModel.APIKey, _mainViewModel.AppKey);
+        try
+        {
+            SaveAppData.SaveData(MainViewModel.Username, MainViewModel.APIKey, MainViewModel.AppKey);
+        } catch (IOException e)
+        {
+            MainViewModel.WriteToOutput($"Error saving file: {e.Message}");
+        }
+    }
+
+    public override bool CanExecute(object? parameter)
+    {
+        return !MainViewModel.PropertyHasError(nameof(MainViewModel.AppKey));
     }
 }
