@@ -14,8 +14,20 @@ public class PresenceSetter : IDisposable
     private readonly LastfmClient _lastfmClient;
     private LastfmResponse? _response;
     private PeriodicTimer? _timer;
-    public bool RetryAllowed { get; set; }
     private bool _firstSuccess;
+    private bool _retryAllowed;
+
+    public bool RetryAllowed
+    {
+        get => _retryAllowed;
+        set
+        {
+            _retryAllowed = value;
+            if (_retryAllowed)
+                ((SetPresenceCommand)_mainViewModel.SetPresenceCommand).RaiseCanExecuteChanged();
+        }
+    }
+
     public bool IsReady { get; set; } = true;
 
     public PresenceSetter(MainViewModel mainViewModel)
@@ -102,13 +114,15 @@ public class PresenceSetter : IDisposable
         {
             _mainViewModel.WriteToOutput($"\n+ Error '{((LastfmException)e).ErrorCode}' from Last.fm: {e.Message}");
 
-            if (((LastfmException)e).ErrorCode is not (ErrorEnum.Temporary or ErrorEnum.OperationFail)) return;
+            if (((LastfmException)e).ErrorCode == ErrorEnum.RateLimit) return;
             RetryAllowed = true;
-            ((SetPresenceCommand)_mainViewModel.SetPresenceCommand).RaiseCanExecuteChanged();
-        } else if (e.GetType() == typeof(HttpRequestException))
+        }
+        else if (e.GetType() == typeof(HttpRequestException))
             _mainViewModel.WriteToOutput($"\n+ HTTP Error '{((HttpRequestException)e).StatusCode}': {e.Message}");
         else
             _mainViewModel.WriteToOutput($"\n+ Unhandled Exception: {e.Message}");
+
+        RetryAllowed = true;
     }
 
     public void Dispose()

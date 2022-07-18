@@ -12,11 +12,10 @@
         <Title>Last.fm Discord Rich Presence</Title>
         <Authors>RegorForgotTheirPassword</Authors>
         <Description>A simple rich presence application to connect to a user's last.fm account</Description>
-        <Copyright>Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</Copyright>
+        <Copyright>MIT License</Copyright>
         <RepositoryUrl>https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC</RepositoryUrl>
         <RepositoryType>Github</RepositoryType>
         <RootNamespace>LastfmDiscordRPC</RootNamespace>
-        <PackageId>LastfmDiscordRPC</PackageId>
         <Product>Last.fm Discord Rich Presence</Product>
         <PackageIcon>Resources\icon.png</PackageIcon>
         <NeutralLanguage>en-US</NeutralLanguage>
@@ -40,7 +39,7 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>EmbeddedImages.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-        <Resource Include="Resources\icon.png"/>
+        <Resource Include="Resources\icon.png" />
       <Resource Include="Resources\githubLogo.png" />
     </ItemGroup>
     
