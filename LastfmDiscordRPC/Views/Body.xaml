@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:LastfmDiscordRPC.Views"
-             xmlns:viewModels="clr-namespace:LastfmDiscordRPC.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="500" d:DesignWidth="650">
+             d:DesignHeight="500" d:DesignWidth="650" 
+             d:DataContext="{d:DesignInstance }">
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="0.4*" />

@@ -96,17 +96,16 @@ public class DiscordClient : IDisposable
     /// <inheritdoc />
     public void Dispose()
     {
-        if (IsInitialised)
+        if (!IsInitialised) return;
+        if (_client!.IsDisposed) return;
+        try
         {
-            if (_client!.IsDisposed) return;
-            try
-            {
-                _client.ClearPresence();
-                _client.Deinitialize();
-                _client.Dispose();
-            } catch (ObjectDisposedException)
-            { }
-        }
+            _client.ClearPresence();
+            _client.Deinitialize();
+            _client.Dispose();
+            SuppressFinalize(this);
+        } catch (ObjectDisposedException)
+        { }
     }
     
     private class FileLoggerTimed : ILogger
@@ -136,7 +135,7 @@ public class DiscordClient : IDisposable
             }
         }
         
-        private string GetCurrentTimeString()
+        private static string GetCurrentTimeString()
         {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }

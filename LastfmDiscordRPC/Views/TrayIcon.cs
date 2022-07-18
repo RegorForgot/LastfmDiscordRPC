@@ -54,5 +54,6 @@ public class TrayIcon : IDisposable
     public void Dispose()
     {
         _trayIcon.Dispose();
+        SuppressFinalize(this);
     }
 }

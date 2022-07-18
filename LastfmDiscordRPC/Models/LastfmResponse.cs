@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using static System.String;
 
 // I feel safe doing this because all the "nulled" items are either filled by Newtonsoft or handled in LastfmClient with the 
 // Lastfm and HTTPRequest exceptions

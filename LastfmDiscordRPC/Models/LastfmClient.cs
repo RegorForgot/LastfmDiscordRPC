@@ -36,7 +36,7 @@ public class LastfmClient : IDisposable
         throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
     }
 
-    private LastfmResponse GetResponse(string response)
+    private static LastfmResponse GetResponse(string response)
     {
         LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response)!;
         if (e.Error == ErrorEnum.OK) return JsonConvert.DeserializeObject<LastfmResponse>(response)!;
@@ -46,5 +46,6 @@ public class LastfmClient : IDisposable
     public void Dispose()
     {
         _client.Dispose();   
+        SuppressFinalize(this);
     }
 }

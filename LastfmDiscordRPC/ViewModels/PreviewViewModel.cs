@@ -1,6 +1,4 @@
-﻿using static System.String;
-
-namespace LastfmDiscordRPC.ViewModels;
+﻿namespace LastfmDiscordRPC.ViewModels;
 
 public sealed class PreviewViewModel : ViewModelBase
 {

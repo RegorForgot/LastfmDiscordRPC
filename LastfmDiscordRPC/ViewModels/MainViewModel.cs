@@ -93,5 +93,6 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         PresenceSetter.Dispose();
         LastfmClient.Dispose();
         DiscordClient.Dispose();
+        SuppressFinalize(this);
     }
 }
