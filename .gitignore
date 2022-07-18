@@ -3,3 +3,14 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+/.idea/.idea.LastfmDiscordRPC/.idea/.gitignore
+/.idea/.idea.LastfmDiscordRPC/.idea/deployment.xml
+/.idea/.idea.LastfmDiscordRPC/.idea/discord.xml
+/.idea/.idea.LastfmDiscordRPC/.idea/encodings.xml
+/.idea/.idea.LastfmDiscordRPC/.idea/indexLayout.xml
+/LastfmDiscordRPC.sln.DotSettings
+/LastfmDiscordRPC.sln.DotSettings.user
+/.idea/.idea.LastfmDiscordRPC/.idea/inspectionProfiles/Project_Default.xml
+/.idea/.idea.LastfmDiscordRPC/.idea/riderPublish.xml
+/.idea/.idea.LastfmDiscordRPC/.idea/vcs.xml
+/.idea/.idea.LastfmDiscordRPC/.idea/webServers.xml
