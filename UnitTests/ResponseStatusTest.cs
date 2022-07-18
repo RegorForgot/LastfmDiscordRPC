@@ -2,12 +2,15 @@
 
 public class ResponseStatusTest
 {
+    private LastfmClient _client = null!;
     private const string Username = "mabdi3";
     private const string APIKey = "05467a3191853eb8da38dfb38ed3c733";
     
     [SetUp]
-    public void Setup() 
-    { }
+    public void Setup()
+    {
+        _client = new LastfmClient();
+    }
 
     [Test]
     public async Task NoError()
@@ -15,14 +18,14 @@ public class ResponseStatusTest
         // Test ran correctly when ran with correct parameters.
         try
         {
-            await CallAPI(Username, APIKey);
-            Assert.Pass();
+            await _client.CallAPI(Username, APIKey);
+            Pass();
         } catch (LastfmException)
         {
-            Assert.Fail();
+            Fail();
         } catch (HttpRequestException)
         {
-            Assert.Fail();
+            Fail();
         } 
     }
 
@@ -32,14 +35,14 @@ public class ResponseStatusTest
         // Test ran correctly when ran with correct parameters.
         try
         {
-            await CallAPI(Username, APIKey);
-            Assert.Fail();
+            await _client.CallAPI(Username, APIKey);
+            Fail();
         } catch (LastfmException e)
         {
-            Assert.That(e.ErrorCode, Is.EqualTo(LastfmException.ErrorEnum.InvalidKey));
+            That(e.ErrorCode, Is.EqualTo(LastfmException.ErrorEnum.InvalidKey));
         } catch (HttpRequestException)
         {
-            Assert.Fail();
+            Fail();
         }
     }
 
@@ -49,14 +52,14 @@ public class ResponseStatusTest
         // Test ran correctly when ran with correct parameters.
         try
         {
-            await CallAPI(Username, APIKey);
-            Assert.Fail();
+            await _client.CallAPI(Username, APIKey);
+            Fail();
         } catch (LastfmException e)
         {
-            Assert.That(e.ErrorCode, Is.EqualTo(LastfmException.ErrorEnum.InvalidParam));
+            That(e.ErrorCode, Is.EqualTo(LastfmException.ErrorEnum.InvalidParam));
         } catch (HttpRequestException)
         {
-            Assert.Fail();
+            Fail();
         }
     }
 
@@ -66,14 +69,14 @@ public class ResponseStatusTest
         // Test ran correctly when run in correct conditions.
         try
         {
-            await CallAPI(Username, APIKey);
-            Assert.Fail();
+            await _client.CallAPI(Username, APIKey);
+            Fail();
         } catch (LastfmException)
         {
-            Assert.Fail();
+            Fail();
         } catch (HttpRequestException e)
         {
-            Assert.That(e.StatusCode, 
+            That(e.StatusCode, 
                 Is.EqualTo(Enum.Parse(typeof(HttpStatusCode), "0")));
         }
     }

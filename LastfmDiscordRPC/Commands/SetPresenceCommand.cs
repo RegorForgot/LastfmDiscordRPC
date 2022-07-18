@@ -7,29 +7,34 @@ namespace LastfmDiscordRPC.Commands;
 
 public class SetPresenceCommand : CommandBase
 {
+    private readonly PresenceSetter _presenceSetter;
+
     public SetPresenceCommand(MainViewModel mainViewModel) : base(mainViewModel)
-    { }
+    {
+        _presenceSetter = mainViewModel.PresenceSetter;
+    }
     
-    public override bool CanExecute(object? parameter) => SetPresence.IsReady && !MainViewModel.HasErrors;
+    public override bool CanExecute(object? parameter)
+    {
+        return _presenceSetter.IsReady && !MainViewModel.HasErrors;
+    }
 
     public override void Execute(object? parameter)
     {
-        string username = MainViewModel.Username;
-        string apiKey = MainViewModel.APIKey;
         UpdateButtonExecute();
-        SetPresence.UpdatePresence(username, apiKey, MainViewModel);
+        _presenceSetter.UpdatePresence(MainViewModel.Username, MainViewModel.APIKey);
     }
 
     private async void UpdateButtonExecute()
     {
         using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
-        SetPresence.Dispose();
-        SetPresence.IsReady = false;
+        _presenceSetter.Dispose();
+        _presenceSetter.IsReady = false;
         RaiseCanExecuteChanged();
 
         while (await timer.WaitForNextTickAsync())
         {
-            SetPresence.IsReady = true;
+            _presenceSetter.IsReady = true;
             RaiseCanExecuteChanged();
             timer.Dispose();
         }

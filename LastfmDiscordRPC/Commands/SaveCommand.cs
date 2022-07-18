@@ -20,5 +20,8 @@ public class SaveCommand : CommandBase
         }
     }
 
-    public override bool CanExecute(object? parameter) => !MainViewModel.PropertyHasError(nameof(MainViewModel.AppKey));
+    public override bool CanExecute(object? parameter)
+    {
+        return !MainViewModel.PropertyHasError(nameof(MainViewModel.AppKey));
+    }
 }

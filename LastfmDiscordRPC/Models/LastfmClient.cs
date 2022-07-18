@@ -7,18 +7,18 @@ using static LastfmDiscordRPC.Models.LastfmException;
 
 namespace LastfmDiscordRPC.Models;
 
-public static class LastfmClient
+public class LastfmClient : IDisposable
 {
-    private readonly static RestClient Client;
-    private static RestRequest? _request;
+    private readonly RestClient _client;
+    private RestRequest? _request;
 
-    static LastfmClient()
+    public LastfmClient()
     {
-        Client = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
-        Client.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 1.0.0");
+        _client = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
+        _client.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 1.0.0");
     }
 
-    public static async Task<LastfmResponse?> CallAPI(string username, string apiKey)
+    public async Task<LastfmResponse> CallAPI(string username, string apiKey)
     {
         _request = new RestRequest();
 
@@ -29,19 +29,22 @@ public static class LastfmClient
         _request.AddParameter("api_key", apiKey);
         _request.Timeout = 5;
 
-        RestResponse response = await Client.ExecuteAsync(_request);
+        RestResponse response = await _client.ExecuteAsync(_request);
         _request = null;
         
         if (response.Content != null) return GetResponse(response.Content);
         throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
     }
 
-    private static LastfmResponse GetResponse(string response)
+    private LastfmResponse GetResponse(string response)
     {
         LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response)!;
         if (e.Error == ErrorEnum.OK) return JsonConvert.DeserializeObject<LastfmResponse>(response)!;
         throw new LastfmException(e.Message, e.Error);
     }
-    
-    public static void Dispose() => Client.Dispose();
+
+    public void Dispose()
+    {
+        _client.Dispose();   
+    }
 }

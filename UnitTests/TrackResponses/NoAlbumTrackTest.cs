@@ -4,22 +4,23 @@ namespace UnitTests.TrackResponses;
 
 public class NoAlbumTrackTest
 {
-    private LastfmResponse? _response;
+    private LastfmResponse _response;
     private const string Username = "mabdi36";
     private const string APIKey = "05467a3191853eb8da38dfb38ed3c733";
 
     [SetUp]
     public async Task Setup()
     {
+        LastfmClient client = new LastfmClient();
         try
         {
-            _response = (await CallAPI(Username, APIKey))!;
+            _response = await client.CallAPI(Username, APIKey);
         } catch (LastfmException)
         {
-            Assert.Fail();
+            Fail();
         } catch (HttpRequestException)
         {
-            Assert.Fail();
+            Fail();
         }
     }
 
@@ -29,7 +30,7 @@ public class NoAlbumTrackTest
     {
         const string actualTrack = "Wicked (Confidence)";
         string? respondedTrackName = _response.Track?.Name;
-        Assert.That(respondedTrackName, Is.EqualTo(actualTrack));
+        That(respondedTrackName, Is.EqualTo(actualTrack));
     }
 
     [Test]
@@ -37,7 +38,7 @@ public class NoAlbumTrackTest
     {
         const string actualArtist = "Rems";
         string? respondedTrackArtist = _response.Track?.Artist.Name;
-        Assert.That(respondedTrackArtist, Is.EqualTo(actualArtist));
+        That(respondedTrackArtist, Is.EqualTo(actualArtist));
     }
 
     [Test]
@@ -45,7 +46,7 @@ public class NoAlbumTrackTest
     {
         string actualArtist = Empty;
         string? respondedTrackArtist = _response.Track?.Album.Name;
-        Assert.That(actualArtist, Is.EqualTo(respondedTrackArtist));
+        That(actualArtist, Is.EqualTo(respondedTrackArtist));
     }
 
     [Test]
@@ -53,7 +54,7 @@ public class NoAlbumTrackTest
     {
         const string actualNowPlaying = "true";
         string? respondedNowPlaying = _response.Track?.NowPlaying.State;
-        Assert.That(respondedNowPlaying, Is.EqualTo(actualNowPlaying));
+        That(respondedNowPlaying, Is.EqualTo(actualNowPlaying));
     }
 
     [Test]
@@ -61,13 +62,13 @@ public class NoAlbumTrackTest
     {
         string actualTimestamp = Empty;
         string? respondedTimestamp = _response.Track?.Date.Timestamp;
-        Assert.That(actualTimestamp, Is.EqualTo(respondedTimestamp));
+        That(actualTimestamp, Is.EqualTo(respondedTimestamp));
     }
 
     [Test]
     public void Image()
     {
         string? respondedImage = _response.Track?.Images[3].URL;
-        Assert.That(respondedImage, Is.EqualTo(Track.DefaultCover));
+        That(respondedImage, Is.EqualTo(Track.DefaultCover));
     }
 }

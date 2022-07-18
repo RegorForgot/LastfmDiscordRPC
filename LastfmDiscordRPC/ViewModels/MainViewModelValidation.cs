@@ -14,11 +14,15 @@ public partial class MainViewModel : INotifyDataErrorInfo
     public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
     public bool HasErrors => _errorsByPropertyName.Any();
 
-    public bool PropertyHasError(string propertyName) =>
-        _errorsByPropertyName.ContainsKey(propertyName);
+    public bool PropertyHasError(string propertyName)
+    {
+        return _errorsByPropertyName.ContainsKey(propertyName);
+    }
 
-    public IEnumerable GetErrors(string? propertyName) =>
-        _errorsByPropertyName.ContainsKey(propertyName) ? _errorsByPropertyName[propertyName] : null;
+    public IEnumerable GetErrors(string? propertyName)
+    {
+        return _errorsByPropertyName.ContainsKey(propertyName) ? _errorsByPropertyName[propertyName] : null;
+    }
 
     private void AddError(string propertyName, string error)
     {

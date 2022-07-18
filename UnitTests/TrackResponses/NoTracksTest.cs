@@ -10,15 +10,16 @@ public class NoTracksTest
     [SetUp]
     public async Task Setup()
     {
+        LastfmClient client = new LastfmClient();
         try
         {
-            _response = await CallAPI(Username, APIKey);
+            _response = await client.CallAPI(Username, APIKey);
         } catch (LastfmException)
         {
-            Assert.Fail();
+            Fail();
         } catch (HttpRequestException)
         {
-            Assert.Fail();
+            Fail();
         }
     }
 
@@ -27,6 +28,6 @@ public class NoTracksTest
     {
         Track? actualTrack = null;
         Track? respondedTrack = _response?.Track;
-        Assert.That(actualTrack, Is.EqualTo(respondedTrack));
+        That(actualTrack, Is.EqualTo(respondedTrack));
     }
 }

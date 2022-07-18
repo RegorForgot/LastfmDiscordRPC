@@ -7,7 +7,7 @@ using static System.String;
 
 namespace LastfmDiscordRPC.Models;
 
-public class DiscordClient
+public class DiscordClient : IDisposable
 {
     private readonly DiscordRpcClient? _client;
     private RichPresence? _presence;
@@ -136,14 +136,29 @@ public class DiscordClient
             }
         }
         
-        private string GetCurrentTimeString() => DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        private string GetCurrentTimeString()
+        {
+            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        }
 
-        public void Trace(string message, params object[] args) => WriteToFile("TRCE:", LogLevel.Trace, message, args);
+        public void Trace(string message, params object[] args)
+        {
+            WriteToFile("TRCE:", LogLevel.Trace, message, args);
+        }
 
-        public void Info(string message, params object[] args) => WriteToFile("INFO:", LogLevel.Info, message, args);
+        public void Info(string message, params object[] args)
+        {
+            WriteToFile("INFO:", LogLevel.Info, message, args);
+        }
 
-        public void Warning(string message, params object[] args) => WriteToFile("WARN:", LogLevel.Warning, message, args);
+        public void Warning(string message, params object[] args)
+        {
+            WriteToFile("WARN:", LogLevel.Warning, message, args);
+        }
 
-        public void Error(string message, params object[] args) => WriteToFile("ERR :", LogLevel.Error, message, args);
+        public void Error(string message, params object[] args)
+        {
+            WriteToFile("ERR :", LogLevel.Error, message, args);
+        }
     }
 }

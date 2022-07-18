@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Resources;
 using System.Windows;
 
 namespace LastfmDiscordRPC;
@@ -9,7 +8,7 @@ namespace LastfmDiscordRPC;
 /// </summary>
 public partial class MainWindow
 {
-    public MainWindow(ResourceManager manager)
+    public MainWindow()
     {
         InitializeComponent();
     }

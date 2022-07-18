@@ -24,7 +24,7 @@ public class LastfmResponse
             Playcount = _recentTracks.Footer.Playcount;
         }
     }
-    
+
     public Track? Track { get; private set; }
     public string Playcount { get; private set; }
 

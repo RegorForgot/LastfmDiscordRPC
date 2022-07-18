@@ -37,13 +37,19 @@ public partial class Body
 
     }
 
-    private void UsernameTextBox_OnTextChanged(object sender, TextChangedEventArgs e) =>
+    private void UsernameTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
         UsernamePlaceholder.Visibility = IsNullOrEmpty(UsernameTextBox.Text) ? Visible : Hidden;
+    }
 
-    private void APIKeyTextBox_OnTextChanged(object sender, TextChangedEventArgs e) =>
+    private void APIKeyTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
         APIKeyPlaceholder.Visibility = IsNullOrEmpty(APIKeyTextBox.Text) ? Visible : Hidden;
+    }
 
-    private void AppKeyTextBox_OnTextChanged(object sender, TextChangedEventArgs e) =>
+    private void AppKeyTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
         AppKeyPlaceholder.Visibility = IsNullOrEmpty(AppKeyTextBox.Text) ? Visible : Hidden;
+    }
 
 }

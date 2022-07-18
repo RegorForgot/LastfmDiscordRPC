@@ -35,7 +35,10 @@ public static class SaveAppData
         }
     }
 
-    private static void SaveData(AppData appData) => SaveData(appData.Username, appData.APIKey, appData.AppKey);
+    private static void SaveData(AppData appData)
+    {
+        SaveData(appData.Username, appData.APIKey, appData.AppKey);
+    }
 
     public static void SaveData(string username = "", string apiKey = "", string appKey = "")
     {
