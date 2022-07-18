@@ -59,11 +59,19 @@
           <TextBlock Text="{Binding Description}"
                      TextTrimming="CharacterEllipsis">
           </TextBlock>
+          <Label.ToolTip>
+            <Label Style="{StaticResource TooltipStyle}"
+                   Content="{Binding Description}"/>
+          </Label.ToolTip>
         </Label>
 
         <Label Style="{StaticResource GeneralStyle}">
           <TextBlock Text="{Binding State}" 
                      TextTrimming="CharacterEllipsis"/>
+          <Label.ToolTip>
+            <Label Style="{StaticResource TooltipStyle}"
+                   Content="{Binding State}"/>
+          </Label.ToolTip>
         </Label>
       </StackPanel>
     </Grid>
