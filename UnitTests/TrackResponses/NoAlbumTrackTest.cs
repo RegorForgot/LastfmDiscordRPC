@@ -69,6 +69,6 @@ public class NoAlbumTrackTest
     public void Image()
     {
         string? respondedImage = _response.Track?.Images[3].URL;
-        That(respondedImage, Is.EqualTo(Track.DefaultCover));
+        That(respondedImage, Is.EqualTo(Track.DefaultSingleCover));
     }
 }

@@ -14,11 +14,6 @@ public partial class MainViewModel : INotifyDataErrorInfo
     public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
     public bool HasErrors => _errorsByPropertyName.Any();
 
-    public bool PropertyHasError(string propertyName)
-    {
-        return _errorsByPropertyName.ContainsKey(propertyName);
-    }
-
     public IEnumerable GetErrors(string? propertyName)
     {
         return _errorsByPropertyName.ContainsKey(propertyName) ? _errorsByPropertyName[propertyName] : null;
@@ -44,8 +39,8 @@ public partial class MainViewModel : INotifyDataErrorInfo
     private void OnErrorsChanged(string? propertyName)
     {
         ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        ((CommandBase)SetPresenceCommand).RaiseCanExecuteChanged();
         ((CommandBase)SaveCommand).RaiseCanExecuteChanged();
+        ((CommandBase)SetPresenceCommand).RaiseCanExecuteChanged();
     }
 
     private void ValidateUsername()
@@ -66,12 +61,12 @@ public partial class MainViewModel : INotifyDataErrorInfo
         AddError(nameof(APIKey), "Last.fm API key is invalid.");
     }
 
-    private void ValidateAppKey()
+    private void ValidateAppID()
     {
-        ClearErrors(nameof(AppKey));
+        ClearErrors(nameof(AppID));
         const string pattern = @"^\d{14,19}$";
 
-        if (Regex.IsMatch(AppKey, pattern)) return;
-        AddError(nameof(AppKey), "Discord application key is invalid.");
+        if (Regex.IsMatch(AppID, pattern)) return;
+        AddError(nameof(AppID), "Discord application ID is invalid.");
     }
 }

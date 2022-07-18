@@ -27,7 +27,7 @@ public class LastfmClient : IDisposable
         _request.AddParameter("limit", "1");
         _request.AddParameter("user", username);
         _request.AddParameter("api_key", apiKey);
-        _request.Timeout = 5;
+        _request.Timeout = 5000;
 
         RestResponse response = await _client.ExecuteAsync(_request);
         _request = null;

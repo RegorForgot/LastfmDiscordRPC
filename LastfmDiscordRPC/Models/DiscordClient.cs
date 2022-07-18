@@ -9,19 +9,25 @@ namespace LastfmDiscordRPC.Models;
 
 public class DiscordClient : IDisposable
 {
-    private readonly DiscordRpcClient? _client;
+    private DiscordRpcClient? _client;
     private RichPresence? _presence;
+    private readonly MainViewModel _mainViewModel;
     private const string PauseIconURL = @"https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = @"https://i.imgur.com/wvTxH0t.png";
 
-    public bool IsInitialised => _client != null;
+    public bool IsInitialised => _client is { IsInitialized: true };
 
-    public DiscordClient(string appID, MainViewModel mainViewModel)
+    public DiscordClient(MainViewModel mainViewModel)
     {
-        if (IsNullOrEmpty(appID)) return;
-        _client = new DiscordRpcClient(appID)
+        _mainViewModel = mainViewModel;
+    }
+
+    public void Initialize()
+    {
+        if (IsInitialised) return;
+        _client = new DiscordRpcClient(_mainViewModel.AppID)
         {
-            Logger = new DiscordLoggerTimed($@"{SaveAppData.FolderPath}\RPClog.log", LogLevel.Warning, mainViewModel),
+            Logger = new DiscordLoggerTimed($@"{SaveAppData.FolderPath}\RPClog.log", LogLevel.Warning, _mainViewModel),
             SkipIdenticalPresence = true
         };
         _client.OnConnectionFailed
@@ -95,6 +101,11 @@ public class DiscordClient : IDisposable
         }
     }
 
+    public void ClearPresence()
+    {
+        _client?.ClearPresence();
+    }
+    
     /// <inheritdoc />
     public void Dispose()
     {
@@ -147,22 +158,22 @@ public class DiscordClient : IDisposable
 
         public void Trace(string message, params object[] args)
         {
-            WriteToFile("TRCE:", LogLevel.Trace, message, args);
+            WriteToFile("TRCE", LogLevel.Trace, message, args);
         }
 
         public void Info(string message, params object[] args)
         {
-            WriteToFile("INFO:", LogLevel.Info, message, args);
+            WriteToFile("INFO", LogLevel.Info, message, args);
         }
 
         public void Warning(string message, params object[] args)
         {
-            WriteToFile("WARN:", LogLevel.Warning, message, args);
+            WriteToFile("WARN", LogLevel.Warning, message, args);
         }
 
         public void Error(string message, params object[] args)
         {
-            WriteToFile("ERR :", LogLevel.Error, message, args);
+            WriteToFile("ERR ", LogLevel.Error, message, args);
         }
     }
 }

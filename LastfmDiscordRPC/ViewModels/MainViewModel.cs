@@ -9,6 +9,7 @@ namespace LastfmDiscordRPC.ViewModels;
 public partial class MainViewModel : ViewModelBase, IDisposable
 {
     private string _username;
+
     public string Username
     {
         get => _username;
@@ -17,11 +18,13 @@ public partial class MainViewModel : ViewModelBase, IDisposable
             if (value == _username) return;
             _username = value;
             ValidateUsername();
-            OnPropertyChanged(nameof(Username)); 
+            OnPropertyChanged(nameof(Username));
+            ((CommandBase)SetPresenceCommand).RaiseCanExecuteChanged();
         }
     }
 
     private string _apiKey;
+
     public string APIKey
     {
         get => _apiKey;
@@ -34,20 +37,22 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         }
     }
 
-    private string _appKey;
-    public string AppKey
+    private string _appID;
+
+    public string AppID
     {
-        get => _appKey;
+        get => _appID;
         set
         {
-            if (value == _appKey) return;
-            _appKey = value;
-            ValidateAppKey();
-            OnPropertyChanged(nameof(AppKey));
+            if (value == _appID) return;
+            _appID = value;
+            ValidateAppID();
+            OnPropertyChanged(nameof(AppID));
         }
     }
 
     private string _outputText;
+
     public string OutputText
     {
         get => _outputText;
@@ -59,33 +64,47 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         }
     }
 
-    public void WriteToOutput(string text)
+    private bool _hasNotRun;
+
+    public bool HasNotRun
     {
-        OutputText += text;
+        get => _hasNotRun;
+        set
+        {
+            if (value == _hasNotRun) return;
+            _hasNotRun = value;
+            OnPropertyChanged(nameof(HasNotRun));
+        }
     }
 
     public ICommand SetPresenceCommand { get; }
     public ICommand SaveCommand { get; }
     public ICommand DefaultKeyCommand { get; }
     public PreviewViewModel PreviewViewModel { get; }
-    
+
     public readonly DiscordClient DiscordClient;
     public readonly LastfmClient LastfmClient;
     public readonly PresenceSetter PresenceSetter;
-    
+
     public MainViewModel(AppData appData)
     {
-        OutputText = "+ Started!\n";
-        Username = appData.Username;
-        APIKey = appData.APIKey;
-        AppKey = appData.AppKey;
-        DiscordClient = new DiscordClient(SavedData.AppKey, this);
+        HasNotRun = true;
+        OutputText = "+ Started!";
         LastfmClient = new LastfmClient();
+        DiscordClient = new DiscordClient(this);
         PresenceSetter = new PresenceSetter(this);
         SetPresenceCommand = new SetPresenceCommand(this);
         SaveCommand = new SaveCommand(this);
         DefaultKeyCommand = new DefaultKeyCommand(this);
         PreviewViewModel = new PreviewViewModel();
+        Username = appData.Username;
+        APIKey = appData.APIKey;
+        AppID = appData.AppID;
+    }
+
+    public void WriteToOutput(string text)
+    {
+        OutputText += text;
     }
 
     public void Dispose()

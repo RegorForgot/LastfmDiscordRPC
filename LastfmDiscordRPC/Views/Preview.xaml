@@ -27,42 +27,43 @@
         </Label.Clip>
         <Hyperlink Name="AlbumCover"
                    TextDecorations=""
-                   NavigateUri="{Binding ImageURL}"
+                   NavigateUri="{Binding ImageHyperlink}"
                    RequestNavigate="AlbumCover_OnRequestNavigate">
           <Image Margin="10"
                  VerticalAlignment="Top"
                  HorizontalAlignment="Center"
                  Stretch="UniformToFill"
                  Source="{Binding ImageURL}"
-                 gif:ImageBehavior.AnimatedSource="{Binding ImageURL}" />
+                 gif:ImageBehavior.AnimatedSource="{Binding ImageURL}">
+            <Image.ToolTip>
+              <Label Style="{StaticResource TooltipStyle}"
+                     Content="{Binding Tooltip}"/>
+            </Image.ToolTip>
+          </Image>
         </Hyperlink>
       </Label>
 
       <StackPanel Grid.Column="1"
-                  VerticalAlignment="Center">
+                  VerticalAlignment="Center"
+                  Height="Auto">
 
         <Label Style="{StaticResource GeneralStyle}"
                FontWeight="Bold"
-               FontSize="32">
+               FontSize="24">
           <TextBlock Text="Last.fm"
                      TextTrimming="CharacterEllipsis">
           </TextBlock>
         </Label>
 
         <Label Style="{StaticResource GeneralStyle}">
-          <TextBlock Text="{Binding Name}"
+          <TextBlock Text="{Binding Description}"
                      TextTrimming="CharacterEllipsis">
           </TextBlock>
         </Label>
 
         <Label Style="{StaticResource GeneralStyle}">
-          <TextBlock TextTrimming="CharacterEllipsis"
-                     Text="{Binding ArtistName}" />
-        </Label>
-
-        <Label Style="{StaticResource GeneralStyle}">
-          <TextBlock TextTrimming="CharacterEllipsis"
-                     Text="{Binding AlbumName}" />
+          <TextBlock Text="{Binding State}" 
+                     TextTrimming="CharacterEllipsis"/>
         </Label>
       </StackPanel>
     </Grid>

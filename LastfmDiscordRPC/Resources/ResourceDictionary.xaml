@@ -6,7 +6,7 @@
   </FontFamily>
 
   <Style x:Key="BackgroundStyle"
-         TargetType="UserControl">
+         TargetType="Control">
     <Setter Property="Background" Value="#263238" />
   </Style>
 
@@ -21,11 +21,26 @@
     <Setter Property="Foreground" Value="White" />
     <Setter Property="VerticalContentAlignment" Value="Center" />
   </Style>
+  
+  <Style x:Key="TooltipStyle"
+         TargetType="Control"
+         BasedOn="{StaticResource GeneralStyle}">
+    <Setter Property="Foreground" Value="Black" />
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="FontSize" Value="16"/>
+  </Style>
 
   <Style x:Key="ErrorTextStyle"
          TargetType="Control"
          BasedOn="{StaticResource GeneralStyle}">
     <Setter Property="FontSize" Value="12" />
+  </Style>
+
+  <Style x:Key="PreviewTextStyle"
+         TargetType="Control"
+         BasedOn="{StaticResource GeneralStyle}">
+    <Setter Property="FontSize" Value="16" />
   </Style>
 
   <Style x:Key="HeaderStyle"
@@ -74,15 +89,15 @@
     <Setter Property="Background" Value="#1f292e" />
     <Setter Property="BorderBrush" Value="#32424a" />
   </Style>
-  
+
   <Style BasedOn="{StaticResource GeneralTextBoxStyle}"
          TargetType="TextBox"
          x:Key="OutputBoxStyle">
-    <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
-    <Setter Property="VerticalContentAlignment" Value="Top"/>
-    <Setter Property="VerticalAlignment" Value="Top"/>
-    <Setter Property="TextWrapping" Value="Wrap"/>
-    <Setter Property="IsReadOnly" Value="True"/>
+    <Setter Property="VerticalScrollBarVisibility" Value="Visible" />
+    <Setter Property="VerticalContentAlignment" Value="Top" />
+    <Setter Property="VerticalAlignment" Value="Top" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+    <Setter Property="IsReadOnly" Value="True" />
   </Style>
 
   <Style BasedOn="{StaticResource GeneralTextBoxStyle}"
@@ -96,21 +111,23 @@
             <Grid IsHitTestVisible="False">
               <AdornedElementPlaceholder x:Name="Placeholder" />
               <Popup Name="ErrorLabel"
-                     IsOpen="True" 
-                     Placement="Bottom" 
+                     IsOpen="True"
+                     Placement="Bottom"
                      HorizontalAlignment="Right">
                 <Label Style="{StaticResource ErrorTextStyle}"
                        Content="{Binding ElementName=Placeholder, Path=AdornedElement.(Validation.Errors).CurrentItem.ErrorContent}"
                        Margin="0,0,0,0"
-                       Background="#A02D31"/>
+                       Background="#A02D31" />
               </Popup>
             </Grid>
           </Border>
           <ControlTemplate.Triggers>
-            <DataTrigger Binding="{Binding ElementName=Placeholder, Path=AdornedElement.IsKeyboardFocused}" Value="True">
+            <DataTrigger Binding="{Binding ElementName=Placeholder, Path=AdornedElement.IsKeyboardFocused}"
+                         Value="True">
               <Setter TargetName="ErrorLabel" Property="IsOpen" Value="True" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding ElementName=Placeholder, Path=AdornedElement.IsKeyboardFocused}" Value="False">
+            <DataTrigger Binding="{Binding ElementName=Placeholder, Path=AdornedElement.IsKeyboardFocused}"
+                         Value="False">
               <Setter TargetName="ErrorLabel" Property="IsOpen" Value="False" />
             </DataTrigger>
           </ControlTemplate.Triggers>

@@ -13,7 +13,7 @@ public class SaveCommand : CommandBase
     {
         try
         {
-            SaveAppData.SaveData(MainViewModel.Username, MainViewModel.APIKey, MainViewModel.AppKey);
+            SaveAppData.SaveData(MainViewModel.Username, MainViewModel.APIKey, MainViewModel.AppID);
         } catch (IOException e)
         {
             MainViewModel.WriteToOutput($"Error saving file: {e.Message}");
@@ -22,6 +22,6 @@ public class SaveCommand : CommandBase
 
     public override bool CanExecute(object? parameter)
     {
-        return !MainViewModel.PropertyHasError(nameof(MainViewModel.AppKey));
+        return !MainViewModel.HasErrors;
     }
 }

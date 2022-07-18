@@ -1,7 +1,21 @@
-﻿namespace LastfmDiscordRPC.ViewModels;
+﻿using LastfmDiscordRPC.Models;
+
+namespace LastfmDiscordRPC.ViewModels;
 
 public sealed class PreviewViewModel : ViewModelBase
 {
+    private string _imageHyperlink;
+    public string ImageHyperlink
+    {
+        get => _imageHyperlink;
+        set
+        {
+            if (value == _imageHyperlink) return;
+            _imageHyperlink = value.Replace(@"/300x300", "");
+            OnPropertyChanged(nameof(ImageHyperlink));
+        }
+    }
+    
     private string _imageURL;
     public string ImageURL
     {
@@ -9,65 +23,54 @@ public sealed class PreviewViewModel : ViewModelBase
         set
         {
             if (value == _imageURL) return;
-            _imageURL = value.Replace(@"/300x300", "");
+
+            _imageURL = value;
+            ImageHyperlink = value is Track.DefaultAlbumCover or Track.DefaultSingleCover ? Empty : _imageURL;
             OnPropertyChanged(nameof(ImageURL));
         }
     }
 
-    private string _name;
-    public string Name
+    private string _tooltip;
+    public string Tooltip
     {
-        get => _name;
+        get => _tooltip;
         set
         {
-            if (value == _name) return;
-            _name = value;
-            OnPropertyChanged(nameof(Name));
+            if (value == _tooltip) return;
+            _tooltip = value;
+            OnPropertyChanged(nameof(Tooltip));
         }
     }
 
-    private string _artistName;
-    public string ArtistName
+    private string _description;
+    public string Description
     {
-        get => _artistName;
+        get => _description;
         set
         {
-            if (value == _artistName) return;
-            _artistName = value;
-            OnPropertyChanged(nameof(ArtistName));
+            if (value == _description) return;
+            _description = value;
+            OnPropertyChanged(nameof(Description));
         }
     }
 
-    private string _albumName;
-    public string AlbumName
+    private string _state;
+    public string State
     {
-        get => _albumName;
+        get => _state;
         set
         {
-            if (value == _albumName) return;
-            _albumName = value;
-            OnPropertyChanged(nameof(AlbumName));
+            if (value == _state) return;
+            _state = value;
+            OnPropertyChanged(nameof(State));
         }
     }
-
-    private string _scrobbleAmount;
-    public string ButtonText
-    {
-        get => $"{_scrobbleAmount} scrobbles" ;
-        set
-        {
-            if (value == _scrobbleAmount) return;
-            _scrobbleAmount = value;
-            OnPropertyChanged(nameof(ButtonText));
-        }
-    }
-
+    
     public PreviewViewModel()
     {
         _imageURL = Empty;
-        _name = Empty;
-        _artistName = Empty;
-        _albumName = Empty;
-        ButtonText = "50000";
+        _tooltip = Empty;
+        _description = Empty;
+        _state = Empty;
     }
 }

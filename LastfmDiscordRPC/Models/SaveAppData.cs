@@ -36,14 +36,14 @@ public static class SaveAppData
 
     private static void SaveData(AppData appData)
     {
-        SaveData(appData.Username, appData.APIKey, appData.AppKey);
+        SaveData(appData.Username, appData.APIKey, appData.AppID);
     }
 
     public static void SaveData(string username = "", string apiKey = "", string appKey = "")
     {
         AppData appData = new AppData
         {
-            Username = username, APIKey = apiKey, AppKey = appKey
+            Username = username, APIKey = apiKey, AppID = appKey
         };
         SavedData = appData;
 
@@ -70,6 +70,6 @@ public static class SaveAppData
     {
         [JsonProperty] public string Username { get; set; } = Empty;
         [JsonProperty] public string APIKey { get; set; } = Empty;
-        [JsonProperty] public string AppKey { get; set; } = Empty;
+        [JsonProperty] public string AppID { get; set; } = Empty;
     }
 }

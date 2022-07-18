@@ -46,9 +46,9 @@ public partial class Body
         APIKeyPlaceholder.Visibility = IsNullOrEmpty(APIKeyTextBox.Text) ? Visible : Hidden;
     }
 
-    private void AppKeyTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+    private void AppIDTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
-        AppKeyPlaceholder.Visibility = IsNullOrEmpty(AppKeyTextBox.Text) ? Visible : Hidden;
+        AppIDPlaceholder.Visibility = IsNullOrEmpty(AppIDTextBox.Text) ? Visible : Hidden;
     }
 
 }

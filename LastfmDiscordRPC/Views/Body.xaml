@@ -51,15 +51,16 @@
              Style="{StaticResource PlaceholderStyle}"
              Grid.Row="1" />
 
-      <TextBox Name="AppKeyTextBox"
+      <TextBox Name="AppIDTextBox"
                Text="{Binding Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
-                      Path=AppKey, ValidatesOnNotifyDataErrors=True}"
+                      Path=AppID, ValidatesOnNotifyDataErrors=True}"
                Style="{StaticResource InputTextBoxStyle}"
-               TextChanged="AppKeyTextBox_OnTextChanged"
+               TextChanged="AppIDTextBox_OnTextChanged"
+               IsEnabled="{Binding HasNotRun}"
                MaxLength="19"
                Grid.Row="2" />
-      <Label Name="AppKeyPlaceholder"
-             Content="Discord App Key (restart req.)"
+      <Label Name="AppIDPlaceholder"
+             Content="Discord App ID"
              Style="{StaticResource PlaceholderStyle}"
              Grid.Row="2" />
     </Grid>
@@ -104,7 +105,7 @@
               Style="{StaticResource ButtonStyle}" />
       <Button Command="{Binding DefaultKeyCommand}"
               Content="Load Default API Key"
-              Style="{StaticResource ButtonStyle}" />
+              Style="{StaticResource ButtonStyle}"/>
     </StackPanel>
 
 

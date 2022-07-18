@@ -41,7 +41,11 @@ public class LastfmResponse
 
 public class Track
 {
-    public const string? DefaultCover = @"https://lastfm.freetls.fastly.net/i/u/300x300/4128a6eb29f94943c9d206c08e625904.jpg";
+    public const string DefaultSingleCover 
+        = @"https://lastfm.freetls.fastly.net/i/u/300x300/4128a6eb29f94943c9d206c08e625904.png";
+
+    public const string DefaultAlbumCover
+        = @"https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png";
 
     [JsonProperty("name")] public string Name { get; set; } = Empty;
     [JsonProperty("artist")] public TrackArtist Artist { get; set; } = new TrackArtist();
@@ -62,7 +66,7 @@ public class Track
 
     public class AlbumImage
     {
-        private string _url = DefaultCover;
+        private string _url = DefaultSingleCover;
         [JsonProperty("#text")]
         public string URL
         {
