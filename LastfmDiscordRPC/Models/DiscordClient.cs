@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using DiscordRPC;
 using DiscordRPC.Logging;
-using static System.String;
+using LastfmDiscordRPC.ViewModels;
 
 namespace LastfmDiscordRPC.Models;
 
@@ -16,14 +16,16 @@ public class DiscordClient : IDisposable
 
     public bool IsInitialised => _client != null;
 
-    public DiscordClient(string appID)
+    public DiscordClient(string appID, MainViewModel mainViewModel)
     {
         if (IsNullOrEmpty(appID)) return;
         _client = new DiscordRpcClient(appID)
         {
-            Logger = new FileLoggerTimed($@"{SaveAppData.FolderPath}\RPClog.log", LogLevel.Warning), 
+            Logger = new DiscordLoggerTimed($@"{SaveAppData.FolderPath}\RPClog.log", LogLevel.Warning, mainViewModel),
             SkipIdenticalPresence = true
         };
+        _client.OnConnectionFailed
+            += (sender, message) => _client.Logger.Warning("Connection to discord failed.", sender);
         _client.Initialize();
     }
 
@@ -108,17 +110,18 @@ public class DiscordClient : IDisposable
         { }
     }
     
-    private class FileLoggerTimed : ILogger
+    private class DiscordLoggerTimed : ILogger
     {
-        private readonly object _fileLock;
+        private readonly MainViewModel _mainViewModel;
+        private readonly object _fileLock = new object();
         private readonly string _filePath;
         public LogLevel Level { get; set; }
 
-        public FileLoggerTimed(string filePath, LogLevel level)
+        public DiscordLoggerTimed(string filePath, LogLevel level, MainViewModel mainViewModel)
         {
             Level = level;
             _filePath = $"{filePath}";
-            _fileLock = new object();
+            _mainViewModel = mainViewModel;
         }
 
         private void WriteToFile(string errorLevel, LogLevel level, string message, params object[] args)
@@ -126,12 +129,14 @@ public class DiscordClient : IDisposable
             if (Level > level)
                 return;
             SaveAppData.CheckFolderExists();
+            string errorMessage
+                = $"\n+ [{GetCurrentTimeString()}] {errorLevel}: {(args.Length != 0 ? Format(message, args) : message)}";
+            
+            _mainViewModel.WriteToOutput(errorMessage);
             lock (_fileLock)
             {
-                if (File.Exists(_filePath)) File.AppendAllText(_filePath,
-                    $"\r\n[{GetCurrentTimeString()}] {errorLevel}: {(args.Length != 0 ? Format(message, args) : message)}");
-                else File.WriteAllText(_filePath,
-                    $"\r\n[{GetCurrentTimeString()}] {errorLevel}: {(args.Length != 0 ? Format(message, args) : message)}");
+                if (File.Exists(_filePath)) File.AppendAllText(_filePath, errorMessage);
+                else File.WriteAllText(_filePath, errorMessage);
             }
         }
         

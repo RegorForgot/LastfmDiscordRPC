@@ -7,9 +7,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance }">
 
-  <Border Width="600"
-          Height="Auto"
-          Background="#263238"
+  <Border Background="#263238"
           CornerRadius="30"
           BorderBrush="#32424a"
           BorderThickness="1">

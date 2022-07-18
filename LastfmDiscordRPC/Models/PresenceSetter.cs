@@ -13,7 +13,7 @@ public class PresenceSetter : IDisposable
     private LastfmResponse? _response;
     private PeriodicTimer? _timer;
     private bool _firstSuccess;
-    public bool IsReady { get; set; }
+    public bool IsReady { get; set; } = true;
 
     public PresenceSetter(MainViewModel mainViewModel)
     {

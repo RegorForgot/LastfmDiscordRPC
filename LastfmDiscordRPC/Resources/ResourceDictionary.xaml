@@ -74,6 +74,16 @@
     <Setter Property="Background" Value="#1f292e" />
     <Setter Property="BorderBrush" Value="#32424a" />
   </Style>
+  
+  <Style BasedOn="{StaticResource GeneralTextBoxStyle}"
+         TargetType="TextBox"
+         x:Key="OutputBoxStyle">
+    <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+    <Setter Property="VerticalContentAlignment" Value="Top"/>
+    <Setter Property="VerticalAlignment" Value="Top"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+    <Setter Property="IsReadOnly" Value="True"/>
+  </Style>
 
   <Style BasedOn="{StaticResource GeneralTextBoxStyle}"
          TargetType="TextBox"

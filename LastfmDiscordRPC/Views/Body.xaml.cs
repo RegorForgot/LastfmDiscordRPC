@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using LastfmDiscordRPC.Models;
-using static System.String;
 using static System.Windows.Visibility;
 
 namespace LastfmDiscordRPC.Views;

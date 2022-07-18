@@ -79,13 +79,13 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         Username = appData.Username;
         APIKey = appData.APIKey;
         AppKey = appData.AppKey;
+        DiscordClient = new DiscordClient(SavedData.AppKey, this);
+        LastfmClient = new LastfmClient();
+        PresenceSetter = new PresenceSetter(this);
         SetPresenceCommand = new SetPresenceCommand(this);
         SaveCommand = new SaveCommand(this);
         DefaultKeyCommand = new DefaultKeyCommand(this);
         PreviewViewModel = new PreviewViewModel();
-        DiscordClient = new DiscordClient(SavedData.AppKey);
-        LastfmClient = new LastfmClient();
-        PresenceSetter = new PresenceSetter(this);
     }
 
     public void Dispose()

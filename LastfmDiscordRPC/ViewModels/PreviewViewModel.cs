@@ -50,11 +50,24 @@ public sealed class PreviewViewModel : ViewModelBase
         }
     }
 
+    private string _scrobbleAmount;
+    public string ButtonText
+    {
+        get => $"{_scrobbleAmount} scrobbles" ;
+        set
+        {
+            if (value == _scrobbleAmount) return;
+            _scrobbleAmount = value;
+            OnPropertyChanged(nameof(ButtonText));
+        }
+    }
+
     public PreviewViewModel()
     {
         _imageURL = Empty;
         _name = Empty;
         _artistName = Empty;
         _albumName = Empty;
+        ButtonText = "50000";
     }
 }

@@ -79,14 +79,10 @@
               Grid.Row="0" />
       <TextBox Name="OutputBox"
                Text="{Binding OutputText}"
-               Style="{StaticResource GeneralTextBoxStyle}"
+               Style="{StaticResource OutputBoxStyle}"
                Height="{Binding ActualHeight, ElementName=SizePlaceholder}"
                Width="{Binding ActualWidth, ElementName=SizePlaceholder}"
                TextChanged="OutputBox_OnTextChanged"
-               VerticalScrollBarVisibility="Visible"
-               VerticalContentAlignment="Top"
-               TextWrapping="Wrap"
-               IsReadOnly="True"
                Grid.Row="0" />
       <Button Name="LogFileButton"
               Style="{StaticResource ButtonStyle}"

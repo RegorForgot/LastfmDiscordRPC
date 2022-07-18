@@ -18,6 +18,12 @@
         <RootNamespace>LastfmDiscordRPC</RootNamespace>
         <PackageId>LastfmDiscordRPC</PackageId>
         <Product>Last.fm Discord Rich Presence</Product>
+        <PackageIcon>Resources\icon.png</PackageIcon>
+        <NeutralLanguage>en-US</NeutralLanguage>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <Optimize>true</Optimize>
     </PropertyGroup>
     
     <ItemGroup>
@@ -34,8 +40,7 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>EmbeddedImages.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <Resource Include="Resources\icon.png" />
-      <None Remove="Resources\githubLogo.png" />
+        <Resource Include="Resources\icon.png"/>
       <Resource Include="Resources\githubLogo.png" />
     </ItemGroup>
     
