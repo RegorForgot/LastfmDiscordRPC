@@ -79,10 +79,10 @@ public class DiscordClient : IDisposable
                 smallText = "Stopped.";
             }
         }
-
+        string formatted_scrobbles = String.Format("{0:n0}", int.Parse(response.Playcount));
         Button button = new Button
         {
-            Label = $"{response.Playcount} scrobbles", Url = @$"https://www.last.fm/user/{username}/"
+            Label = $"{formatted_scrobbles} scrobbles", Url = @$"https://www.last.fm/user/{username}/"
         };
 
         _presence = new RichPresence
