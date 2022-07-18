@@ -17,19 +17,16 @@ public static class SaveAppData
     {
         FolderPath = $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\LastfmDiscordRPC";
         FilePath = $@"{FolderPath}\config.json";
-
         SavedData = ReadData();
     }
 
     private static AppData ReadData()
     {
-        AppData appData;
-
         try
         {
             string json;
             lock (Lock) json = File.ReadAllText(FilePath);
-            appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new Exception();
+            AppData appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new Exception();
 
             return appData;
         } catch (Exception)
@@ -66,11 +63,11 @@ public static class SaveAppData
 
         return false;
     }
-}
 
-public class AppData
-{
-    [JsonProperty] public string Username { get; set; } = Empty;
-    [JsonProperty] public string APIKey { get; set; } = Empty;
-    [JsonProperty] public string AppKey { get; set; } = Empty;
+    public class AppData
+    {
+        [JsonProperty] public string Username { get; set; } = Empty;
+        [JsonProperty] public string APIKey { get; set; } = Empty;
+        [JsonProperty] public string AppKey { get; set; } = Empty;
+    }
 }

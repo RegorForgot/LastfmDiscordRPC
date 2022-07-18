@@ -6,7 +6,8 @@ namespace LastfmDiscordRPC.Commands;
 
 public abstract class CommandBase : ICommand
 {
-    protected MainViewModel MainViewModel;
+    readonly protected MainViewModel MainViewModel;
+    public event EventHandler? CanExecuteChanged;
 
     protected CommandBase(MainViewModel mainViewModel)
     {
@@ -14,12 +15,7 @@ public abstract class CommandBase : ICommand
     }
     
     public abstract void Execute(object? parameter);
-
-    public event EventHandler? CanExecuteChanged;
-    public virtual bool CanExecute(object? parameter)
-    {
-        return true;
-    }
+    public abstract bool CanExecute(object? parameter);
 
     public void RaiseCanExecuteChanged()
     {

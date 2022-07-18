@@ -10,6 +10,7 @@ namespace LastfmDiscordRPC.Models;
 public static class LastfmClient
 {
     private readonly static RestClient Client;
+    private static RestRequest? _request;
 
     static LastfmClient()
     {
@@ -19,16 +20,18 @@ public static class LastfmClient
 
     public static async Task<LastfmResponse?> CallAPI(string username, string apiKey)
     {
-        RestRequest request = new RestRequest();
+        _request = new RestRequest();
 
-        request.AddParameter("format", "json");
-        request.AddParameter("method", "user.getrecenttracks");
-        request.AddParameter("limit", "1");
-        request.AddParameter("user", username);
-        request.AddParameter("api_key", apiKey);
-        request.Timeout = 5;
+        _request.AddParameter("format", "json");
+        _request.AddParameter("method", "user.getrecenttracks");
+        _request.AddParameter("limit", "1");
+        _request.AddParameter("user", username);
+        _request.AddParameter("api_key", apiKey);
+        _request.Timeout = 5;
 
-        RestResponse response = await Client.ExecuteAsync(request);
+        RestResponse response = await Client.ExecuteAsync(_request);
+        _request = null;
+        
         if (response.Content != null) return GetResponse(response.Content);
         throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
     }
@@ -39,4 +42,6 @@ public static class LastfmClient
         if (e.Error == ErrorEnum.OK) return JsonConvert.DeserializeObject<LastfmResponse>(response)!;
         throw new LastfmException(e.Message, e.Error);
     }
+    
+    public static void Dispose() => Client.Dispose();
 }

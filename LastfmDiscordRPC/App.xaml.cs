@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Resources;
 using System.Windows;
 using System.Windows.Forms;
-using LastfmDiscordRPC.Commands;
 using LastfmDiscordRPC.Models;
 using LastfmDiscordRPC.ViewModels;
 using static System.Net.WebRequest;
@@ -13,7 +12,7 @@ namespace LastfmDiscordRPC;
 
 public partial class App
 {
-    private readonly DiscordClient _client;
+    private readonly DiscordClient _discordClient;
     private readonly MainViewModel _mainViewModel;
     private readonly ResourceManager _manager;
     private readonly NotifyIcon _trayIcon;
@@ -21,10 +20,12 @@ public partial class App
     public App()
     {
         DefaultWebProxy = null;
+
         _trayIcon = new NotifyIcon();
         _manager = new ResourceManager(typeof(Resources.EmbeddedImages));
-        _client = new DiscordClient(SavedData.AppKey);
-        _mainViewModel = new MainViewModel(SavedData.Username, SavedData.APIKey, SavedData.AppKey, _client);
+        _discordClient = new DiscordClient(SavedData.AppKey);
+        _mainViewModel = new MainViewModel(SavedData, _discordClient);
+
         SetTrayIcon();
     }
 
@@ -74,15 +75,15 @@ public partial class App
     protected override void OnExit(ExitEventArgs e)
     {
         _trayIcon.Dispose();
-        _client.Dispose();
-        ((SetPresenceCommand)_mainViewModel.SetPresenceCommand).Dispose();
+        _discordClient.Dispose();
+        SetPresence.Dispose();
+        LastfmClient.Dispose();
         base.OnExit(e);
     }
 
     private void TrayIcon_OnClick(object? sender, EventArgs e)
     {
         if (((MouseEventArgs)e).Button != MouseButtons.Left) return;
-
         OnTrayClick(sender, e);
     }
 }

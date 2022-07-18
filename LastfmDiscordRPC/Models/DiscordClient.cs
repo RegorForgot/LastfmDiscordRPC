@@ -3,29 +3,28 @@ using System.Globalization;
 using System.IO;
 using DiscordRPC;
 using DiscordRPC.Logging;
-using DiscordRPC.Message;
 using static System.String;
 
 namespace LastfmDiscordRPC.Models;
 
-public class DiscordClient : IDisposable
+public class DiscordClient
 {
-    private readonly DiscordRpcClient _client;
+    private readonly DiscordRpcClient? _client;
     private RichPresence? _presence;
     private const string PauseIconURL = @"https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = @"https://i.imgur.com/wvTxH0t.png";
 
-    public bool IsInitialised { get; }
+    public bool IsInitialised => _client != null;
 
     public DiscordClient(string appID)
     {
         if (IsNullOrEmpty(appID)) return;
         _client = new DiscordRpcClient(appID)
         {
-            Logger = new FileLoggerTimed(SaveAppData.FolderPath, "RPClog.log", LogLevel.Warning), SkipIdenticalPresence = true
+            Logger = new FileLoggerTimed($@"{SaveAppData.FolderPath}\RPClog.log", LogLevel.Warning), 
+            SkipIdenticalPresence = true
         };
         _client.Initialize();
-        IsInitialised = _client.IsInitialized;
     }
 
     /// <summary>
@@ -80,7 +79,7 @@ public class DiscordClient : IDisposable
                 button
             }
         };
-        _client.SetPresence(_presence);
+        _client?.SetPresence(_presence);
         _presence = null;
 
         string GetTimeString(TimeSpan timeSince)
@@ -94,18 +93,12 @@ public class DiscordClient : IDisposable
         }
     }
 
-    public bool HasPresence()
-    {
-        return _client.CurrentPresence != null;
-    }
-
     /// <inheritdoc />
     public void Dispose()
     {
         if (IsInitialised)
         {
-            if (_client.IsDisposed) return;
-
+            if (_client!.IsDisposed) return;
             try
             {
                 _client.ClearPresence();
@@ -114,27 +107,18 @@ public class DiscordClient : IDisposable
             } catch (ObjectDisposedException)
             { }
         }
-
-        GC.SuppressFinalize(this);
     }
-
-    ~DiscordClient()
-    {
-        Dispose();
-    }
-
+    
     private class FileLoggerTimed : ILogger
     {
         private readonly object _fileLock;
         private readonly string _filePath;
-        private readonly string _folderPath;
         public LogLevel Level { get; set; }
 
-        public FileLoggerTimed(string folder, string name, LogLevel level)
+        public FileLoggerTimed(string filePath, LogLevel level)
         {
             Level = level;
-            _folderPath = folder;
-            _filePath = @$"{folder}\{name}";
+            _filePath = $"{filePath}";
             _fileLock = new object();
         }
 
@@ -152,11 +136,8 @@ public class DiscordClient : IDisposable
             }
         }
         
-        private string GetCurrentTimeString()
-        {
-            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        }
-        
+        private string GetCurrentTimeString() => DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
         public void Trace(string message, params object[] args) => WriteToFile("TRCE:", LogLevel.Trace, message, args);
 
         public void Info(string message, params object[] args) => WriteToFile("INFO:", LogLevel.Info, message, args);

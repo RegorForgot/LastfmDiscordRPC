@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using LastfmDiscordRPC.Commands;
 using LastfmDiscordRPC.Models;
 
@@ -68,15 +66,15 @@ public partial class MainViewModel : ViewModelBase
     public PreviewViewModel PreviewViewModel { get; }
     public readonly DiscordClient Client;
     
-    public MainViewModel(string username, string apiKey, string appKey, DiscordClient client)
+    public MainViewModel(SaveAppData.AppData appData, DiscordClient client)
     {
         SetPresenceCommand = new SetPresenceCommand(this);
         SaveCommand = new SaveCommand(this);
         DefaultKeyCommand = new DefaultKeyCommand(this);
         PreviewViewModel = new PreviewViewModel();
-        Username = username;
-        APIKey = apiKey;
-        AppKey = appKey;
+        Username = appData.Username;
+        APIKey = appData.APIKey;
+        AppKey = appData.AppKey;
         Client = client;
         OutputText = "+ Started!\n";
     }
