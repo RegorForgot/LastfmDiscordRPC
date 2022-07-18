@@ -78,7 +78,7 @@ public class PresenceSetter : IDisposable
     {
         if (_response?.Track == null)
         {
-            _mainViewModel.WriteToOutput("\n+ No tracks found for user.");
+            _mainViewModel.Logger.InfoOverride("No tracks found for user.");
             Dispose();
         } else
         {
@@ -90,19 +90,17 @@ public class PresenceSetter : IDisposable
             _mainViewModel.PreviewViewModel.ImageURL = track.Images[3].URL;
 
             if (!_firstSuccess)
-                _mainViewModel.WriteToOutput("\n+ Track successfully received! Attempting to connect to presence...");
+                _mainViewModel.Logger.InfoOverride("Track successfully received! Attempting to connect to presence...");
 
-            if (_mainViewModel.DiscordClient.IsInitialised)
+            if (_mainViewModel.DiscordClient.IsReady)
             {
                 _mainViewModel.DiscordClient.SetPresence(_response, username);
                 if (!_firstSuccess)
-                    _mainViewModel.WriteToOutput("\n+ Connected to presence!" +
-                                                 "\n+ If presence is not showing, please check log file.");
+                    _mainViewModel.Logger.InfoOverride("Presence has been set!");
                 _firstSuccess = true;
             } else
             {
-                _mainViewModel.WriteToOutput("\n+ DiscordClient not initialised. Please enter a valid Discord " +
-                                             "App ID, save, then restart.");
+                _mainViewModel.Logger.WarningOverride("Discord client not initialised. Please restart and use a valid ID.");
                 Dispose();
             }
         }
@@ -112,15 +110,14 @@ public class PresenceSetter : IDisposable
     {
         if (e.GetType() == typeof(LastfmException))
         {
-            _mainViewModel.WriteToOutput($"\n+ Error '{((LastfmException)e).ErrorCode}' from Last.fm: {e.Message}");
-
+            _mainViewModel.Logger.ErrorOverride("Last.fm {0}", e.Message);
             if (((LastfmException)e).ErrorCode == ErrorEnum.RateLimit) return;
             RetryAllowed = true;
         }
         else if (e.GetType() == typeof(HttpRequestException))
-            _mainViewModel.WriteToOutput($"\n+ HTTP Error '{((HttpRequestException)e).StatusCode}': {e.Message}");
+            _mainViewModel.Logger.ErrorOverride("HTTP {0}: {1}", ((HttpRequestException)e).StatusCode, e.Message);
         else
-            _mainViewModel.WriteToOutput($"\n+ Unhandled Exception: {e.Message}");
+            _mainViewModel.Logger.ErrorOverride("Unhandled exception! {0}", e.Message);
 
         RetryAllowed = true;
     }

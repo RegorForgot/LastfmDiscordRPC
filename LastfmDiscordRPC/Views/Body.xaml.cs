@@ -22,7 +22,7 @@ public partial class Body
     private void LogFileButton_OnClick(object sender, RoutedEventArgs e)
     {
         LogFileButton.IsEnabled = false;
-        string logFilePath = $@"{SaveAppData.FolderPath}\RPClog.log";
+        string logFilePath = $@"{SaveAppData.FolderPath}\errLog.log";
         SaveAppData.CheckFolderExists();
 
         if (!File.Exists(logFilePath))

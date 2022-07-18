@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using DiscordRPC.Logging;
 using LastfmDiscordRPC.Commands;
 using LastfmDiscordRPC.Models;
 using static LastfmDiscordRPC.Models.SaveAppData;
@@ -85,11 +86,13 @@ public partial class MainViewModel : ViewModelBase, IDisposable
     public readonly DiscordClient DiscordClient;
     public readonly LastfmClient LastfmClient;
     public readonly PresenceSetter PresenceSetter;
+    public readonly Logger Logger;
 
     public MainViewModel(AppData appData)
     {
         HasNotRun = true;
         OutputText = "+ Started!";
+        Logger = new Logger($@"{FolderPath}\errLog.log", LogLevel.Warning, this);
         LastfmClient = new LastfmClient();
         DiscordClient = new DiscordClient(this);
         PresenceSetter = new PresenceSetter(this);

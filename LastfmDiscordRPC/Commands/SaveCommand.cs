@@ -16,7 +16,7 @@ public class SaveCommand : CommandBase
             SaveAppData.SaveData(MainViewModel.Username, MainViewModel.APIKey, MainViewModel.AppID);
         } catch (IOException e)
         {
-            MainViewModel.WriteToOutput($"Error saving file: {e.Message}");
+            MainViewModel.Logger.ErrorOverride("Error writing to file: {0}", e.Message);
         }
     }
 

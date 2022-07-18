@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 using DiscordRPC;
-using DiscordRPC.Logging;
+using DiscordRPC.Exceptions;
 using LastfmDiscordRPC.ViewModels;
 
 namespace LastfmDiscordRPC.Models;
@@ -15,7 +14,12 @@ public class DiscordClient : IDisposable
     private const string PauseIconURL = @"https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = @"https://i.imgur.com/wvTxH0t.png";
 
-    public bool IsInitialised => _client is { IsInitialized: true };
+    private bool IsInitialised
+    {
+        get => _client != null;
+    }
+
+    public bool IsReady { get; set; } = false;
 
     public DiscordClient(MainViewModel mainViewModel)
     {
@@ -27,12 +31,19 @@ public class DiscordClient : IDisposable
         if (IsInitialised) return;
         _client = new DiscordRpcClient(_mainViewModel.AppID)
         {
-            Logger = new DiscordLoggerTimed($@"{SaveAppData.FolderPath}\RPClog.log", LogLevel.Warning, _mainViewModel),
+            Logger = _mainViewModel.Logger,
             SkipIdenticalPresence = true
         };
-        _client.OnConnectionFailed
-            += (sender, message) => _client.Logger.Warning("Connection to discord failed.", sender);
         _client.Initialize();
+        _client.OnClose += (_, _) =>
+        {
+            _mainViewModel.Logger.ErrorOverride("Could not connect to Discord.");
+        };
+        _client.OnReady += (_, _) =>
+        {
+            _mainViewModel.Logger.InfoOverride("Client ready.");
+            IsReady = true;
+        };
     }
 
     /// <summary>
@@ -111,75 +122,21 @@ public class DiscordClient : IDisposable
     {
         _client?.ClearPresence();
     }
-    
+
     /// <inheritdoc />
     public void Dispose()
     {
         if (!IsInitialised) return;
         if (_client!.IsDisposed) return;
+
         try
         {
-            _client.ClearPresence();
+            ClearPresence();
             _client.Deinitialize();
             _client.Dispose();
             SuppressFinalize(this);
         } catch (ObjectDisposedException)
+        { } catch (UninitializedException)
         { }
-    }
-    
-    private class DiscordLoggerTimed : ILogger
-    {
-        private readonly MainViewModel _mainViewModel;
-        private readonly object _fileLock = new object();
-        private readonly string _filePath;
-        public LogLevel Level { get; set; }
-
-        public DiscordLoggerTimed(string filePath, LogLevel level, MainViewModel mainViewModel)
-        {
-            Level = level;
-            _filePath = $"{filePath}";
-            _mainViewModel = mainViewModel;
-        }
-
-        private void WriteToFile(string errorLevel, LogLevel level, string message, params object[] args)
-        {
-            if (Level > level)
-                return;
-            SaveAppData.CheckFolderExists();
-            string errorMessage
-                = $"\n+ [{GetCurrentTimeString()}] {errorLevel}: {(args.Length != 0 ? Format(message, args) : message)}";
-            
-            _mainViewModel.WriteToOutput(errorMessage);
-            lock (_fileLock)
-            {
-                if (File.Exists(_filePath)) File.AppendAllText(_filePath, errorMessage);
-                else File.WriteAllText(_filePath, errorMessage);
-            }
-        }
-        
-        private static string GetCurrentTimeString()
-        {
-            return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        }
-
-        public void Trace(string message, params object[] args)
-        {
-            WriteToFile("TRCE", LogLevel.Trace, message, args);
-        }
-
-        public void Info(string message, params object[] args)
-        {
-            WriteToFile("INFO", LogLevel.Info, message, args);
-        }
-
-        public void Warning(string message, params object[] args)
-        {
-            WriteToFile("WARN", LogLevel.Warning, message, args);
-        }
-
-        public void Error(string message, params object[] args)
-        {
-            WriteToFile("ERR ", LogLevel.Error, message, args);
-        }
     }
 }
