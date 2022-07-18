@@ -14,12 +14,9 @@ public class DiscordClient : IDisposable
     private const string PauseIconURL = @"https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = @"https://i.imgur.com/wvTxH0t.png";
 
-    private bool IsInitialised
-    {
-        get => _client != null;
-    }
+    private bool IsInitialised => _client != null;
 
-    public bool IsReady { get; set; } = false;
+    public bool IsReady { get; private set; }
 
     public DiscordClient(MainViewModel mainViewModel)
     {
@@ -134,9 +131,11 @@ public class DiscordClient : IDisposable
             ClearPresence();
             _client.Deinitialize();
             _client.Dispose();
-            SuppressFinalize(this);
         } catch (ObjectDisposedException)
         { } catch (UninitializedException)
-        { }
+        { } finally
+        {
+            SuppressFinalize(this);
+        }
     }
 }
