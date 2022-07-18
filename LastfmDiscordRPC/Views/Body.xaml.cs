@@ -21,6 +21,7 @@ public partial class Body
 
     private void LogFileButton_OnClick(object sender, RoutedEventArgs e)
     {
+        LogFileButton.IsEnabled = false;
         string logFilePath = $@"{SaveAppData.FolderPath}\RPClog.log";
         SaveAppData.CheckFolderExists();
 
@@ -32,8 +33,8 @@ public partial class Body
         {
             UseShellExecute = true
         };
-        Process.Start(sInfo); 
-
+        Process.Start(sInfo);
+        LogFileButton.IsEnabled = true;
     }
 
     private void UsernameTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
