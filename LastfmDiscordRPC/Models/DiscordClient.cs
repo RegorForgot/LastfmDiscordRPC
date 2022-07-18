@@ -47,6 +47,12 @@ public class DiscordClient : IDisposable
         string smallImage;
         string smallText;
         string albumString = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
+        string trackName = track.Name;
+
+        while (trackName.Length < 2)
+        {
+            trackName += "\u180E";
+        }
 
         if (response.Track!.NowPlaying.State == "true")
         {
@@ -73,7 +79,7 @@ public class DiscordClient : IDisposable
 
         _presence = new RichPresence
         {
-            Details = track.Name,
+            Details = trackName,
             State = $"By {track.Artist.Name}{albumString}",
             Assets = new Assets
             {
