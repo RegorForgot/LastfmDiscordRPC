@@ -51,14 +51,12 @@
                FontWeight="Bold"
                FontSize="24">
           <TextBlock Text="Last.fm"
-                     TextTrimming="CharacterEllipsis">
-          </TextBlock>
+                     TextTrimming="CharacterEllipsis"/>
         </Label>
 
         <Label Style="{StaticResource GeneralStyle}">
           <TextBlock Text="{Binding Description}"
-                     TextTrimming="CharacterEllipsis">
-          </TextBlock>
+                     TextTrimming="CharacterEllipsis"/>
           <Label.ToolTip>
             <Label Style="{StaticResource TooltipStyle}"
                    Content="{Binding Description}"/>
