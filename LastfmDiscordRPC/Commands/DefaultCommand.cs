@@ -3,9 +3,9 @@ using LastfmDiscordRPC.ViewModels;
 
 namespace LastfmDiscordRPC.Commands;
 
-public class DefaultKeyCommand : CommandBase
+public class DefaultCommand : CommandBase
 {
-    public DefaultKeyCommand(MainViewModel mainViewModel) : base(mainViewModel)
+    public DefaultCommand(MainViewModel mainViewModel) : base(mainViewModel)
     { }
 
     public override bool CanExecute(object? parameter)
@@ -16,5 +16,6 @@ public class DefaultKeyCommand : CommandBase
     public override void Execute(object? parameter)
     {
         MainViewModel.APIKey = SaveAppData.DefaultAPIKey;
+        MainViewModel.AppID = SaveAppData.DefaultAppID;
     }
 }

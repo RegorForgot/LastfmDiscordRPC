@@ -8,6 +8,7 @@ public static class SaveAppData
 {
     public static AppData SavedData { get; private set; }
     public const string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
+    public const string DefaultAppID = "997756398664421446";
     public readonly static string FolderPath;
     private readonly static string FilePath;
     private readonly static object Lock = new object();
@@ -39,7 +40,7 @@ public static class SaveAppData
         SaveData(appData.Username, appData.APIKey, appData.AppID);
     }
 
-    public static void SaveData(string username = "", string apiKey = "", string appKey = "")
+    public static void SaveData(string username, string apiKey, string appKey)
     {
         AppData appData = new AppData
         {
@@ -69,7 +70,7 @@ public static class SaveAppData
     public class AppData
     {
         [JsonProperty] public string Username { get; set; } = Empty;
-        [JsonProperty] public string APIKey { get; set; } = Empty;
-        [JsonProperty] public string AppID { get; set; } = Empty;
+        [JsonProperty] public string APIKey { get; set; } = DefaultAPIKey;
+        [JsonProperty] public string AppID { get; set; } = DefaultAppID;
     }
 }

@@ -80,7 +80,7 @@ public partial class MainViewModel : ViewModelBase, IDisposable
 
     public ICommand SetPresenceCommand { get; }
     public ICommand SaveCommand { get; }
-    public ICommand DefaultKeyCommand { get; }
+    public ICommand DefaultCommand { get; }
     public PreviewViewModel PreviewViewModel { get; }
 
     public readonly DiscordClient DiscordClient;
@@ -98,7 +98,7 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         PresenceSetter = new PresenceSetter(this);
         SetPresenceCommand = new SetPresenceCommand(this);
         SaveCommand = new SaveCommand(this);
-        DefaultKeyCommand = new DefaultKeyCommand(this);
+        DefaultCommand = new DefaultCommand(this);
         PreviewViewModel = new PreviewViewModel();
         Username = appData.Username;
         APIKey = appData.APIKey;

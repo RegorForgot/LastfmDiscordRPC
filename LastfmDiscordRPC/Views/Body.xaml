@@ -103,8 +103,8 @@
       <Button Command="{Binding SaveCommand}"
               Content="Save Settings"
               Style="{StaticResource ButtonStyle}" />
-      <Button Command="{Binding DefaultKeyCommand}"
-              Content="Load Default API Key"
+      <Button Command="{Binding DefaultCommand}"
+              Content="Load Default Settings"
               Style="{StaticResource ButtonStyle}"/>
     </StackPanel>
 
