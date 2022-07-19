@@ -16,6 +16,7 @@ public class PresenceSetter : IDisposable
     private PeriodicTimer? _timer;
     private bool _firstSuccess;
     private bool _retryAllowed;
+    private int _exceptionCount;
 
     public bool RetryAllowed
     {
@@ -58,9 +59,7 @@ public class PresenceSetter : IDisposable
                             _response = null;
                         } catch (Exception e)
                         {
-                            ConnectionError(e);
-                            Dispose();
-                            _mainViewModel.DiscordClient.ClearPresence();
+                            ConnectionError(e, username, apiKey);
                         }
                     }
                 } catch (Exception)
@@ -94,6 +93,7 @@ public class PresenceSetter : IDisposable
 
             if (_mainViewModel.DiscordClient.IsReady)
             {
+                _exceptionCount = 0;
                 _mainViewModel.DiscordClient.SetPresence(_response, username);
                 if (!_firstSuccess)
                     _mainViewModel.Logger.InfoOverride("Presence has been set!");
@@ -106,18 +106,42 @@ public class PresenceSetter : IDisposable
         }
     }
 
-    private void ConnectionError(Exception e)
+    private void ConnectionError(Exception e, string username, string apiKey)
     {
         if (e.GetType() == typeof(LastfmException))
         {
             _mainViewModel.Logger.ErrorOverride("Last.fm {0}", e.Message);
-            if (((LastfmException)e).ErrorCode == ErrorEnum.RateLimit) return;
-            RetryAllowed = true;
+
+            switch (((LastfmException)e).ErrorCode)
+            {
+                case ErrorEnum.RateLimit:
+                    Dispose();
+
+                    return;
+                case ErrorEnum.Temporary or ErrorEnum.OperationFail when _exceptionCount < 3:
+                    _exceptionCount++;
+                    UpdatePresence(username, apiKey);
+                    _mainViewModel.Logger.InfoOverride($"Attempting to reconnect... Try {_exceptionCount}");
+                    break;
+                case ErrorEnum.Temporary or ErrorEnum.OperationFail:
+                    Dispose();
+
+                    break;
+                default:
+                    Dispose();
+
+                    break;
+            }
         }
         else if (e.GetType() == typeof(HttpRequestException))
+        {
             _mainViewModel.Logger.ErrorOverride("HTTP {0}: {1}", ((HttpRequestException)e).StatusCode, e.Message);
-        else
+            Dispose();
+        } else
+        {
             _mainViewModel.Logger.ErrorOverride("Unhandled exception! {0}", e.Message);
+            Dispose();
+        }
 
         RetryAllowed = true;
     }
@@ -125,5 +149,6 @@ public class PresenceSetter : IDisposable
     public void Dispose()
     {
         _timer?.Dispose();
+        _mainViewModel.DiscordClient.ClearPresence();
     }
 }
