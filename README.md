@@ -20,9 +20,11 @@ Simply download the release of your choice, enter your username, and set the pre
 
 ## Customisation
 
+Thanks to [curiositIy](https://github.com/curiositIy/) for writing the section below!
+
 ### **Setting your own Last.fm API key**
 
-You can use the default Last.fm API key by simply clicking "Load defaults", but if any problems (such as ratelimiting) arise, you can always use yor own.
+You can use the default Last.fm API key by simply clicking "Load defaults", but if any problems (such as rate-limiting) arise, you can always use yor own.
 
 Head over to [last.fm/api/account/create](https://www.last.fm/api/account/create) and create an API account.
 
@@ -45,3 +47,11 @@ Finally, look for the text that says **Application ID**, there will be an ID bel
 ## Contributing
 
 If you find any issues or have any suggestions, feel free to start an issue or create a pull request!
+
+## Libraries and assets
+
+- [Github Logo](https://github-media-downloads.s3.amazonaws.com/GitHub-Mark.zip)
+- [Last.fm Logo](https://www.last.fm/static/images/lastfm_avatar_twitter.png)
+- [discord-rpc-csharp](https://github.com/Lachee/discord-rpc-csharp/)
+- [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
+- [RestSharp](https://github.com/restsharp/RestSharp)
