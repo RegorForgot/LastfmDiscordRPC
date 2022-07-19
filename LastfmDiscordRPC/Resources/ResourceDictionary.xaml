@@ -98,6 +98,8 @@
     <Setter Property="VerticalAlignment" Value="Top" />
     <Setter Property="TextWrapping" Value="Wrap" />
     <Setter Property="IsReadOnly" Value="True" />
+    <Setter Property="FontFamily" Value="Courier New"/>
+    <Setter Property="FontSize" Value="14"/>
   </Style>
 
   <Style BasedOn="{StaticResource GeneralTextBoxStyle}"

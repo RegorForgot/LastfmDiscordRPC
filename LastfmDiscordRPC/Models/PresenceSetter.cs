@@ -24,8 +24,7 @@ public class PresenceSetter : IDisposable
         set
         {
             _retryAllowed = value;
-            if (_retryAllowed)
-                ((SetPresenceCommand)_mainViewModel.SetPresenceCommand).RaiseCanExecuteChanged();
+            ((SetPresenceCommand)_mainViewModel.SetPresenceCommand).RaiseCanExecuteChanged();
         }
     }
 
@@ -116,19 +115,21 @@ public class PresenceSetter : IDisposable
             {
                 case ErrorEnum.RateLimit:
                     Dispose();
-
                     return;
                 case ErrorEnum.Temporary or ErrorEnum.OperationFail when _exceptionCount < 3:
                     _exceptionCount++;
                     UpdatePresence(username, apiKey);
                     _mainViewModel.Logger.InfoOverride($"Attempting to reconnect... Try {_exceptionCount}");
+
                     break;
                 case ErrorEnum.Temporary or ErrorEnum.OperationFail:
                     Dispose();
+                    RetryAllowed = true;
 
                     break;
                 default:
                     Dispose();
+                    RetryAllowed = true;
 
                     break;
             }
@@ -137,13 +138,13 @@ public class PresenceSetter : IDisposable
         {
             _mainViewModel.Logger.ErrorOverride("HTTP {0}: {1}", ((HttpRequestException)e).StatusCode, e.Message);
             Dispose();
+            RetryAllowed = true;
         } else
         {
             _mainViewModel.Logger.ErrorOverride("Unhandled exception! {0}", e.Message);
             Dispose();
+            RetryAllowed = true;
         }
-
-        RetryAllowed = true;
     }
 
     public void Dispose()
