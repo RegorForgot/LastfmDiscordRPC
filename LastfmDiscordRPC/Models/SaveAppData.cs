@@ -7,8 +7,8 @@ namespace LastfmDiscordRPC.Models;
 public static class SaveAppData
 {
     public static AppData SavedData { get; private set; }
-    public const string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
-    public const string DefaultAppID = "997756398664421446";
+    public readonly static string DefaultAPIKey = "05467a3191853eb8da38dfb38ed3c733";
+    public readonly static string DefaultAppID = "997756398664421446";
     public readonly static string FolderPath;
     private readonly static string FilePath;
     private readonly static object Lock = new object();

@@ -15,7 +15,7 @@ public class SaveCommand : CommandBase
     /// <summary>
     ///  Try saving the data, catch an IOException which will leave the user unable to save their settings
     /// </summary>
-    /// <param name="parameter"></param>
+    /// <param name="parameter">w</param>
     public override void Execute(object? parameter)
     {
         try

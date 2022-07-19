@@ -24,14 +24,20 @@ public partial class MainViewModel : INotifyDataErrorInfo
         if (!_errorsByPropertyName.ContainsKey(propertyName))
             _errorsByPropertyName[propertyName] = new List<string>();
 
-        if (_errorsByPropertyName[propertyName].Contains(error)) return;
+        if (_errorsByPropertyName[propertyName].Contains(error))
+        {
+            return;
+        }
         _errorsByPropertyName[propertyName].Add(error);
         OnErrorsChanged(propertyName);
     }
 
     private void ClearErrors(string propertyName)
     {
-        if (!_errorsByPropertyName.ContainsKey(propertyName)) return;
+        if (!_errorsByPropertyName.ContainsKey(propertyName))
+        {
+            return;
+        }
         _errorsByPropertyName.Remove(propertyName);
         OnErrorsChanged(propertyName);
     }
@@ -50,7 +56,10 @@ public partial class MainViewModel : INotifyDataErrorInfo
         ClearErrors(nameof(Username));
         const string pattern = @"^[A-Za-z0-9-_]{1,15}$";
 
-        if (Regex.IsMatch(Username, pattern)) return;
+        if (Regex.IsMatch(Username, pattern))
+        {
+            return;
+        }
         AddError(nameof(Username), "Username is invalid.");
     }
 
@@ -59,7 +68,10 @@ public partial class MainViewModel : INotifyDataErrorInfo
         ClearErrors(nameof(APIKey));
         const string pattern = @"^[0-9a-f]{32}$";
 
-        if (Regex.IsMatch(APIKey, pattern)) return;
+        if (Regex.IsMatch(APIKey, pattern))
+        {
+            return;
+        }
         AddError(nameof(APIKey), "Last.fm API key is invalid.");
     }
 
@@ -68,7 +80,10 @@ public partial class MainViewModel : INotifyDataErrorInfo
         ClearErrors(nameof(AppID));
         const string pattern = @"^\d{14,19}$";
 
-        if (Regex.IsMatch(AppID, pattern)) return;
+        if (Regex.IsMatch(AppID, pattern))
+        {
+            return;
+        }
         AddError(nameof(AppID), "Discord application ID is invalid.");
     }
 

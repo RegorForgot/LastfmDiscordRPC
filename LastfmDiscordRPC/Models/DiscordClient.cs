@@ -39,7 +39,10 @@ public class DiscordClient : IDisposable
 
     private void SetEventHandlers()
     {
-        if (_client == null) return;
+        if (_client == null)
+        {
+            return;
+        }
         _client.OnClose += (_, _) =>
         {
             _mainViewModel.Logger.ErrorOverride("Could not connect to Discord.");
@@ -153,14 +156,19 @@ public class DiscordClient : IDisposable
         {
             return;
         }
+
         try
         {
             ClearPresence();
             _client.Deinitialize();
             _client.Dispose();
         } catch (ObjectDisposedException)
-        { } catch (UninitializedException)
-        { } finally
+        {
+            // If either of these are run, the client did not need to be disposed in the first place.
+        } catch (UninitializedException)
+        {
+            // Same as above
+        } finally
         {
             SuppressFinalize(this);
         }

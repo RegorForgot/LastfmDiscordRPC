@@ -65,25 +65,37 @@ public class Logger : ILogger
 
     public void Trace(string message, params object[] args)
     {
-        if (Level > LogLevel.Trace) return;
+        if (Level > LogLevel.Trace)
+        {
+            return;
+        }
         WriteToFile("TRCE", LogLevel.Trace, message, args);
     }
 
     public void Info(string message, params object[] args)
     {
-        if (Level > LogLevel.Info) return;
+        if (Level > LogLevel.Info)
+        {
+            return;
+        }
         WriteToFile("INFO", LogLevel.Info, message, args);
     }
 
     public void Warning(string message, params object[] args)
     {
-        if (Level > LogLevel.Warning) return;
+        if (Level > LogLevel.Warning)
+        {
+            return;
+        }
         WriteToFile("WARN", LogLevel.Warning, message, args);
     }
 
     public void Error(string message, params object[] args)
     {
-        if (Level > LogLevel.Error) return;
+        if (Level > LogLevel.Error)
+        {
+            return;
+        }
         WriteToFile("ERR ", LogLevel.Error, message, args);
     }
 

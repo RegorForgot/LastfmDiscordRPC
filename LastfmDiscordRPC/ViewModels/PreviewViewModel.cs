@@ -10,7 +10,10 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _imageHyperlink;
         set
         {
-            if (value == _imageHyperlink) return;
+            if (value == _imageHyperlink)
+            {
+                return;
+            }
             _imageHyperlink = value.Replace(@"/300x300", "");
             OnPropertyChanged(nameof(ImageHyperlink));
         }
@@ -22,8 +25,10 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _imageURL;
         set
         {
-            if (value == _imageURL) return;
-
+            if (value == _imageURL)
+            {
+                return;
+            }
             _imageURL = value;
             ImageHyperlink = value is Track.DefaultAlbumCover or Track.DefaultSingleCover ? Empty : _imageURL;
             OnPropertyChanged(nameof(ImageURL));
@@ -36,7 +41,10 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _tooltip;
         set
         {
-            if (value == _tooltip) return;
+            if (value == _tooltip)
+            {
+                return;
+            }
             _tooltip = value;
             OnPropertyChanged(nameof(Tooltip));
         }
@@ -48,7 +56,10 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _description;
         set
         {
-            if (value == _description) return;
+            if (value == _description)
+            {
+                return;
+            }
             _description = value;
             OnPropertyChanged(nameof(Description));
         }
@@ -60,7 +71,10 @@ public sealed class PreviewViewModel : ViewModelBase
         get => _state;
         set
         {
-            if (value == _state) return;
+            if (value == _state)
+            {
+                return;
+            }
             _state = value;
             OnPropertyChanged(nameof(State));
         }

@@ -19,7 +19,10 @@ public partial class MainWindow
     /// <param name="e"></param>
     protected override void OnStateChanged(EventArgs e)
     {
-        if (WindowState == WindowState.Minimized) Hide();
+        if (WindowState == WindowState.Minimized)
+        {
+            Hide();
+        }
         base.OnStateChanged(e);
     }
 }
