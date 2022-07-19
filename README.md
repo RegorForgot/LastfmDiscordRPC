@@ -13,7 +13,7 @@ Simply download the release of your choice, enter your username, and set the pre
 
 **Note:** For the non-self contained releases **(recommended)**, .NET 6 Desktop Runtime must be installed on your computer
 
-[Download .NET 6 x64 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x64-installer)
+[Download .NET 6 x64 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x64-installer)
 
 [Download .NET 6 x86 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x86-installer)
 
