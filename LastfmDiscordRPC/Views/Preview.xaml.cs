@@ -10,6 +10,11 @@ public partial class Preview
         InitializeComponent();
     }
 
+    /// <summary>
+    /// Opens a window in browser that opens the link to the album cover's image.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void AlbumCover_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
     {
         string url = AlbumCover.NavigateUri.AbsoluteUri;

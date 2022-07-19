@@ -1,51 +1,42 @@
 ﻿using System;
 using System.Threading;
-using LastfmDiscordRPC.Models;
 using LastfmDiscordRPC.ViewModels;
 
 namespace LastfmDiscordRPC.Commands;
 
 public class SetPresenceCommand : CommandBase
 {
-    private readonly PresenceSetter _presenceSetter;
-    private string _previousUsername;
-    private string _previousAPIKey;
-
+    private bool CanSetPresence { get; set; } = true;
+    
     public SetPresenceCommand(MainViewModel mainViewModel) : base(mainViewModel)
-    {
-        _presenceSetter = mainViewModel.PresenceSetter;
-        _previousUsername = Empty;
-        _previousAPIKey = Empty;
-    }
+    { }
     
     public override bool CanExecute(object? parameter)
     {
-        return _presenceSetter.IsReady 
-               && !MainViewModel.HasErrors 
-               && (_previousUsername != MainViewModel.Username 
-                   || _previousAPIKey != MainViewModel.APIKey)
-               || MainViewModel.PresenceSetter.RetryAllowed;
+        return CanSetPresence && !MainViewModel.HasErrors;
     }
 
     public override void Execute(object? parameter)
     {
-        _previousUsername = MainViewModel.Username;
-        _previousAPIKey = MainViewModel.APIKey;
-        MainViewModel.PresenceSetter.RetryAllowed = false;
+        string username = MainViewModel.Username;
+        string apiKey = MainViewModel.APIKey;
+        
         UpdateButtonExecute();
-        _presenceSetter.UpdatePresence(_previousUsername, _previousAPIKey);
+        MainViewModel.PresenceSetter.UpdatePresence(username, apiKey);
     }
 
+    // Dispose PresenceSetter's timer - event handler (in this case for the button click) - hence why it is async void and not
+    // async Task.
     private async void UpdateButtonExecute()
     {
-        using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
-        _presenceSetter.Dispose();
-        _presenceSetter.IsReady = false;
+        using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+        MainViewModel.PresenceSetter.Dispose();
+        CanSetPresence = false;
         RaiseCanExecuteChanged();
 
         while (await timer.WaitForNextTickAsync())
         {
-            _presenceSetter.IsReady = true;
+            CanSetPresence = true;
             RaiseCanExecuteChanged();
             timer.Dispose();
         }

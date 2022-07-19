@@ -9,13 +9,11 @@ namespace LastfmDiscordRPC.Models;
 public class DiscordClient : IDisposable
 {
     private DiscordRpcClient? _client;
-    private RichPresence? _presence;
     private readonly MainViewModel _mainViewModel;
     private const string PauseIconURL = @"https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = @"https://i.imgur.com/wvTxH0t.png";
 
     private bool IsInitialised => _client != null;
-
     public bool IsReady { get; private set; }
 
     public DiscordClient(MainViewModel mainViewModel)
@@ -25,16 +23,41 @@ public class DiscordClient : IDisposable
 
     public void Initialize()
     {
-        if (IsInitialised) return;
+        if (IsInitialised)
+        {
+            return;
+        }
+
         _client = new DiscordRpcClient(_mainViewModel.AppID)
         {
-            Logger = _mainViewModel.Logger,
-            SkipIdenticalPresence = true
+            Logger = _mainViewModel.Logger, SkipIdenticalPresence = true
         };
         _client.Initialize();
+
+        SetEventHandlers();
+    }
+
+    private void SetEventHandlers()
+    {
+        if (_client == null) return;
         _client.OnClose += (_, _) =>
         {
             _mainViewModel.Logger.ErrorOverride("Could not connect to Discord.");
+            IsReady = false;
+        };
+        _client.OnError += (_, _) =>
+        {
+            _mainViewModel.Logger.ErrorOverride("There has been an error trying to connect to Discord.");
+            IsReady = false;
+        };
+        _client.OnConnectionFailed += (_, _) =>
+        {
+            _mainViewModel.Logger.ErrorOverride("Connection to discord failed. Check if your Discord app is open.");
+            IsReady = false;
+        };
+        _client.OnConnectionEstablished += (_, _) =>
+        {
+            _mainViewModel.Logger.InfoOverride("Connection to discord succeeded.");
         };
         _client.OnReady += (_, _) =>
         {
@@ -48,7 +71,7 @@ public class DiscordClient : IDisposable
     /// </summary>
     /// <param name="response">The API response received from last.fm</param>
     /// <param name="username">The username provided by user</param>
-    public void SetPresence(LastfmResponse response, string username)
+    public void SetPresence(LastfmResponse? response, string username)
     {
         // Null ignore - handling done in SetPresenceCommand's Execute method.
         Track track = response.Track!;
@@ -57,7 +80,8 @@ public class DiscordClient : IDisposable
         string albumString = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
         string trackName = track.Name;
 
-        while (trackName.Length < 2)
+        // Adding just one is fine: all tracks have to have at least one character in the Last.fm database.
+        if (trackName.Length < 2)
         {
             trackName += "\u180E";
         }
@@ -82,11 +106,10 @@ public class DiscordClient : IDisposable
 
         Button button = new Button
         {
-            Label = $"{int.Parse(response.Playcount):n0} scrobbles", 
-            Url = @$"https://www.last.fm/user/{username}/"
+            Label = $"{int.Parse(response.Playcount):n0} scrobbles", Url = @$"https://www.last.fm/user/{username}/"
         };
 
-        _presence = new RichPresence
+        RichPresence presence = new RichPresence
         {
             Details = trackName,
             State = $"By {track.Artist.Name}{albumString}",
@@ -102,8 +125,7 @@ public class DiscordClient : IDisposable
                 button
             }
         };
-        _client?.SetPresence(_presence);
-        _presence = null;
+        _client?.SetPresence(presence);
 
         string GetTimeString(TimeSpan timeSince)
         {
@@ -118,15 +140,19 @@ public class DiscordClient : IDisposable
 
     public void ClearPresence()
     {
-        _client?.ClearPresence();
+        if (IsInitialised)
+        {
+            _client?.ClearPresence();
+        }
     }
 
     /// <inheritdoc />
     public void Dispose()
     {
-        if (!IsInitialised) return;
-        if (_client!.IsDisposed) return;
-
+        if (!IsInitialised || (bool)_client?.IsDisposed)
+        {
+            return;
+        }
         try
         {
             ClearPresence();

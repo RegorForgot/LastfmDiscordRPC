@@ -19,9 +19,15 @@ public partial class Body
         OutputBox.ScrollToEnd();
     }
 
+    /// <summary>
+    /// Open the log file - if it doesn't exist or the folder containing it doesn't exist, make it.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void LogFileButton_OnClick(object sender, RoutedEventArgs e)
     {
         LogFileButton.IsEnabled = false;
+        
         string logFilePath = $@"{SaveAppData.FolderPath}\errLog.log";
         SaveAppData.CheckFolderExists();
 
@@ -34,9 +40,10 @@ public partial class Body
             UseShellExecute = true
         };
         Process.Start(sInfo);
+        
         LogFileButton.IsEnabled = true;
     }
-
+    
     private void UsernameTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         UsernamePlaceholder.Visibility = IsNullOrEmpty(UsernameTextBox.Text) ? Visible : Hidden;
@@ -46,10 +53,9 @@ public partial class Body
     {
         APIKeyPlaceholder.Visibility = IsNullOrEmpty(APIKeyTextBox.Text) ? Visible : Hidden;
     }
-
+    
     private void AppIDTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
     {
         AppIDPlaceholder.Visibility = IsNullOrEmpty(AppIDTextBox.Text) ? Visible : Hidden;
     }
-
 }

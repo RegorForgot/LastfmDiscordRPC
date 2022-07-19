@@ -43,6 +43,8 @@ public partial class MainViewModel : INotifyDataErrorInfo
         ((CommandBase)SetPresenceCommand).RaiseCanExecuteChanged();
     }
 
+    #region Input Validators
+
     private void ValidateUsername()
     {
         ClearErrors(nameof(Username));
@@ -69,4 +71,6 @@ public partial class MainViewModel : INotifyDataErrorInfo
         if (Regex.IsMatch(AppID, pattern)) return;
         AddError(nameof(AppID), "Discord application ID is invalid.");
     }
+
+    #endregion
 }

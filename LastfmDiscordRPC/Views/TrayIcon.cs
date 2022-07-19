@@ -47,7 +47,10 @@ public class TrayIcon : IDisposable
     
     private void TrayIcon_OnClick(object? sender, EventArgs e)
     {
-        if (((MouseEventArgs)e).Button != MouseButtons.Left) return;
+        if (((MouseEventArgs)e).Button != MouseButtons.Left)
+        {
+            return;
+        }
         _app.OnTrayClick(sender, e);
     }
 

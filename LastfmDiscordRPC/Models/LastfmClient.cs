@@ -10,8 +10,7 @@ namespace LastfmDiscordRPC.Models;
 public class LastfmClient : IDisposable
 {
     private readonly RestClient _client;
-    private RestRequest? _request;
-
+    
     public LastfmClient()
     {
         _client = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
@@ -20,26 +19,32 @@ public class LastfmClient : IDisposable
 
     public async Task<LastfmResponse> CallAPI(string username, string apiKey)
     {
-        _request = new RestRequest();
-
-        _request.AddParameter("format", "json");
-        _request.AddParameter("method", "user.getrecenttracks");
-        _request.AddParameter("limit", "1");
-        _request.AddParameter("user", username);
-        _request.AddParameter("api_key", apiKey);
-        _request.Timeout = 5000;
-
-        RestResponse response = await _client.ExecuteAsync(_request);
-        _request = null;
         
-        if (response.Content != null) return GetResponse(response.Content);
+        RestRequest request = new RestRequest();
+
+        request.AddParameter("format", "json");
+        request.AddParameter("method", "user.getrecenttracks");
+        request.AddParameter("limit", "1");
+        request.AddParameter("user", username);
+        request.AddParameter("api_key", apiKey);
+        request.Timeout = 5000;
+
+        RestResponse response = await _client.ExecuteAsync(request);
+
+        if (response.Content != null)
+        {
+            return GetResponse(response.Content);
+        }
         throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
     }
 
     private static LastfmResponse GetResponse(string response)
     {
         LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response)!;
-        if (e.Error == ErrorEnum.OK) return JsonConvert.DeserializeObject<LastfmResponse>(response)!;
+        if (e.Error == ErrorEnum.OK)
+        {
+            return JsonConvert.DeserializeObject<LastfmResponse>(response)!;
+        }
         throw new LastfmException(e.Message, e.Error);
     }
 

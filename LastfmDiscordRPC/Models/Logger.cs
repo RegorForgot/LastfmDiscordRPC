@@ -17,6 +17,13 @@ public class Logger : ILogger
         Level = level;
         _filePath = $"{filePath}";
         _mainViewModel = mainViewModel;
+
+        SaveAppData.CheckFolderExists();
+
+        using (FileStream fs = File.Create(_filePath))
+        {
+            // Doesn't need anything
+        }
     }
 
     private void WriteToFile(string errorLevel, LogLevel level, string message, params object[] args)
@@ -29,8 +36,13 @@ public class Logger : ILogger
 
         lock (_fileLock)
         {
-            if (File.Exists(_filePath)) File.AppendAllText(_filePath, errorMessage);
-            else File.WriteAllText(_filePath, errorMessage);
+            if (File.Exists(_filePath))
+            {
+                File.AppendAllText(_filePath, errorMessage);
+            } else
+            {
+                File.WriteAllText(_filePath, errorMessage);
+            }
         }
 
         string GetColourCode(LogLevel logLevel)
@@ -78,24 +90,24 @@ public class Logger : ILogger
     public void ErrorOverride(string message, params object[] args)
     {
         string timeString = GetCurrentTimeString();
-        _mainViewModel.WriteToOutput($"\n+ [{timeString}] {"ERR "}: " +
-                                     $"{(args.Length != 0 ? Format(message, args) : message)}");
+        _mainViewModel.OutputText = $"\n+ [{timeString}] {"ERR "}: " +
+                                    $"{(args.Length != 0 ? Format(message, args) : message)}";
         WriteToFile("ERR ", LogLevel.Error, message, args);
     }
 
     public void WarningOverride(string message, params object[] args)
     {
         string timeString = GetCurrentTimeString();
-        _mainViewModel.WriteToOutput($"\n+ [{timeString}] {"WARN"}: " +
-                                     $"{(args.Length != 0 ? Format(message, args) : message)}");
+        _mainViewModel.OutputText = $"\n+ [{timeString}] {"WARN"}: " +
+                                    $"{(args.Length != 0 ? Format(message, args) : message)}";
         WriteToFile("WARN", LogLevel.Warning, message, args);
     }
 
     public void InfoOverride(string message, params object[] args)
     {
         string timeString = GetCurrentTimeString();
-        _mainViewModel.WriteToOutput($"\n+ [{timeString}] {"INFO"}: " +
-                                     $"{(args.Length != 0 ? Format(message, args) : message)}");
+        _mainViewModel.OutputText = $"\n+ [{timeString}] {"INFO"}: " +
+                                    $"{(args.Length != 0 ? Format(message, args) : message)}";
         WriteToFile("INFO", LogLevel.Info, message, args);
     }
 

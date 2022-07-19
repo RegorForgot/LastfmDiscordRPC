@@ -73,7 +73,10 @@ public class Track
             get => _url;
             set
             {
-                if (!IsNullOrEmpty(value)) _url = value;
+                if (!IsNullOrEmpty(value))
+                {
+                    _url = value;
+                }
             }
         }
     }
