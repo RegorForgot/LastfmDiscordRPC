@@ -78,7 +78,7 @@ public partial class MainViewModel : INotifyDataErrorInfo
     private void ValidateAppID()
     {
         ClearErrors(nameof(AppID));
-        const string pattern = @"^\d{14,19}$";
+        const string pattern = @"^\d{17,19}$";
 
         if (Regex.IsMatch(AppID, pattern))
         {
