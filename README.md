@@ -15,8 +15,6 @@ Simply download the release of your choice, enter your username, and set the pre
 
 [Download .NET 6 x64 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x64-installer)
 
-[Download .NET 6 x86 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x86-installer)
-
 
 ## Customisation
 
