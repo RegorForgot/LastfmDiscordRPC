@@ -55,3 +55,5 @@ If you find any issues or have any suggestions, feel free to start an issue or c
 - [discord-rpc-csharp](https://github.com/Lachee/discord-rpc-csharp/)
 - [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 - [RestSharp](https://github.com/restsharp/RestSharp)
+- [WpfAnimatedGif](https://github.com/XamlAnimatedGif/WpfAnimatedGif/)
+- [InnoSetup](https://github.com/jrsoftware/issrc)
