@@ -14,3 +14,5 @@ riderModule.iml
 /.idea/.idea.LastfmDiscordRPC/.idea/riderPublish.xml
 /.idea/.idea.LastfmDiscordRPC/.idea/vcs.xml
 /.idea/.idea.LastfmDiscordRPC/.idea/webServers.xml
+/Release/
+/*.gitignore
