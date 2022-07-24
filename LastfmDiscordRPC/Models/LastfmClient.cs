@@ -14,7 +14,7 @@ public class LastfmClient : IDisposable
     public LastfmClient()
     {
         _client = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
-        _client.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 1.0.0");
+        _client.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 1.1.1");
     }
 
     public async Task<LastfmResponse> CallAPI(string username, string apiKey)

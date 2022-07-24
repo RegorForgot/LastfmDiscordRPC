@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
 using LastfmDiscordRPC.ViewModels;
@@ -80,14 +81,9 @@ public class DiscordClient : IDisposable
         Track track = response.Track!;
         string smallImage;
         string smallText;
-        string albumString = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
-        string trackName = track.Name;
+        string albumName = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
 
         // Adding just one is fine: all tracks have to have at least one character in the Last.fm database.
-        if (trackName.Length < 2)
-        {
-            trackName += "\u180E";
-        }
 
         if (response.Track!.NowPlaying.State == "true")
         {
@@ -114,8 +110,8 @@ public class DiscordClient : IDisposable
 
         RichPresence presence = new RichPresence
         {
-            Details = trackName,
-            State = $"By {track.Artist.Name}{albumString}",
+            Details = GetUTF8String(track.Name),
+            State = GetUTF8String($"By {track.Artist.Name}{albumName}"),
             Assets = new Assets
             {
                 LargeImageKey = track.Images[3].URL,
@@ -138,6 +134,23 @@ public class DiscordClient : IDisposable
             string seconds = timeSince.Seconds == 0 ? "" : $"{timeSince.Seconds % 60}s";
 
             return $"{days}{hours}{minutes}{seconds}";
+        }
+
+        string GetUTF8String(string input)
+        {
+            if (input.Length < 2)
+            {
+                input += "\u180E";
+            }
+
+            if (Encoding.UTF8.GetByteCount(input) <= 128) return input;
+            byte[] buffer = new byte[128];
+            char[] inputChars = input.ToCharArray();
+            Encoding.UTF8.GetEncoder().Convert(inputChars, 0, inputChars.Length, buffer, 0, buffer.Length,
+                false, out _, out int bytesUsed,out _);
+
+            return Encoding.UTF8.GetString(buffer, 0, bytesUsed);
+
         }
     }
 
