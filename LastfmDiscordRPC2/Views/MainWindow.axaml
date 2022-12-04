@@ -1,36 +1,76 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="LastfmDiscordRPC2.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="LastfmDiscordRPC2"
-        TransparencyLevelHint="Blur"
-        ExtendClientAreaToDecorationsHint="True"
-        Background="#A0000000">
+<Window
+    x:Class="LastfmDiscordRPC2.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
+    Title="LastfmDiscordRPC2"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="#A0000000"
+    ExtendClientAreaToDecorationsHint="True"
+    Icon="/Assets/avalonia-logo.ico"
+    TransparencyLevelHint="Mica"
+    ExtendClientAreaChromeHints="PreferSystemChrome"
+    mc:Ignorable="d">
 
-  <Window.Styles>
-    <Style Selector="Button:pointerover /template/ ContentPresenter">
-      <Setter Property="TextBlock.Background" Value="Red" />
-    </Style>
-    <Style Selector="Button:pressed /template/ ContentPresenter">
-      <Setter Property="TextBlock.Background" Value="Maroon" />
-    </Style>
-  </Window.Styles>
+    <Window.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="5, 0, 0, 0" />
+        </Style>
+        <Style Selector="TabItem Border.PageButton">
+            <Setter Property="Width" Value="60" />
+            <Setter Property="Height" Value="60" />
+            <Setter Property="CornerRadius" Value="15" />
+            <Setter Property="Margin" Value="5 0 0 5" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="TabItem Border.PageButton Image">
+            <Setter Property="Width" Value="40" />
+        </Style>
+        <Style Selector="TabItem:selected Border.PageButton">
+            <Setter Property="Background" Value="#60D0D0D0" />
+        </Style>
+        <Style Selector="TabItem Border.PageContent">
+            <Setter Property="Background" Value="#40A0A0A0" />
+            <Setter Property="CornerRadius" Value="15" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </Window.Styles>
 
-  <Design.DataContext>
-    <vm:MainWindowViewModel />
-  </Design.DataContext>
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
 
-  <StackPanel Margin="20 50 20 0">
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-    <ComboBox SelectedIndex="0">
-      <ComboBoxItem>1</ComboBoxItem>
-      <ComboBoxItem>2</ComboBoxItem>
-    </ComboBox>
-    <TextBox />
-    <Button Content="Stuff" />
-  </StackPanel>
+    <Grid Margin="0,35,0,12">
+        <TabControl Margin="0" TabStripPlacement="Left">
+            <TabItem>
+                <TabItem.Header>
+                    <Border Classes="PageButton">
+                        <Image Source="../Assets/avalonia-logo.ico" />
+                    </Border>
+                </TabItem.Header>
+                <Border Classes="PageContent">
+                    <Grid>
+                    </Grid>
+                </Border>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Border Classes="PageButton">
+                        <Image Source="../Assets/avalonia-logo.ico" />
+                    </Border>
+                </TabItem.Header>
+                <StackPanel>
+                    <TextBlock Text="{Binding OS}"/>
+                    <ToggleSwitch
+                        IsVisible="{Binding StartUpVisible}"
+                        Content="Launch on Startup"
+                        IsChecked="{Binding StartUpChecked}"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </Window>

@@ -1,23 +1,47 @@
 ﻿using System;
-using System.Reactive;
-using Avalonia.Animation;
+using Avalonia;
+using Avalonia.Platform;
+using LastfmDiscordRPC2.Models;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    public MainWindowViewModel()
+    private string? _os;
+    private bool _startUpVisible;
+    private bool _startUpChecked;
+
+    public string? OS
     {
-        Animate = ReactiveCommand.Create(AnimateCommand);
+        get => _os;
+        set => this.RaiseAndSetIfChanged(ref _os, value);
+    }
+
+    public bool StartUpVisible
+    {
+        get => _startUpVisible;
+        set => this.RaiseAndSetIfChanged(ref _startUpVisible, value);
     }
     
-    public string Greeting => "Welcome to Avalonia!";
-     
-    public ReactiveCommand<Unit, Unit> Animate {get;}
-
-    private void AnimateCommand()
+    public bool StartUpChecked
     {
-        var transition = new PageSlide(TimeSpan.FromMilliseconds(500), PageSlide.SlideAxis.Vertical);
+        get => _startUpChecked;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _startUpChecked, value);
+            Utilities.SetRegistry(_startUpChecked);
+        }
+    }
+
+
+    public MainWindowViewModel()
+    {
+        OS = AvaloniaLocator.Current.GetService<IRuntimePlatform>()?.GetRuntimeInfo().OperatingSystem.ToString();
+        if (OperatingSystem.IsWindows())
+        {
+            StartUpVisible = true;
+            StartUpChecked = Utilities.CheckRegistryExists();
+        }
     }
 }
