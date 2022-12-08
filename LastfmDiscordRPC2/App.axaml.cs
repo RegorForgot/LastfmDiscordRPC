@@ -8,7 +8,7 @@ using LastfmDiscordRPC2.Views;
 
 namespace LastfmDiscordRPC2;
 
-public partial class App : Application
+public class App : Application
 {
     public override void Initialize()
     {
