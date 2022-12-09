@@ -1,0 +1,97 @@
+<Window x:Class="LastfmDiscordRPC2.Views.MainWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:LastfmDiscordRPC2.Views"
+        xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
+        Title="LastfmDiscordRPC2"
+        Background="#A0000000"
+        ExtendClientAreaToDecorationsHint="True"
+        Icon="/Assets/icon.ico"
+        TransparencyLevelHint="Mica"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+    
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="5, 0, 0, 0" />
+        </Style>
+        <Style Selector="Border.PageButton">
+            <Setter Property="Width" Value="60" />
+            <Setter Property="Height" Value="60" />
+            <Setter Property="CornerRadius" Value="15" />
+            <Setter Property="Margin" Value="5 0 0 5" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="Border.PageButton Image">
+            <Setter Property="Width" Value="30" />
+        </Style>
+        <Style Selector="Border.PageButton TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.PageButton StackPanel">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TabItem:selected Border.PageButton">
+            <Setter Property="Background" Value="#60D0D0D0" />
+        </Style>
+        <Style Selector="TabItem Border.PageContent">
+            <Setter Property="Background" Value="#40A0A0A0" />
+            <Setter Property="CornerRadius" Value="15" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="10" />
+        </Style>
+    </Window.Styles>
+
+    <Grid Margin="0,35,0,12">
+        <TabControl Margin="0" TabStripPlacement="Left">
+            <TabItem>
+                <TabItem.Header>
+                    <Border Classes="PageButton">
+                        <StackPanel>
+                            <Image Source="../Assets/home.png" />
+                            <TextBlock Text="Home" />
+                        </StackPanel>
+                    </Border>
+                </TabItem.Header>
+                <Border Classes="PageContent">
+                    <local:Home DataContext="{Binding Children[0]}" />
+                </Border>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Border Classes="PageButton">
+                        <StackPanel>
+                            <Image Source="../Assets/settings.png" />
+                            <TextBlock Text="Options" />
+                        </StackPanel>
+                    </Border>
+                </TabItem.Header>
+                <Border Classes="PageContent">
+                    <local:Settings DataContext="{Binding Children[1]}" />
+                </Border>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Border Classes="PageButton">
+                        <StackPanel>
+                            <Image Source="../Assets/info.png" />
+                            <TextBlock Text="About" />
+                        </StackPanel>
+                    </Border>
+                </TabItem.Header>
+                <Border Classes="PageContent">
+                    <local:AboutView DataContext="{Binding Children[2]}" />
+                </Border>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
