@@ -13,8 +13,7 @@ public class MainWindowViewModel : ViewModelBase
         _children = new ObservableCollection<ViewModelBase>
         {
             new HomeViewModel(),
-            new SettingsViewModel(),
-            new AboutViewModel()
+            new SettingsViewModel()
         };
     }
 }

@@ -28,4 +28,9 @@ public static class Utilities
             winLogon?.DeleteValue("LastfmDiscordRPC", false);
         }
     }
+
+    public static class SaveAppData
+    {
+        public static AppData SavedData { get; private set; }
+    }
 }

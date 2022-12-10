@@ -1,4 +1,4 @@
-<Window x:Class="LastfmDiscordRPC2.Views.MainWindow"
+<Window x:Class="LastfmDiscordRPC2.Views.MainWindowView"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -89,7 +89,7 @@
                     </Border>
                 </TabItem.Header>
                 <Border Classes="PageContent">
-                    <local:AboutView DataContext="{Binding Children[2]}" />
+                    <local:AboutView />
                 </Border>
             </TabItem>
         </TabControl>
