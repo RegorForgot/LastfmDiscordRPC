@@ -14,7 +14,7 @@
         mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
     
     <Design.DataContext>
-        <vm:MainWindowViewModel />
+        <vm:MainViewModel />
     </Design.DataContext>
 
     <Window.Styles>

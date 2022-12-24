@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using static System.String;
 
 namespace LastfmDiscordRPC2.Models;
 
@@ -13,8 +12,8 @@ public class AppData
 
     public class Account
     {
-        [JsonProperty] public string Username { get; set; } = Empty;
-        [JsonProperty] public string SessionKey { get; set; } = Empty;
+        [JsonProperty] public string? Username { get; set; } = Empty;
+        [JsonProperty] public string? SessionKey { get; set; } = Empty;
     }
 
     public class RPCConfig

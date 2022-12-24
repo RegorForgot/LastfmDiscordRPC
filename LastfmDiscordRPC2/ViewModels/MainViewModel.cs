@@ -1,19 +1,20 @@
 ﻿using System.Collections.ObjectModel;
+using LastfmDiscordRPC2.Models;
 
 namespace LastfmDiscordRPC2.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase
+public class MainViewModel : ViewModelBase
 {
-    private ObservableCollection<ViewModelBase> _children;
+    public LastfmClient LastfmClient { get; }
+    public ObservableCollection<ViewModelBase> Children { get; }
 
-    public ObservableCollection<ViewModelBase> Children => _children;
-
-    public MainWindowViewModel()
+    public MainViewModel()
     {
-        _children = new ObservableCollection<ViewModelBase>
+        LastfmClient = new LastfmClient();
+        Children = new ObservableCollection<ViewModelBase>
         {
-            new HomeViewModel(),
-            new SettingsViewModel()
+            new HomeViewModel(this),
+            new SettingsViewModel(this)
         };
     }
 }

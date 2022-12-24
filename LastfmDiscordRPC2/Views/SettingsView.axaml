@@ -2,20 +2,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:p="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
+             xmlns:m="using:LastfmDiscordRPC2.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LastfmDiscordRPC2.Views.Settings">
+    <UserControl.Resources>
+        <m:LoginTextConverter x:Key="LoginTextConverter" />
+    </UserControl.Resources>
+
     <Design.DataContext>
-        <vm:SettingsViewModel/>
+        <vm:SettingsViewModel />
     </Design.DataContext>
-    
+
     <StackPanel>
-        <TextBlock Text="{Binding OS}" />
         <ToggleSwitch
             Content="Launch on Startup"
             IsVisible="{Binding StartUpVisible}"
             IsChecked="{Binding StartUpChecked}"
             Command="{Binding LaunchOnStartup}"
             CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+        <StackPanel Orientation="Horizontal">
+            <Button
+                Content="{Binding IsLogin, Converter={StaticResource LoginTextConverter}}"
+                Command="{Binding LastfmLogin}"
+                CommandParameter="{Binding IsLogin}"
+                IsEnabled="{Binding !IsInProgress}" />
+            <Label 
+                Content="{Binding UsernameLogin}"
+                IsVisible="{Binding !IsLogin}"/>
+        </StackPanel>
+        <ProgressBar IsIndeterminate="True"
+                     IsVisible="{Binding IsInProgress}"
+                     Width="40"/>
     </StackPanel>
 </UserControl>

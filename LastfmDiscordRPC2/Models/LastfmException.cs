@@ -34,6 +34,8 @@ public class LastfmException : Exception
         InvalidKey = 10,
         Offline = 11,
         InvalidSignature = 13,
+        UnauthorizedToken = 14,
+        ExpiredToken = 15,
         Temporary = 16,
         SuspendedKey = 26,
         RateLimit = 29
