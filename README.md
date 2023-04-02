@@ -1,6 +1,5 @@
 ﻿# Last.fm Discord Rich Presence
-[![Codacy Badge](https://img.shields.io/codacy/grade/e0da00a962b5448cbd888887b9f9a77f)](https://www.codacy.com/gh/RegorForgotTheirPassword/LastfmDiscordRPC/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RegorForgotTheirPassword/LastfmDiscordRPC&amp;utm_campaign=Badge_Grade)
-![Downloads](https://img.shields.io/github/downloads/regorforgot/lastfmdiscordrpc/total)
+
 
 ![Presence](https://raw.githubusercontent.com/RegorForgotTheirPassword/LastfmDiscordRPC/master/Screenshots/Presence.png)
 

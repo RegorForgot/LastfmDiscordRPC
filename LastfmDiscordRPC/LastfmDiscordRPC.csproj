@@ -8,7 +8,7 @@
         <UseWindowsForms>true</UseWindowsForms>
         <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
     
-        <PackageVersion>1.0.0</PackageVersion>
+        <PackageVersion>1.1.2</PackageVersion>
         <Title>Last.fm Discord Rich Presence</Title>
         <Authors>RegorForgotTheirPassword</Authors>
         <Description>A simple rich presence application to connect to a user's last.fm account</Description>
