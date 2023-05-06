@@ -79,7 +79,10 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         get => _hasNotRun;
         set
         {
-            if (value == _hasNotRun) return;
+            if (value == _hasNotRun)
+            {
+                return;
+            }
             _hasNotRun = value;
             OnPropertyChanged(nameof(HasNotRun));
         }

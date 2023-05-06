@@ -22,7 +22,9 @@ public partial class MainViewModel : INotifyDataErrorInfo
     private void AddError(string propertyName, string error)
     {
         if (!_errorsByPropertyName.ContainsKey(propertyName))
+        {
             _errorsByPropertyName[propertyName] = new List<string>();
+        }
 
         if (_errorsByPropertyName[propertyName].Contains(error))
         {

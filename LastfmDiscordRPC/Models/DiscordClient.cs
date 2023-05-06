@@ -45,6 +45,7 @@ public class DiscordClient : IDisposable
         {
             return;
         }
+
         _client.OnClose += (_, _) =>
         {
             _mainViewModel.Logger.ErrorOverride("Could not connect to Discord.");
@@ -91,7 +92,8 @@ public class DiscordClient : IDisposable
             smallImage = PlayIconURL;
             smallText = "Now playing";
             LastScrobbleTime = DateTimeOffset.Now.ToUnixTimeSeconds();
-        } else
+        }
+        else
         {
             smallImage = PauseIconURL;
 
@@ -100,7 +102,8 @@ public class DiscordClient : IDisposable
                 LastScrobbleTime = lastScrobbleTime;
                 TimeSpan timeSince = TimeSpan.FromSeconds(DateTimeOffset.Now.ToUnixTimeSeconds() - LastScrobbleTime);
                 smallText = $"Last played {GetTimeString(timeSince)}";
-            } else
+            }
+            else
             {
                 smallText = "Stopped.";
             }
@@ -146,14 +149,17 @@ public class DiscordClient : IDisposable
                 input += "\u180E";
             }
 
-            if (Encoding.UTF8.GetByteCount(input) <= 128) return input;
+            if (Encoding.UTF8.GetByteCount(input) <= 128)
+            {
+                return input;
+            }
+
             byte[] buffer = new byte[128];
             char[] inputChars = input.ToCharArray();
             Encoding.UTF8.GetEncoder().Convert(inputChars, 0, inputChars.Length, buffer, 0, buffer.Length,
-                false, out _, out int bytesUsed,out _);
+                false, out _, out int bytesUsed, out _);
 
             return Encoding.UTF8.GetString(buffer, 0, bytesUsed);
-
         }
     }
 
@@ -178,13 +184,16 @@ public class DiscordClient : IDisposable
             ClearPresence();
             _client.Deinitialize();
             _client.Dispose();
-        } catch (ObjectDisposedException)
+        }
+        catch (ObjectDisposedException)
         {
             // If either of these are run, the client did not need to be disposed in the first place.
-        } catch (UninitializedException)
+        }
+        catch (UninitializedException)
         {
             // Same as above
-        } finally
+        }
+        finally
         {
             SuppressFinalize(this);
         }
