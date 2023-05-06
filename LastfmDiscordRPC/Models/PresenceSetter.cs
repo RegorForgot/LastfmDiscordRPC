@@ -12,17 +12,24 @@ public class PresenceSetter : IDisposable
     private readonly MainViewModel _mainViewModel;
     private readonly LastfmClient _lastfmClient;
     private PeriodicTimer? _timer;
+    private long _timeOfStart;
+    private long _timeSinceStart;
+    private long _timeSinceLastScrobble;
     private bool _firstSuccess;
+    private bool _turnOffPresence;
     private int _exceptionCount;
 
     public PresenceSetter(MainViewModel mainViewModel)
     {
         _mainViewModel = mainViewModel;
         _lastfmClient = mainViewModel.LastfmClient;
+        _turnOffPresence = false;
     }
 
     public async void UpdatePresence(string username, string apiKey)
     {
+        _timeOfStart = DateTimeOffset.Now.ToUnixTimeSeconds();
+        _turnOffPresence = false;
         await PresenceLock.WaitAsync();
 
         try
@@ -33,7 +40,7 @@ public class PresenceSetter : IDisposable
 
             using (_timer = new PeriodicTimer(TimeSpan.FromSeconds(2)))
             {
-                while (await _timer.WaitForNextTickAsync())
+                while (await _timer.WaitForNextTickAsync() & !_turnOffPresence)
                 {
                     try
                     {
@@ -43,14 +50,27 @@ public class PresenceSetter : IDisposable
                     {
                         HandleError(e, username, apiKey);
                     }
+
+                    // Turn off rich presence updating and close presence when time since last scrobble
+                    // AND time since presence starting is longer than an hour.
+                    long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+                    _timeSinceStart = currentTime - _timeOfStart;
+                    _timeSinceLastScrobble = currentTime - _mainViewModel.DiscordClient.LastScrobbleTime;
+                    _turnOffPresence = _timeSinceStart > 3600 & _timeSinceLastScrobble > 3600;
                 }
+            }
+
+            if (_turnOffPresence)
+            {
+                _mainViewModel.Logger.InfoOverride("Turned off presence due to inactivity");
+                Dispose();
             }
             PresenceLock.Release();
         } catch
         {
             PresenceLock.Release();
-            // All exceptions here will be thrown by the timer being disposed - all which are not will be handled in the inner
-            // catch block (which is logged).
+            // All exceptions here will be thrown by the timer being disposed
+            // all which are not will be handled in the inner catch block (which is logged).
         } 
     }
 

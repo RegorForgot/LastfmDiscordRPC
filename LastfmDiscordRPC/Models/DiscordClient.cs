@@ -16,6 +16,7 @@ public class DiscordClient : IDisposable
 
     private bool IsInitialised => _client != null;
     public bool IsReady { get; private set; }
+    public long LastScrobbleTime { get; private set; } = 0;
 
     public DiscordClient(MainViewModel mainViewModel)
     {
@@ -89,13 +90,15 @@ public class DiscordClient : IDisposable
         {
             smallImage = PlayIconURL;
             smallText = "Now playing";
+            LastScrobbleTime = DateTimeOffset.Now.ToUnixTimeSeconds();
         } else
         {
             smallImage = PauseIconURL;
 
-            if (long.TryParse(response.Track.Date.Timestamp, NumberStyles.Number, null, out long unixTimeStamp))
+            if (long.TryParse(response.Track.Date.Timestamp, NumberStyles.Number, null, out long lastScrobbleTime))
             {
-                TimeSpan timeSince = TimeSpan.FromSeconds(DateTimeOffset.Now.ToUnixTimeSeconds() - unixTimeStamp);
+                LastScrobbleTime = lastScrobbleTime;
+                TimeSpan timeSince = TimeSpan.FromSeconds(DateTimeOffset.Now.ToUnixTimeSeconds() - LastScrobbleTime);
                 smallText = $"Last played {GetTimeString(timeSince)}";
             } else
             {
