@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "LastfmDiscordRPC"
-#define MyAppVersion "1.1.2"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "RegorForgotTheirPassword"
 #define MyAppURL "https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC/"
 #define MyAppExeName "LastfmDiscordRPC.exe"
