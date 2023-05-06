@@ -1,5 +1,6 @@
 ﻿# Last.fm Discord Rich Presence
-
+[![Codacy Badge](https://img.shields.io/codacy/grade/e0da00a962b5448cbd888887b9f9a77f)](https://www.codacy.com/gh/RegorForgotTheirPassword/LastfmDiscordRPC/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RegorForgotTheirPassword/LastfmDiscordRPC&amp;utm_campaign=Badge_Grade)
+![Downloads](https://img.shields.io/github/downloads/regorforgot/lastfmdiscordrpc/total)
 
 ![Presence](https://raw.githubusercontent.com/RegorForgotTheirPassword/LastfmDiscordRPC/master/Screenshots/Presence.png)
 
@@ -11,9 +12,10 @@ A simple Windows-only* application that sets your Discord presence to your last 
 
 Simply download the release of your choice, enter your username, and set the presence!
 
-**Note:** For the non-self contained releases **(recommended)**, .NET 6 Desktop Runtime must be installed on your computer
+**Please note:** This application requires the .NET 7 Desktop runtime:
 
-[Download .NET 6 x64 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x64-installer)
+[Download .NET 7 x64 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-7.0.5-windows-x64-installer)
+## Changelog
 
 
 ## Customisation
