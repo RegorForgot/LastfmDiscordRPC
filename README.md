@@ -6,7 +6,7 @@
 
 ![Program](https://raw.githubusercontent.com/RegorForgotTheirPassword/LastfmDiscordRPC/master/Screenshots/Program.png)
 
-A simple Windows-only* application that sets your Discord presence to your last played track on Last.fm!
+A simple Windows-only* application that sets your Discord presence to your last played track on Last.fm
 
 ## Usage
 
