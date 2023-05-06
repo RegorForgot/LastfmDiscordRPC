@@ -8,7 +8,7 @@ namespace LastfmDiscordRPC.Models;
 
 public class PresenceSetter : IDisposable
 {
-    private readonly static SemaphoreSlim PresenceLock = new SemaphoreSlim(1, 1);
+    private static readonly SemaphoreSlim PresenceLock = new SemaphoreSlim(1, 1);
     private readonly MainViewModel _mainViewModel;
     private readonly LastfmClient _lastfmClient;
     private PeriodicTimer? _timer;

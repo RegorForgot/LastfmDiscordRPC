@@ -9,7 +9,7 @@ namespace LastfmDiscordRPC.Commands;
 /// </summary>
 public abstract class CommandBase : ICommand
 {
-    readonly protected MainViewModel MainViewModel;
+    protected readonly MainViewModel MainViewModel;
     public event EventHandler? CanExecuteChanged;
     public abstract void Execute(object? parameter);
     public abstract bool CanExecute(object? parameter);
