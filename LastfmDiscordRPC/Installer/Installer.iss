@@ -5,7 +5,7 @@
 #define MyAppVersion "1.1.2"
 #define MyAppPublisher "RegorForgotTheirPassword"
 #define MyAppURL "https://github.com/RegorForgotTheirPassword/LastfmDiscordRPC/"
-#define MyAppExeName "LastfmDiscordRPC-x64.exe"
+#define MyAppExeName "LastfmDiscordRPC.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
