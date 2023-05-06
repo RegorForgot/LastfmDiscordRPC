@@ -118,7 +118,7 @@ public class DiscordClient : IDisposable
             Assets = new Assets
             {
                 LargeImageKey = track.Images[3].URL,
-                LargeImageText = $"{response.Playcount} scrobbles",
+                LargeImageText = $"{(IsNullOrEmpty(track.Album.Name) ? null : track.Album.Name)}",
                 SmallImageKey = smallImage,
                 SmallImageText = smallText
             },
