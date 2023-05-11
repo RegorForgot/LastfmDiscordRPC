@@ -8,14 +8,11 @@
 
 A simple Windows-only* application that sets your Discord presence to your last played track on Last.fm
 
-## Usage
-
 Simply download the release of your choice, enter your username, and set the presence!
 
 **Please note:** This application requires the .NET 7 Desktop runtime:
 
 [Download .NET 7 x64 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-7.0.5-windows-x64-installer)
-## Changelog
 
 
 ## Customisation
