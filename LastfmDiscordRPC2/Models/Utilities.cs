@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Avalonia;
 using Avalonia.Platform;
 using Microsoft.Win32;
@@ -48,7 +47,7 @@ public static class Utilities
     public static class SaveAppData
     {
         public static AppData SavedData { get; }
-        private static readonly string FolderPath;
+        public static readonly string FolderPath;
         private static readonly string FilePath;
         private static readonly object Lock = new();
 
@@ -88,7 +87,7 @@ public static class Utilities
             SaveData(SavedData);
         }
 
-        public static AppData SaveData(AppData appData)
+        private static AppData SaveData(AppData appData)
         {
             try
             {

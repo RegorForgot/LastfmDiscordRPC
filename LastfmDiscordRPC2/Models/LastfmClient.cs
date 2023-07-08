@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
@@ -21,7 +22,7 @@ public class LastfmClient : IDisposable
         _signatureClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
     }
 
-    public async Task<TokenResponse> GetToken()
+    public async Task<TokenResponse?> GetToken()
     {
         RestRequest request = new RestRequest();
 
@@ -41,23 +42,37 @@ public class LastfmClient : IDisposable
 
     public async Task<SessionResponse?> GetSession(string token)
     {
-        RestRequest request = new RestRequest();
+        string signature = await GetSignature($"api_key{Utilities.APIKey}methodauth.getsessiontoken{token}");
 
+        RestRequest request = new RestRequest();
         request.AddParameter("format", "json");
         request.AddParameter("method", "auth.getsession");
         request.AddParameter("token", token);
         request.AddParameter("api_key", Utilities.APIKey);
-        request.Timeout = 20000;
-
-        string signature = await GetSignature($"api_key{Utilities.APIKey}methodauth.getsessiontoken{token}");
         request.AddParameter("api_sig", signature);
+        request.Timeout = 10000;
 
-        RestResponse response = await _lfmClient.ExecuteAsync(request);
-        if (response.Content != null)
+        PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+        do
         {
-            return GetResponse<SessionResponse>(response.Content);
-        }
-        throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
+            try
+            {
+                while (await timer.WaitForNextTickAsync())
+                {
+                    RestResponse? response = await _lfmClient.ExecuteAsync(request);
+                    return GetResponse<SessionResponse>(response.Content);
+                }
+
+                timer.Dispose();
+            }
+            catch (LastfmException e)
+            {
+                if (e.ErrorCode != ErrorEnum.UnauthorizedToken)
+                {
+                    throw;
+                }
+            }
+        } while (true);
     }
 
     public async Task<TrackResponse> CallAPI(string username)
@@ -97,6 +112,7 @@ public class LastfmClient : IDisposable
         {
             return response.Content;
         }
+
         throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
     }
 

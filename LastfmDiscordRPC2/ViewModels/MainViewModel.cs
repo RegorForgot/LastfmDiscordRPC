@@ -14,7 +14,8 @@ public class MainViewModel : ViewModelBase
         Children = new ObservableCollection<ViewModelBase>
         {
             new HomeViewModel(this),
-            new SettingsViewModel(this)
+            new SettingsViewModel(this),
+            new AboutViewModel(this)
         };
     }
 }

@@ -5,8 +5,17 @@
              xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LastfmDiscordRPC2.Views.Home">
-    Welcome to Avalonia!
     <Design.DataContext>
         <vm:HomeViewModel />
     </Design.DataContext>
+    
+    <StackPanel>
+        <TextBox Text="{Binding Path=Username,Mode=TwoWay}"
+                 Watermark="Username"
+                 AcceptsReturn="False"/>
+        <TextBox Text="{Binding AppID, Mode=TwoWay}"
+                 Watermark="Discord ID"
+                 AcceptsReturn="False"
+                 MaxLength="21"/>
+    </StackPanel>
 </UserControl>

@@ -1,0 +1,1 @@
+dotnet publish -r win8-x64 --self-contained false -c Release -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true

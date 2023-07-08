@@ -7,8 +7,6 @@ public class AppData
     [JsonProperty] public Account UserAccount { get; set; }
     [JsonProperty] public RPCConfig UserRPCConfig { get; set; }
     [JsonProperty] public string AppID { get; set; } = Utilities.DefaultAppID;
-    [JsonProperty] public string LoveTrackHotkey { get; set; }
-    [JsonProperty] public bool IsHotkeyGlobal { get; set; }
 
     public class Account
     {
@@ -38,6 +36,5 @@ public class AppData
     {
         UserAccount = new Account();
         UserRPCConfig = new RPCConfig();
-        LoveTrackHotkey = Empty;
     }
 }

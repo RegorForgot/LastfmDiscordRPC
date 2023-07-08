@@ -89,7 +89,7 @@
                     </Border>
                 </TabItem.Header>
                 <Border Classes="PageContent">
-                    <local:AboutView />
+                    <local:AboutView DataContext="{Binding Children[2]}"/>
                 </Border>
             </TabItem>
         </TabControl>
