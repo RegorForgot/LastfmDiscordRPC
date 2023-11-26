@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reactive;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LastfmDiscordRPC2.Models;
 using ReactiveUI;
@@ -11,6 +12,8 @@ namespace LastfmDiscordRPC2.ViewModels;
 
 public class SettingsViewModel : ViewModelBase
 {
+    private const string AppIDRegExp = @"^\d{17,21}$";
+
     public ReactiveCommand<bool, Unit> LaunchOnStartup { get; }
     public ReactiveCommand<bool, Unit> LastfmLogin { get; }
     public ReactiveCommand<Unit, Unit> SaveAppID { get; }
@@ -21,6 +24,7 @@ public class SettingsViewModel : ViewModelBase
     private bool _isInProgress;
     private string _loginMessage;
     private string _appID;
+
 
     public bool SaveEnabled
     {
@@ -43,7 +47,11 @@ public class SettingsViewModel : ViewModelBase
     public string LoginMessage
     {
         get => _loginMessage;
-        set => this.RaiseAndSetIfChanged(ref _loginMessage, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _loginMessage, value);
+            this.RaisePropertyChanged(nameof(IsLoggedIn));
+        }
     }
 
     public bool IsLoggedIn
@@ -52,14 +60,16 @@ public class SettingsViewModel : ViewModelBase
     }
 
     private readonly MainViewModel _mainViewModel;
-
-
-    [Required(ErrorMessage = "Please input a Discord Application ID.")]
-    [RegularExpression(@"^\d{17,21}$", ErrorMessage = "Please ensure you are using a valid ID.")]
+    
+    [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
     public string AppID
     {
         get => _appID;
-        set => this.RaiseAndSetIfChanged(ref _appID, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _appID, value);
+            SaveEnabled = Regex.IsMatch(value, AppIDRegExp);
+        }
     }
 
     public SettingsViewModel(MainViewModel mainViewModel)
@@ -69,8 +79,7 @@ public class SettingsViewModel : ViewModelBase
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
-        SaveEnabled = true;
-
+        
         if (Utilities.OS == OSPlatform.Windows)
         {
             StartUpVisible = true;
@@ -98,6 +107,7 @@ public class SettingsViewModel : ViewModelBase
     private async Task SetLastfmLogin(bool logIn)
     {
         IsInProgress = true;
+        
         if (logIn)
         {
             await LogUserIn();
@@ -107,7 +117,6 @@ public class SettingsViewModel : ViewModelBase
             LogUserOut();
         }
 
-        this.RaisePropertyChanged(nameof(IsLoggedIn));
         IsInProgress = false;
     }
 
