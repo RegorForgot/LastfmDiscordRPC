@@ -15,7 +15,7 @@ public class MainViewModel : ViewModelBase
         {
             new HomeViewModel(this),
             new SettingsViewModel(this),
-            new AboutViewModel(this)
+            new AboutViewModel()
         };
     }
 }

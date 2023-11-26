@@ -8,14 +8,4 @@
     <Design.DataContext>
         <vm:HomeViewModel />
     </Design.DataContext>
-    
-    <StackPanel>
-        <TextBox Text="{Binding Path=Username,Mode=TwoWay}"
-                 Watermark="Username"
-                 AcceptsReturn="False"/>
-        <TextBox Text="{Binding AppID, Mode=TwoWay}"
-                 Watermark="Discord ID"
-                 AcceptsReturn="False"
-                 MaxLength="21"/>
-    </StackPanel>
 </UserControl>

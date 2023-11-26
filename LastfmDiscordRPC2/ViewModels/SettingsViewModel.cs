@@ -1,6 +1,7 @@
 using System;
-using System.Diagnostics;
+using System.ComponentModel.DataAnnotations;
 using System.Reactive;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LastfmDiscordRPC2.Models;
 using ReactiveUI;
@@ -10,21 +11,21 @@ namespace LastfmDiscordRPC2.ViewModels;
 
 public class SettingsViewModel : ViewModelBase
 {
-    private bool _startUpVisible;
+    public ReactiveCommand<bool, Unit> LaunchOnStartup { get; }
+    public ReactiveCommand<bool, Unit> LastfmLogin { get; }
+    public ReactiveCommand<Unit, Unit> SaveAppID { get; }
+    public bool StartUpVisible { get; set; }
+
+    private bool _saveEnabled;
     private bool _startUpChecked;
     private bool _isInProgress;
     private string _loginMessage;
-    public ReactiveCommand<bool, Unit> LaunchOnStartup { get; }
-    public ReactiveCommand<bool, Unit> LastfmLogin { get; }
+    private string _appID;
 
-    private readonly MainViewModel _mainViewModel;
-    public bool IsLogin => SavedData.UserAccount.SessionKey == "" || SavedData.UserAccount.Username == "";
-
-
-    public bool StartUpVisible
+    public bool SaveEnabled
     {
-        get => _startUpVisible;
-        set => this.RaiseAndSetIfChanged(ref _startUpVisible, value);
+        get => _saveEnabled;
+        set => this.RaiseAndSetIfChanged(ref _saveEnabled, value);
     }
 
     public bool StartUpChecked
@@ -45,29 +46,59 @@ public class SettingsViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _loginMessage, value);
     }
 
+    public bool IsLoggedIn
+    {
+        get => SavedData.UserAccount.SessionKey == "" || SavedData.UserAccount.Username == "";
+    }
+
+    private readonly MainViewModel _mainViewModel;
+
+
+    [Required(ErrorMessage = "Please input a Discord Application ID.")]
+    [RegularExpression(@"^\d{17,21}$", ErrorMessage = "Please ensure you are using a valid ID.")]
+    public string AppID
+    {
+        get => _appID;
+        set => this.RaiseAndSetIfChanged(ref _appID, value);
+    }
+
     public SettingsViewModel(MainViewModel mainViewModel)
     {
         _mainViewModel = mainViewModel;
+
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
-        if (OperatingSystem.IsWindows())
+        SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
+        SaveEnabled = true;
+
+        if (Utilities.OS == OSPlatform.Windows)
         {
             StartUpVisible = true;
             StartUpChecked = Utilities.CheckRegistryExists();
         }
 
-        LoginMessage = IsLogin ? "Not logged in" : $"Logged in as {SavedData.UserAccount.Username}";
+        AppID = SavedData.AppID;
+        LoginMessage = IsLoggedIn ? "Not logged in" : $"Logged in as {SavedData.UserAccount.Username}";
     }
 
-    private void SetLaunchOnStartup(bool parameter)
+    private void SaveDiscordAppID()
     {
-        Utilities.SetRegistry(parameter);
+        AppData data = new AppData(SavedData)
+        {
+            AppID = AppID
+        };
+        SaveData(data);
     }
 
-    private async Task SetLastfmLogin(bool parameter)
+    private void SetLaunchOnStartup(bool startUpValue)
+    {
+        Utilities.SetRegistry(startUpValue);
+    }
+
+    private async Task SetLastfmLogin(bool logIn)
     {
         IsInProgress = true;
-        if (parameter)
+        if (logIn)
         {
             await LogUserIn();
         }
@@ -75,54 +106,46 @@ public class SettingsViewModel : ViewModelBase
         {
             LogUserOut();
         }
-        
-        this.RaisePropertyChanged(nameof(IsLogin));
+
+        this.RaisePropertyChanged(nameof(IsLoggedIn));
         IsInProgress = false;
     }
 
     private void LogUserOut()
     {
-        SavedData.UserAccount.SessionKey = Empty;
-        SavedData.UserAccount.Username = Empty;
+        AppData data = new AppData(SavedData)
+        {
+            UserAccount = new AppData.Account()
+        };
+        SaveData(data);
+
         LoginMessage = "Not logged in";
-        SaveData();
     }
 
     private async Task LogUserIn()
     {
-        TokenResponse? token = null;
         try
         {
-            token = await _mainViewModel.LastfmClient.GetToken();
+            TokenResponse token = await _mainViewModel.LastfmClient.GetToken();
+            Utilities.OpenWebpage(@$"https://www.last.fm/api/auth/?api_key={Utilities.APIKey}&token={token.Token}");
+            
+            SessionResponse? sessionResponse = await _mainViewModel.LastfmClient.GetSession(token.Token);
+
+            AppData data = new AppData(SavedData)
+            {
+                UserAccount = new AppData.Account
+                {
+                    SessionKey = sessionResponse.LfmSession.SessionKey,
+                    Username = sessionResponse.LfmSession.Username
+                }
+            };
+            SaveData(data);
+
+            LoginMessage = $"Logged in as {SavedData.UserAccount.Username}";
         }
         catch (Exception e)
         {
             LoginMessage = e.Message;
-        }
-
-        if (token?.Token != null)
-        {
-            ProcessStartInfo psi = new ProcessStartInfo
-            {
-                FileName = @$"https://www.last.fm/api/auth/?api_key={Utilities.APIKey}&token={token.Token}",
-                UseShellExecute = true
-            };
-            Process.Start(psi);
-
-            try
-            {
-                SessionResponse? sessionResponse = await _mainViewModel.LastfmClient.GetSession(token.Token);
-
-                SavedData.UserAccount.SessionKey = sessionResponse.LfmSession.SessionKey;
-                SavedData.UserAccount.Username = sessionResponse.LfmSession.Username;
-                SaveData();
-                
-                LoginMessage = $"Logged in as {SavedData.UserAccount.Username}";
-            }
-            catch (Exception e)
-            {
-                LoginMessage = e.Message;
-            }
         }
     }
 }

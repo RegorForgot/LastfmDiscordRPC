@@ -7,7 +7,7 @@ namespace LastfmDiscordRPC2.Models;
 public class Logger : ILogger
 {
     private readonly string _filePath;
-    private readonly object _fileLock = new();
+    private readonly object _fileLock = new object();
     public LogLevel Level { get; set; }
 
     public Logger(LogLevel level)

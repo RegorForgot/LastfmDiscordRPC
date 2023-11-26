@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using Avalonia;
-using Avalonia.Platform;
+using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -14,27 +14,44 @@ public static class Utilities
 {
     public static readonly string DefaultAppID = "997756398664421446";
     public static readonly string APIKey = "79d35013754ac3b3225b73bba566afca";
-    private static readonly OperatingSystemType OS;
+    public static readonly OSPlatform OS;
 
     static Utilities()
     {
-        OS = AvaloniaLocator.Current.GetService<IRuntimePlatform>()!
-            .GetRuntimeInfo().OperatingSystem;
+        OS = GetOperatingSystem();
+    }
+
+    private static OSPlatform GetOperatingSystem()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return OSPlatform.OSX;
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return OSPlatform.Linux;
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return OSPlatform.Windows;
+        }
+
+        throw new Exception("Cannot determine operating system!");
     }
 
     public static bool CheckRegistryExists()
     {
         RegistryKey? winStartup = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
-        bool exists = winStartup != null && winStartup.GetValueNames().Contains("LastfmDiscordRPC");
+        bool isRegistered = winStartup != null && winStartup.GetValueNames().Contains("LastfmDiscordRPC");
         winStartup?.Close();
-        return exists;
+        return isRegistered;
     }
 
-    public static void SetRegistry(bool startUpChecked)
+    public static void SetRegistry(bool startUpValue)
     {
         RegistryKey? winStartup =
             Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-        if (startUpChecked)
+        if (startUpValue)
         {
             winStartup?.SetValue("LastfmDiscordRPC", '"' + AppContext.BaseDirectory + "LastfmDiscordRPC2.exe" + '"');
         }
@@ -44,50 +61,55 @@ public static class Utilities
         }
     }
 
+    public static void OpenWebpage(string url)
+    {
+        Process.Start(
+            new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            }
+        );
+    }
+
     public static class SaveAppData
     {
-        public static AppData SavedData { get; }
+        public static AppData SavedData { get; private set; }
         public static readonly string FolderPath;
         private static readonly string FilePath;
-        private static readonly object Lock = new();
+        private static readonly object Lock = new object();
 
         static SaveAppData()
         {
             FolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            FolderPath += OS switch
+            FolderPath += OS.ToString() switch
             {
-                OperatingSystemType.WinNT => @"/AppData/Local/LastfmDiscordRPC",
-                OperatingSystemType.Linux => @"/.LastfmDiscordRPC",
-                OperatingSystemType.OSX => @"/Library/Application Support/LastfmDiscordRPC",
+                "WINDOWS" => @"/AppData/Local/LastfmDiscordRPC",
+                "LINUX" => @"/.LastfmDiscordRPC",
+                "OSX" => @"/Library/Application Support/LastfmDiscordRPC",
                 _ => FolderPath
             };
 
             FilePath = $@"{FolderPath}/config.json";
-
-            SavedData = ReadData();
+            ReadData();
         }
 
-        private static AppData ReadData()
+        private static void ReadData()
         {
             try
             {
                 string json;
                 lock (Lock) json = File.ReadAllText(FilePath);
                 AppData appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new Exception();
-                return appData;
+                SavedData = appData;
             }
             catch (Exception)
             {
-                return SaveData(new AppData());
+                SaveData(new AppData());
             }
         }
-        
-        public static void SaveData()
-        {
-            SaveData(SavedData);
-        }
 
-        private static AppData SaveData(AppData appData)
+        public static void SaveData(AppData appData)
         {
             try
             {
@@ -95,7 +117,7 @@ public static class Utilities
             }
             catch (IOException)
             {
-                if (CheckFolderExists())
+                if (Directory.Exists(FolderPath))
                 {
                     throw;
                 }
@@ -104,18 +126,7 @@ public static class Utilities
                 SaveData(appData);
             }
 
-            return appData;
-        }
-
-        private static bool CheckFolderExists()
-        {
-            if (Directory.Exists(FolderPath))
-            {
-                return true;
-            }
-
-            Directory.CreateDirectory(FolderPath);
-            return false;
+            SavedData = appData;
         }
     }
 }

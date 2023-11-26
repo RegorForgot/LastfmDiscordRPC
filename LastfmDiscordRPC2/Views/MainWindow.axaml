@@ -6,10 +6,9 @@
         xmlns:local="using:LastfmDiscordRPC2.Views"
         xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
         Title="LastfmDiscordRPC2"
-        Background="#A0000000"
         ExtendClientAreaToDecorationsHint="True"
         Icon="/Assets/icon.ico"
-        TransparencyLevelHint="Mica"
+        TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaChromeHints="PreferSystemChrome"
         mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
     

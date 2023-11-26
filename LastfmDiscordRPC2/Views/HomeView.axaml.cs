@@ -7,10 +7,10 @@ public partial class Home : UserControl
 {
     public Home()
     {
-        InitializeComponent();
+        InitalizeComponent();
     }
 
-    private void InitializeComponent()
+    private void InitalizeComponent()
     {
         AvaloniaXamlLoader.Load(this);
     }

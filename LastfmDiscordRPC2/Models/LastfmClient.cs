@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using LastfmDiscordRPC2.Assets;
 using Newtonsoft.Json;
 using RestSharp;
 using static LastfmDiscordRPC2.Models.LastfmException;
@@ -18,11 +20,11 @@ public class LastfmClient : IDisposable
         _lfmClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
         _lfmClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
 
-        _signatureClient = new RestClient(@"https://regorforgot.000webhostapp.com");
+        _signatureClient = new RestClient(@"https://crygup.com/regor/");
         _signatureClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
     }
 
-    public async Task<TokenResponse?> GetToken()
+    public async Task<TokenResponse> GetToken()
     {
         RestRequest request = new RestRequest();
 
@@ -32,17 +34,12 @@ public class LastfmClient : IDisposable
         request.Timeout = 20000;
 
         RestResponse response = await _lfmClient.ExecuteAsync(request);
-        if (response.Content != null)
-        {
-            return GetResponse<TokenResponse>(response.Content);
-        }
-
-        throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
+        return GetResponse<TokenResponse>(response);
     }
 
     public async Task<SessionResponse?> GetSession(string token)
     {
-        string signature = await GetSignature($"api_key{Utilities.APIKey}methodauth.getsessiontoken{token}");
+        string signature = await GetSignatureTemp($"api_key{Utilities.APIKey}methodauth.getsessiontoken{token}");
 
         RestRequest request = new RestRequest();
         request.AddParameter("format", "json");
@@ -53,14 +50,15 @@ public class LastfmClient : IDisposable
         request.Timeout = 10000;
 
         PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+        
         do
         {
             try
             {
                 while (await timer.WaitForNextTickAsync())
                 {
-                    RestResponse? response = await _lfmClient.ExecuteAsync(request);
-                    return GetResponse<SessionResponse>(response.Content);
+                    RestResponse response = await _lfmClient.ExecuteAsync(request);
+                    return GetResponse<SessionResponse>(response);
                 }
 
                 timer.Dispose();
@@ -88,12 +86,14 @@ public class LastfmClient : IDisposable
 
         RestResponse response = await _lfmClient.ExecuteAsync(request);
 
-        if (response.Content != null)
-        {
-            return GetResponse<TrackResponse>(response.Content);
-        }
+        return GetResponse<TrackResponse>(response);
+    }
 
-        throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
+    private Task<String> GetSignatureTemp(string message)
+    {
+        using MD5 hash = MD5.Create();
+        string input = message + SecretKey.Secret;
+        return Task.FromResult(Convert.ToHexString(hash.ComputeHash(System.Text.Encoding.ASCII.GetBytes(input))));
     }
 
     private async Task<string> GetSignature(string message)
@@ -116,15 +116,20 @@ public class LastfmClient : IDisposable
         throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
     }
 
-    private static T GetResponse<T>(string response)
+    private static T GetResponse<T>(RestResponse response)
     {
-        LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response)!;
-        if (e.Error == ErrorEnum.OK)
+        if (response.Content == null)
         {
-            return JsonConvert.DeserializeObject<T>(response)!;
+            throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
+        }
+        
+        LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response.Content)!;
+        if (e.Error != ErrorEnum.OK)
+        {   
+            throw new LastfmException(e.Message, e.Error);
         }
 
-        throw new LastfmException(e.Message, e.Error);
+        return JsonConvert.DeserializeObject<T>(response.Content)!;
     }
 
     public void Dispose()

@@ -1,13 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:LastfmDiscordRPC2"
              x:Class="LastfmDiscordRPC2.App">
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
 
     <Application.Styles>
-        <FluentTheme Mode="Dark" />
+        <FluentTheme />
         <Style Selector="DataValidationErrors">
             <Setter Property="Template">
                 <ControlTemplate>
@@ -38,9 +34,6 @@
                                 <Setter Property="BorderBrush" Value="Red" />
                             </Style>
                         </Canvas.Styles>
-                        <ToolTip.Tip>
-                            <ItemsControl Items="{Binding}" />
-                        </ToolTip.Tip>
                         <Path Data="M14,7 A7,7 0 0,0 0,7 M0,7 A7,7 0 1,0 14,7 M7,3l0,5 M7,9l0,2"
                               Stroke="Red"
                               StrokeThickness="2" />
