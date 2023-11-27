@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LastfmDiscordRPC2.Models;
+using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using ReactiveUI;
 using static LastfmDiscordRPC2.Models.Utilities.SaveAppData;
@@ -19,12 +20,15 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
     public ReactiveCommand<bool, Unit> LastfmLogin { get; }
     public ReactiveCommand<Unit, Unit> SaveAppID { get; }
     public bool StartUpVisible { get; set; }
+    public string PaneName { get; }
+
 
     private bool _saveEnabled;
     private bool _startUpChecked;
     private bool _isInProgress;
     private string _loginMessage;
     private string _appID;
+    private readonly LastfmAPIClient _apiClient;
 
 
     public bool SaveEnabled
@@ -71,11 +75,13 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
         }
     }
 
-    public SettingsViewModel()
+    public SettingsViewModel(LastfmAPIClient apiClient)
     {
+        _apiClient = apiClient;
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
+        PaneName = "Settings";
         
         if (Utilities.OS == OSPlatform.Windows)
         {
@@ -132,10 +138,10 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
     {
         try
         {
-            TokenResponse token = await LastfmClient.GetToken();
+            TokenResponse token = await _apiClient.GetToken();
             Utilities.OpenWebpage(@$"https://www.last.fm/api/auth/?api_key={Utilities.APIKey}&token={token.Token}");
             
-            SessionResponse? sessionResponse = await LastfmClient.GetSession(token.Token);
+            SessionResponse? sessionResponse = await _apiClient.GetSession(token.Token);
             
             ApplicationData data = new ApplicationData(SavedData)
             {

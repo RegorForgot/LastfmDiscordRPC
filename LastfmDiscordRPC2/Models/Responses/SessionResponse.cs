@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using LastfmDiscordRPC2.Models.API;
+using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.Models.Responses;
 
-public class SessionResponse : ILastfmResponse
+public class SessionResponse : ILastfmAPIResponse
 {
     [JsonProperty("session")] public Session LfmSession { get; set; }
     

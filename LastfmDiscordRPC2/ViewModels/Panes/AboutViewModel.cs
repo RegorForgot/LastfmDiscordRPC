@@ -7,9 +7,11 @@ namespace LastfmDiscordRPC2.ViewModels.Panes;
 public class AboutViewModel : ReactiveObject, IPaneViewModel
 {
     public ReactiveCommand<Unit, Unit> GithubPage { get; }
+    public string PaneName { get; }
 
     public AboutViewModel()
     {
+        PaneName = "About";
         GithubPage = ReactiveCommand.Create(OpenGithubPage);
     }
 

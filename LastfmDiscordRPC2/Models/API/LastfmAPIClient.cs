@@ -1,31 +1,28 @@
 ﻿using System;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
-using LastfmDiscordRPC2.Assets;
 using LastfmDiscordRPC2.Models.Responses;
 using Newtonsoft.Json;
 using RestSharp;
 using static LastfmDiscordRPC2.Models.LastfmException;
 
-namespace LastfmDiscordRPC2.Models;
+namespace LastfmDiscordRPC2.Models.API;
 
-public static class LastfmClient
+public class LastfmAPIClient : IAPIClient
 {
-    private static readonly RestClient LfmClient;
-    private static readonly RestClient SignatureClient;
+    public RestClient APIRestClient { get; }
+    private readonly ISignatureAPIClient _signatureAPIClient;
 
-    static LastfmClient()
+    public LastfmAPIClient(ISignatureAPIClient signatureAPIClient)
     {
-        LfmClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
-        LfmClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
-
-        SignatureClient = new RestClient(@"https://crygup.com/regor/");
-        SignatureClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
+        APIRestClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
+        APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
+        
+        _signatureAPIClient = signatureAPIClient;
     }
 
-    public async static Task<TokenResponse> GetToken()
+    public async Task<TokenResponse> GetToken()
     {
         RestRequest request = new RestRequest();
 
@@ -34,13 +31,13 @@ public static class LastfmClient
         request.AddParameter("api_key", Utilities.APIKey);
         request.Timeout = 20000;
 
-        RestResponse response = await LfmClient.ExecuteAsync(request);
+        RestResponse response = await APIRestClient.ExecuteAsync(request);
         return GetResponse<TokenResponse>(response);
     }
 
-    public async static Task<SessionResponse?> GetSession(string token)
+    public async Task<SessionResponse> GetSession(string token)
     {
-        string signature = await GetSignatureTemp($"api_key{Utilities.APIKey}methodauth.getsessiontoken{token}");
+        string signature = await _signatureAPIClient.GetSignature($"api_key{Utilities.APIKey}methodauth.getsessiontoken{token}");
 
         RestRequest request = new RestRequest();
         request.AddParameter("format", "json");
@@ -58,7 +55,7 @@ public static class LastfmClient
             {
                 while (await timer.WaitForNextTickAsync())
                 {
-                    RestResponse response = await LfmClient.ExecuteAsync(request);
+                    RestResponse response = await APIRestClient.ExecuteAsync(request);
                     return GetResponse<SessionResponse>(response);
                 }
 
@@ -74,7 +71,7 @@ public static class LastfmClient
         } while (true);
     }
 
-    public async static Task<TrackResponse> CallAPI(string username)
+    public async Task<TrackResponse> CallAPI(string username)
     {
         RestRequest request = new RestRequest();
 
@@ -85,39 +82,12 @@ public static class LastfmClient
         request.AddParameter("api_key", Utilities.APIKey);
         request.Timeout = 20000;
 
-        RestResponse response = await LfmClient.ExecuteAsync(request);
+        RestResponse response = await APIRestClient.ExecuteAsync(request);
 
         return GetResponse<TrackResponse>(response);
     }
 
-    private static Task<String> GetSignatureTemp(string message)
-    {
-        using MD5 hash = MD5.Create();
-        string input = message + SecretKey.Secret;
-        return Task.FromResult(Convert.ToHexString(hash.ComputeHash(System.Text.Encoding.ASCII.GetBytes(input))));
-    }
-
-    private async static Task<string> GetSignature(string message)
-    {
-        RestRequest request = new RestRequest("", Method.Post);
-
-        // this was a pain in the ass to write
-        string json = @"{""string"": """ + message + @"""}";
-
-        request.AddParameter("application/json", json, ParameterType.RequestBody);
-        request.RequestFormat = DataFormat.Json;
-        request.Timeout = 20000;
-
-        RestResponse response = await SignatureClient.ExecuteAsync(request);
-        if (response.Content != null)
-        {
-            return response.Content;
-        }
-
-        throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
-    }
-
-    private static T GetResponse<T>(RestResponse response)
+    public T GetResponse<T>(RestResponse response) where T : ILastfmAPIResponse
     {
         if (response.Content == null)
         {
@@ -132,10 +102,9 @@ public static class LastfmClient
 
         return JsonConvert.DeserializeObject<T>(response.Content)!;
     }
-
-    public static void Dispose()
+    
+    public void Dispose()
     {
-        LfmClient.Dispose();
-        SignatureClient.Dispose();
+        APIRestClient.Dispose();
     }
 }

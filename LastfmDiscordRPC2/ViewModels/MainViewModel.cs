@@ -8,7 +8,7 @@ namespace LastfmDiscordRPC2.ViewModels;
 public class MainViewModel : ReactiveObject, IWindowViewModel
 {
     public ObservableCollection<IPaneViewModel> Children { get; }
-
+    
     public MainViewModel(IEnumerable<IPaneViewModel> children)
     {
         Children = new ObservableCollection<IPaneViewModel>(children);

@@ -20,7 +20,7 @@ public class App : Application
         IWindowViewModel windowViewModel = container.Resolve<IWindowViewModel>();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow((MainViewModel) windowViewModel);
+            desktop.MainWindow = new MainWindow(windowViewModel);
         }
         
         base.OnFrameworkInitializationCompleted();

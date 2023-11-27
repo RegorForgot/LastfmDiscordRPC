@@ -3,11 +3,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
-             xmlns:panes1="clr-namespace:LastfmDiscordRPC2.Views.Panes"
+             xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="LastfmDiscordRPC2.Views.Panes.SettingsView">
     <UserControl.Resources>
-        <panes1:LoginTextConverter x:Key="LoginTextConverter" />
+        <converters:LoginTextConverter x:Key="LoginTextConverter" />
     </UserControl.Resources>
     
     <Design.DataContext>

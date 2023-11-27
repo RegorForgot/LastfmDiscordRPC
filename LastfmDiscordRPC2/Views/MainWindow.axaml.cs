@@ -14,7 +14,7 @@ public partial class MainWindow : Window
     private static readonly Color WindowsBackground = Color.FromArgb(0xD0, 0x00, 0x00, 0x00);
     private static readonly Color UnixBackground = Color.FromRgb(0x00, 0x00, 0x00);
     
-    public MainWindow(MainViewModel dataContext)
+    public MainWindow(IWindowViewModel dataContext)
     {
         InitializeComponent();
         
@@ -24,10 +24,7 @@ public partial class MainWindow : Window
         
         foreach (IPaneViewModel viewModel in dataContext.Children)
         {
-            Type viewModelType = viewModel.GetType();
-            string elementName = viewModelType.ToString().Split('.').Last().Replace("ViewModel", "");
-
-            Control? control = this.FindControl<Control>(elementName);
+            Control? control = this.FindControl<Control>(viewModel.PaneName);
             if (control != null)
             {
                 control.DataContext = viewModel;
