@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -24,7 +22,7 @@ public partial class MainWindow : Window
         
         foreach (IPaneViewModel viewModel in dataContext.Children)
         {
-            Control? control = this.FindControl<Control>(viewModel.PaneName);
+            UserControl? control = this.FindControl<UserControl>(viewModel.PaneName);
             if (control != null)
             {
                 control.DataContext = viewModel;

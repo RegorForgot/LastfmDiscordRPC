@@ -1,6 +1,4 @@
 ﻿namespace LastfmDiscordRPC2.Models.Responses;
 
-public interface ILastfmAPIResponse : IAPIResponse
-{
-    
-}
+public interface ILastfmAPIResponse 
+{ }

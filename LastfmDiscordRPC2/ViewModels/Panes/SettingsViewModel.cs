@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
@@ -21,7 +22,7 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
     public ReactiveCommand<Unit, Unit> SaveAppID { get; }
     public bool StartUpVisible { get; set; }
     public string PaneName { get; }
-
+    public SettingsConsoleViewModel? LoggingControlViewModel { get; }
 
     private bool _saveEnabled;
     private bool _startUpChecked;
@@ -29,7 +30,7 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
     private string _loginMessage;
     private string _appID;
     private readonly LastfmAPIClient _apiClient;
-
+    private readonly ILastfmLogger _logger;
 
     public bool SaveEnabled
     {
@@ -72,12 +73,16 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
         {
             this.RaiseAndSetIfChanged(ref _appID, value);
             SaveEnabled = Regex.IsMatch(value, AppIDRegExp);
+            _logger.Trace("test");
         }
     }
 
-    public SettingsViewModel(LastfmAPIClient apiClient)
+    public SettingsViewModel(LastfmAPIClient apiClient, SettingsConsoleViewModel loggingControlViewModel, ILastfmLogger logger)
     {
         _apiClient = apiClient;
+        _logger = logger;
+        LoggingControlViewModel = loggingControlViewModel;
+        
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);

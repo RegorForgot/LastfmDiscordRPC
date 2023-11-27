@@ -1,19 +1,23 @@
 ﻿using System.IO;
 using DiscordRPC.Logging;
-using static System.DateTime;
+using LastfmDiscordRPC2.Models;
 
-namespace LastfmDiscordRPC2.Models;
+namespace LastfmDiscordRPC2.Logging;
 
-public class Logger : ILogger
+public class TextLogger : ILastfmLogger
 {
+    private readonly ViewLogger _viewLogger;
     private readonly string _filePath;
     private readonly object _fileLock = new object();
+    
     public LogLevel Level { get; set; }
 
-    public Logger(LogLevel level)
+    public TextLogger(LogLevel level, ViewLogger viewLogger)
     {
         Level = level;
-        _filePath = Utilities.SaveAppData.FolderPath + @"/errorLog.log";
+        
+        _viewLogger = viewLogger;
+        _filePath = Utilities.SaveAppData.FolderPath + "/errorLog.log";
         
         using (File.Create(_filePath))
         {
@@ -34,22 +38,18 @@ public class Logger : ILogger
             }
         }
     }
-    private static string GetCurrentTimeString()
-    {
-        return Now.ToString("yyyy-MM-dd HH:mm:ss");
-    }
     
-    #region Message Methods
-
     public void Trace(string message, params object[] args)
     {
         if (Level > LogLevel.Trace)
         {
             return;
         }
+        
+        _viewLogger.Trace(message, args);
 
-        string msgText = @$"\n+ [{GetCurrentTimeString()}] ""TRCE"": " +
-                         @$"{(args.Length != 0 ? Format(message, args) : message)}";
+        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""TRCE"": " +
+                         $"{(args.Length != 0 ? Format(message, args) : message)}";
         WriteToFile(msgText);
     }
 
@@ -59,8 +59,11 @@ public class Logger : ILogger
         {
             return;
         }
-        string msgText = @$"\n+ [{GetCurrentTimeString()}] ""INFO"": " +
-                         @$"{(args.Length != 0 ? Format(message, args) : message)}";
+        
+        _viewLogger.Info(message, args);
+        
+        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""INFO"": " +
+                         $"{(args.Length != 0 ? Format(message, args) : message)}";
         WriteToFile(msgText);
     }
 
@@ -70,8 +73,11 @@ public class Logger : ILogger
         {
             return;
         }
-        string msgText = @$"\n+ [{GetCurrentTimeString()}] ""WARN"": " +
-                         @$"{(args.Length != 0 ? Format(message, args) : message)}";
+        
+        _viewLogger.Warning(message, args);
+        
+        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""WARN"": " +
+                         $"{(args.Length != 0 ? Format(message, args) : message)}";
         WriteToFile(msgText);
     }
 
@@ -81,10 +87,12 @@ public class Logger : ILogger
         {
             return;
         }
-        string msgText = @$"\n+ [{GetCurrentTimeString()}] ""ERR "": " +
-                         @$"{(args.Length != 0 ? Format(message, args) : message)}";
+        
+        _viewLogger.Error(message, args);
+        
+        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""ERR "": " +
+                         $"{(args.Length != 0 ? Format(message, args) : message)}";
+        
         WriteToFile(msgText);
     }
-
-    #endregion
 }

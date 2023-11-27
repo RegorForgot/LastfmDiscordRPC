@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using LastfmDiscordRPC2.Models.API;
 using Newtonsoft.Json;
 
 // I feel safe doing this because all the "nulled" items are either filled by Newtonsoft or handled in LastfmClient with the 

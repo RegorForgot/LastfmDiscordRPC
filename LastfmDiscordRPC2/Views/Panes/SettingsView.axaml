@@ -51,6 +51,10 @@
                     IsEnabled="{Binding SaveEnabled}"
                     Margin="0 10 10 10" />
             </StackPanel>
+            <StackPanel>
+                <TextBlock DataContext="{Binding LoggingControlViewModel}"
+                         Text="{Binding ConsoleText, Mode=TwoWay}"/>
+            </StackPanel>
         </StackPanel>
         <StackPanel
             HorizontalAlignment="Center"

@@ -2,10 +2,11 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.Models.Responses;
 using Newtonsoft.Json;
 using RestSharp;
-using static LastfmDiscordRPC2.Models.LastfmException;
 
 namespace LastfmDiscordRPC2.Models.API;
 
@@ -63,7 +64,7 @@ public class LastfmAPIClient : IAPIClient
             }
             catch (LastfmException e)
             {
-                if (e.ErrorCode != ErrorEnum.UnauthorizedToken)
+                if (e.ErrorCode != LastfmErrorCode.UnauthorizedToken)
                 {
                     throw;
                 }
@@ -94,8 +95,8 @@ public class LastfmAPIClient : IAPIClient
             throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
         }
         
-        LastfmError e = JsonConvert.DeserializeObject<LastfmError>(response.Content)!;
-        if (e.Error != ErrorEnum.OK)
+        LastfmErrorResponse e = JsonConvert.DeserializeObject<LastfmErrorResponse>(response.Content)!;
+        if (e.Error != LastfmErrorCode.OK)
         {   
             throw new LastfmException(e.Message, e.Error);
         }

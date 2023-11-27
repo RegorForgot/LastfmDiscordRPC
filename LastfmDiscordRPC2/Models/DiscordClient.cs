@@ -3,6 +3,8 @@
 // using System.Text;
 // using DiscordRPC;
 // using DiscordRPC.Exceptions;
+// using DiscordRPC.Logging;
+// using LastfmDiscordRPC2.Logging;
 // using LastfmDiscordRPC2.Models.Responses;
 // using LastfmDiscordRPC2.ViewModels;
 // using static LastfmDiscordRPC2.Models.Utilities.SaveAppData;
@@ -31,6 +33,7 @@
 //
 //         _client = new DiscordRpcClient(SavedData.AppID);
 //         _client.Initialize();
+//         _client.Logger = new TextLogger(LogLevel.Warning);
 //
 //         SetEventHandlers();
 //     }
