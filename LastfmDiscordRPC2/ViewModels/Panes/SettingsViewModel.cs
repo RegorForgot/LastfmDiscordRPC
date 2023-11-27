@@ -5,12 +5,13 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LastfmDiscordRPC2.Models;
+using LastfmDiscordRPC2.Models.Responses;
 using ReactiveUI;
 using static LastfmDiscordRPC2.Models.Utilities.SaveAppData;
 
-namespace LastfmDiscordRPC2.ViewModels;
+namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public class SettingsViewModel : ViewModelBase
+public class SettingsViewModel : ReactiveObject, IPaneViewModel
 {
     private const string AppIDRegExp = @"^\d{17,21}$";
 
@@ -58,8 +59,6 @@ public class SettingsViewModel : ViewModelBase
     {
         get => SavedData.UserAccount.SessionKey == "" || SavedData.UserAccount.Username == "";
     }
-
-    private readonly MainViewModel _mainViewModel;
     
     [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
     public string AppID
@@ -72,10 +71,8 @@ public class SettingsViewModel : ViewModelBase
         }
     }
 
-    public SettingsViewModel(MainViewModel mainViewModel)
+    public SettingsViewModel()
     {
-        _mainViewModel = mainViewModel;
-
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
@@ -92,7 +89,7 @@ public class SettingsViewModel : ViewModelBase
 
     private void SaveDiscordAppID()
     {
-        AppData data = new AppData(SavedData)
+        ApplicationData data = new ApplicationData(SavedData)
         {
             AppID = AppID
         };
@@ -122,9 +119,9 @@ public class SettingsViewModel : ViewModelBase
 
     private void LogUserOut()
     {
-        AppData data = new AppData(SavedData)
+        ApplicationData data = new ApplicationData(SavedData)
         {
-            UserAccount = new AppData.Account()
+            UserAccount = new ApplicationData.Account()
         };
         SaveData(data);
 
@@ -135,14 +132,14 @@ public class SettingsViewModel : ViewModelBase
     {
         try
         {
-            TokenResponse token = await _mainViewModel.LastfmClient.GetToken();
+            TokenResponse token = await LastfmClient.GetToken();
             Utilities.OpenWebpage(@$"https://www.last.fm/api/auth/?api_key={Utilities.APIKey}&token={token.Token}");
             
-            SessionResponse? sessionResponse = await _mainViewModel.LastfmClient.GetSession(token.Token);
-
-            AppData data = new AppData(SavedData)
+            SessionResponse? sessionResponse = await LastfmClient.GetSession(token.Token);
+            
+            ApplicationData data = new ApplicationData(SavedData)
             {
-                UserAccount = new AppData.Account
+                UserAccount = new ApplicationData.Account
                 {
                     SessionKey = sessionResponse.LfmSession.SessionKey,
                     Username = sessionResponse.LfmSession.Username

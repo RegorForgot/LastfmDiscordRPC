@@ -2,9 +2,9 @@
 using LastfmDiscordRPC2.Models;
 using ReactiveUI;
 
-namespace LastfmDiscordRPC2.ViewModels;
+namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public class AboutViewModel : ViewModelBase
+public class AboutViewModel : ReactiveObject, IPaneViewModel
 {
     public ReactiveCommand<Unit, Unit> GithubPage { get; }
 

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 #pragma warning disable CS8618
 #pragma warning disable CS8601
 
-namespace LastfmDiscordRPC2.Models;
+namespace LastfmDiscordRPC2.Models.Responses;
 
 public class TrackResponse : ILastfmResponse
 {
@@ -20,12 +20,12 @@ public class TrackResponse : ILastfmResponse
         {
             _recentTracks = value;
             Track = _recentTracks.Tracks.Count == 0 ? null : _recentTracks.Tracks[0];
-            Playcount = _recentTracks.Footer.Playcount;
+            PlayCount = _recentTracks.Footer.Playcount;
         }
     }
 
     public Track? Track { get; private set; }
-    public string Playcount { get; private set; }
+    public string PlayCount { get; private set; }
 
     public class RecentTrackList
     {

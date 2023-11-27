@@ -2,4 +2,4 @@
 
 namespace LastfmDiscordRPC2.ViewModels;
 
-public class ViewModelBase : ReactiveObject { }
+public interface IWindowViewModel : IReactiveObject { }

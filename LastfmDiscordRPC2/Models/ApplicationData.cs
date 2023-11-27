@@ -2,11 +2,11 @@ using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.Models;
 
-public class AppData
+public class ApplicationData
 {
-    public AppData() { }
+    public ApplicationData() { }
     
-    public AppData(AppData savedData)
+    public ApplicationData(ApplicationData savedData)
     {
         UserAccount = savedData.UserAccount;
         UserRPCConfig = savedData.UserRPCConfig;

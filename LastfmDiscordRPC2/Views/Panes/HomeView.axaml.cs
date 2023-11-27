@@ -1,11 +1,11 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace LastfmDiscordRPC2.Views;
+namespace LastfmDiscordRPC2.Views.Panes;
 
-public partial class Home : UserControl
+public partial class HomeView : UserControl
 {
-    public Home()
+    public HomeView()
     {
         InitalizeComponent();
     }

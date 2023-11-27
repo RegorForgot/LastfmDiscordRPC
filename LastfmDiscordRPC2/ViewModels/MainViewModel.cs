@@ -1,21 +1,16 @@
-﻿using System.Collections.ObjectModel;
-using LastfmDiscordRPC2.Models;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using LastfmDiscordRPC2.ViewModels.Panes;
+using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels;
 
-public class MainViewModel : ViewModelBase
+public class MainViewModel : ReactiveObject, IWindowViewModel
 {
-    public LastfmClient LastfmClient { get; }
-    public ObservableCollection<ViewModelBase> Children { get; }
+    public ObservableCollection<IPaneViewModel> Children { get; }
 
-    public MainViewModel()
+    public MainViewModel(IEnumerable<IPaneViewModel> children)
     {
-        LastfmClient = new LastfmClient();
-        Children = new ObservableCollection<ViewModelBase>
-        {
-            new HomeViewModel(this),
-            new SettingsViewModel(this),
-            new AboutViewModel()
-        };
+        Children = new ObservableCollection<IPaneViewModel>(children);
     }
 }

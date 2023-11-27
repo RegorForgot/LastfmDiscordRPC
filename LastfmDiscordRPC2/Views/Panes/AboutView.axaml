@@ -2,12 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:LastfmDiscordRPC2.ViewModels"
+             xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="LastfmDiscordRPC2.Views.AboutView">
+             x:Class="LastfmDiscordRPC2.Views.Panes.AboutView">
     
     <Design.DataContext>
-        <vm:AboutViewModel />
+        <panes:AboutViewModel />
     </Design.DataContext>
     
     <UserControl.Styles>

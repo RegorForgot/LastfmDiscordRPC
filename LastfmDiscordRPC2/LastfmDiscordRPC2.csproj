@@ -9,7 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
     </ItemGroup>
@@ -19,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Autofac" Version="7.1.0" />
         <PackageReference Include="Avalonia" Version="11.0.5" />
         <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -32,6 +32,18 @@
     <ItemGroup>
       <Compile Update="Views\MainWindow.axaml.cs">
         <DependentUpon>MainWindowView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\Panes\SettingsView.axaml.cs">
+        <DependentUpon>SettingsView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Panes\HomeView.axaml.cs">
+        <DependentUpon>HomeView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Panes\AboutView.axaml.cs">
+        <DependentUpon>AboutView.axaml</DependentUpon>
+        <SubType>Code</SubType>
       </Compile>
     </ItemGroup>
 

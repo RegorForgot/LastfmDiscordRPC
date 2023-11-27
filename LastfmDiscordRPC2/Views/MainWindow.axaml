@@ -1,10 +1,10 @@
-<Window x:Class="LastfmDiscordRPC2.Views.MainWindowView"
+<Window x:Class="LastfmDiscordRPC2.Views.MainWindow"
         xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="using:LastfmDiscordRPC2.Views"
         xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
+        xmlns:panes="clr-namespace:LastfmDiscordRPC2.Views.Panes"
         Title="LastfmDiscordRPC2"
         ExtendClientAreaToDecorationsHint="True"
         Icon="/Assets/icon.ico"
@@ -62,7 +62,7 @@
                     </Border>
                 </TabItem.Header>
                 <Border Classes="PageContent">
-                    <local:Home DataContext="{Binding Children[0]}" />
+                    <panes:HomeView Name="Home" />
                 </Border>
             </TabItem>
             <TabItem>
@@ -75,7 +75,7 @@
                     </Border>
                 </TabItem.Header>
                 <Border Classes="PageContent">
-                    <local:Settings DataContext="{Binding Children[1]}" />
+                    <panes:SettingsView Name="Settings" />
                 </Border>
             </TabItem>
             <TabItem>
@@ -88,7 +88,7 @@
                     </Border>
                 </TabItem.Header>
                 <Border Classes="PageContent">
-                    <local:AboutView DataContext="{Binding Children[2]}"/>
+                    <panes:AboutView Name="About"/>
                 </Border>
             </TabItem>
         </TabControl>

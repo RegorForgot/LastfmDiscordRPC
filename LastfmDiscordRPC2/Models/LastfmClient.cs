@@ -4,27 +4,28 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using LastfmDiscordRPC2.Assets;
+using LastfmDiscordRPC2.Models.Responses;
 using Newtonsoft.Json;
 using RestSharp;
 using static LastfmDiscordRPC2.Models.LastfmException;
 
 namespace LastfmDiscordRPC2.Models;
 
-public class LastfmClient : IDisposable
+public static class LastfmClient
 {
-    private readonly RestClient _lfmClient;
-    private readonly RestClient _signatureClient;
+    private static readonly RestClient LfmClient;
+    private static readonly RestClient SignatureClient;
 
-    public LastfmClient()
+    static LastfmClient()
     {
-        _lfmClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
-        _lfmClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
+        LfmClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
+        LfmClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
 
-        _signatureClient = new RestClient(@"https://crygup.com/regor/");
-        _signatureClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
+        SignatureClient = new RestClient(@"https://crygup.com/regor/");
+        SignatureClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
     }
 
-    public async Task<TokenResponse> GetToken()
+    public async static Task<TokenResponse> GetToken()
     {
         RestRequest request = new RestRequest();
 
@@ -33,11 +34,11 @@ public class LastfmClient : IDisposable
         request.AddParameter("api_key", Utilities.APIKey);
         request.Timeout = 20000;
 
-        RestResponse response = await _lfmClient.ExecuteAsync(request);
+        RestResponse response = await LfmClient.ExecuteAsync(request);
         return GetResponse<TokenResponse>(response);
     }
 
-    public async Task<SessionResponse?> GetSession(string token)
+    public async static Task<SessionResponse?> GetSession(string token)
     {
         string signature = await GetSignatureTemp($"api_key{Utilities.APIKey}methodauth.getsessiontoken{token}");
 
@@ -57,7 +58,7 @@ public class LastfmClient : IDisposable
             {
                 while (await timer.WaitForNextTickAsync())
                 {
-                    RestResponse response = await _lfmClient.ExecuteAsync(request);
+                    RestResponse response = await LfmClient.ExecuteAsync(request);
                     return GetResponse<SessionResponse>(response);
                 }
 
@@ -73,7 +74,7 @@ public class LastfmClient : IDisposable
         } while (true);
     }
 
-    public async Task<TrackResponse> CallAPI(string username)
+    public async static Task<TrackResponse> CallAPI(string username)
     {
         RestRequest request = new RestRequest();
 
@@ -84,19 +85,19 @@ public class LastfmClient : IDisposable
         request.AddParameter("api_key", Utilities.APIKey);
         request.Timeout = 20000;
 
-        RestResponse response = await _lfmClient.ExecuteAsync(request);
+        RestResponse response = await LfmClient.ExecuteAsync(request);
 
         return GetResponse<TrackResponse>(response);
     }
 
-    private Task<String> GetSignatureTemp(string message)
+    private static Task<String> GetSignatureTemp(string message)
     {
         using MD5 hash = MD5.Create();
         string input = message + SecretKey.Secret;
         return Task.FromResult(Convert.ToHexString(hash.ComputeHash(System.Text.Encoding.ASCII.GetBytes(input))));
     }
 
-    private async Task<string> GetSignature(string message)
+    private async static Task<string> GetSignature(string message)
     {
         RestRequest request = new RestRequest("", Method.Post);
 
@@ -107,7 +108,7 @@ public class LastfmClient : IDisposable
         request.RequestFormat = DataFormat.Json;
         request.Timeout = 20000;
 
-        RestResponse response = await _signatureClient.ExecuteAsync(request);
+        RestResponse response = await SignatureClient.ExecuteAsync(request);
         if (response.Content != null)
         {
             return response.Content;
@@ -132,10 +133,9 @@ public class LastfmClient : IDisposable
         return JsonConvert.DeserializeObject<T>(response.Content)!;
     }
 
-    public void Dispose()
+    public static void Dispose()
     {
-        _lfmClient.Dispose();
-        _signatureClient.Dispose();
-        SuppressFinalize(this);
+        LfmClient.Dispose();
+        SignatureClient.Dispose();
     }
 }

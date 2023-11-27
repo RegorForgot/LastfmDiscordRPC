@@ -1,7 +1,6 @@
+using Autofac;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.Views;
@@ -17,15 +16,13 @@ public class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        using ILifetimeScope container = ContainerConfigurator.Configure().BeginLifetimeScope();
+        IWindowViewModel windowViewModel = container.Resolve<IWindowViewModel>();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-
-            desktop.MainWindow = new MainWindowView
-            {
-                DataContext = new MainViewModel()
-            };
+            desktop.MainWindow = new MainWindow((MainViewModel) windowViewModel);
         }
-
+        
         base.OnFrameworkInitializationCompleted();
     }
 }

@@ -74,7 +74,7 @@ public static class Utilities
 
     public static class SaveAppData
     {
-        public static AppData SavedData { get; private set; }
+        public static ApplicationData SavedData { get; private set; }
         public static readonly string FolderPath;
         private static readonly string FilePath;
         private static readonly object Lock = new object();
@@ -100,20 +100,20 @@ public static class Utilities
             {
                 string json;
                 lock (Lock) json = File.ReadAllText(FilePath);
-                AppData appData = JsonConvert.DeserializeObject<AppData>(json) ?? throw new Exception();
-                SavedData = appData;
+                ApplicationData applicationData = JsonConvert.DeserializeObject<ApplicationData>(json) ?? throw new Exception();
+                SavedData = applicationData;
             }
             catch (Exception)
             {
-                SaveData(new AppData());
+                SaveData(new ApplicationData());
             }
         }
 
-        public static void SaveData(AppData appData)
+        public static void SaveData(ApplicationData applicationData)
         {
             try
             {
-                lock (Lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(appData));
+                lock (Lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(applicationData));
             }
             catch (IOException)
             {
@@ -123,10 +123,10 @@ public static class Utilities
                 }
 
                 Directory.CreateDirectory(FolderPath);
-                SaveData(appData);
+                SaveData(applicationData);
             }
 
-            SavedData = appData;
+            SavedData = applicationData;
         }
     }
 }

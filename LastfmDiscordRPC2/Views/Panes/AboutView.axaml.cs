@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace LastfmDiscordRPC2.Views;
+namespace LastfmDiscordRPC2.Views.Panes;
 
 public partial class AboutView : UserControl
 {

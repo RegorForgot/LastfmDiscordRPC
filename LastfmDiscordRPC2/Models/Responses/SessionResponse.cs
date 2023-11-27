@@ -1,13 +1,6 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace LastfmDiscordRPC2.Models;
-
-public interface ILastfmResponse {}
-
-public class TokenResponse : ILastfmResponse
-{
-    [JsonProperty("token")] public string Token { get; set; } = Empty;
-}
+namespace LastfmDiscordRPC2.Models.Responses;
 
 public class SessionResponse : ILastfmResponse
 {
@@ -19,4 +12,3 @@ public class SessionResponse : ILastfmResponse
         [JsonProperty("key")] public string SessionKey { get; set; } = Empty;
     }
 }
-
