@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DiscordRPC.Logging;
 
 namespace LastfmDiscordRPC2.Logging;
 
 public abstract class AbstractLoggingService : ILogger
 {
-    private readonly List<IRPCLogger> _loggers;
+    protected readonly List<IRPCLogger> _loggers;
     public LogLevel Level { get; set; } = LogLevel.None;
 
     protected AbstractLoggingService(IEnumerable<IRPCLogger> loggers)
@@ -24,7 +25,7 @@ public abstract class AbstractLoggingService : ILogger
     
     public void Info(string message, params object[] args)
     {
-        foreach (IRPCLogger logger in _loggers)
+        foreach (IRPCLogger logger in _loggers.Where(_ => !message.Contains("Handling Response")))
         {
             logger.Info(message, args);
         }

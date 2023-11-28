@@ -25,7 +25,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
     public ReactiveCommand<Unit, Unit> SaveAppID { get; }
     public bool StartUpVisible { get; set; }
     public override string Name { get => "Settings"; }
-    public AbstractControlViewModel LoggingControlViewModel { get; }
+    public AbstractLoggingControlViewModel LoggingControlViewModel { get; }
 
     private bool _saveEnabled;
     private bool _startUpChecked;
@@ -95,7 +95,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
         _apiClient = apiClient;
         _saveDataFileIO = saveDataFileIO;
         _loggingService = loggingService;
-        LoggingControlViewModel = loggingControlViewModel ;
+        LoggingControlViewModel = loggingControlViewModel;
 
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);

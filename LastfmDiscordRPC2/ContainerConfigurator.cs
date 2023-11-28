@@ -5,6 +5,7 @@ using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
+using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Controls;
 using LastfmDiscordRPC2.ViewModels.Panes;
@@ -29,8 +30,12 @@ public static class ContainerConfigurator
         builder.RegisterType<TextLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Warning);
         
         builder.RegisterType<LoggingService>().As<AbstractLoggingService>().SingleInstance();
+
+        builder.RegisterType<DiscordClient>().AsSelf().SingleInstance();
+        builder.RegisterType<PresenceSetter>().AsSelf().SingleInstance();
         
         builder.RegisterType<LastfmAPIClient>().AsSelf().SingleInstance();
+        builder.RegisterType<LastfmService>().AsSelf().SingleInstance();
         builder.RegisterType<SignatureLocalClient>().As<ISignatureAPIClient>().SingleInstance();
 
         builder.RegisterType<LogFileIO>().AsSelf().SingleInstance();

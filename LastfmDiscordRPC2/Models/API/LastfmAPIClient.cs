@@ -62,13 +62,7 @@ public class LastfmAPIClient : IAPIClient
 
                 timer.Dispose();
             }
-            catch (LastfmException e)
-            {
-                if (e.ErrorCode != LastfmErrorCode.UnauthorizedToken)
-                {
-                    throw;
-                }
-            }
+            catch (LastfmException e) when (e.ErrorCode is LastfmErrorCode.UnauthorizedToken) { }
         } while (true);
     }
 

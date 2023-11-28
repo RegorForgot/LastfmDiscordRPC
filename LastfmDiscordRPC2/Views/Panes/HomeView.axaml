@@ -11,4 +11,11 @@
     <Design.DataContext>
         <panes:HomeViewModel />
     </Design.DataContext>
+
+    <StackPanel>
+        <Button
+            Command="{Binding StartPresence}"
+            Content="Start Presence"
+            Margin="0,10,10,10" />
+    </StackPanel>
 </UserControl>
