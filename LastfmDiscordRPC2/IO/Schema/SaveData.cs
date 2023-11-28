@@ -1,4 +1,3 @@
-using LastfmDiscordRPC2.Models;
 using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.IO.Schema;

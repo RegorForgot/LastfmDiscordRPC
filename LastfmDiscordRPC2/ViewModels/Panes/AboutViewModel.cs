@@ -1,17 +1,16 @@
 ﻿using System.Reactive;
-using LastfmDiscordRPC2.Models;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class AboutViewModel : ReactiveObject, IPaneViewModel
+public sealed class AboutViewModel : AbstractPaneViewModel
 {
     public ReactiveCommand<Unit, Unit> GithubPage { get; }
-    public string PaneName { get; }
+    public override string Name { get; }
 
     public AboutViewModel()
     {
-        PaneName = "About";
+        Name = "About";
         GithubPage = ReactiveCommand.Create(OpenGithubPage);
     }
 

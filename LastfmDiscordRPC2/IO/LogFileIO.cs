@@ -12,7 +12,7 @@ public sealed class LogFileIO : AbstractFileIO
         {
             using (File.Create(FilePath)) { }
         }
-        AppendToFile("------------------------");
+        AppendToFile("------------------------\n");
     }
 
     public void Log(string message)

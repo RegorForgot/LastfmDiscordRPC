@@ -6,7 +6,7 @@ using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.ViewModels;
-using LastfmDiscordRPC2.ViewModels.Logging;
+using LastfmDiscordRPC2.ViewModels.Controls;
 using LastfmDiscordRPC2.ViewModels.Panes;
 
 namespace LastfmDiscordRPC2;
@@ -19,11 +19,11 @@ public static class ContainerConfigurator
 
         builder.RegisterAssemblyTypes(Assembly.Load(nameof(LastfmDiscordRPC2)))
             .Where(t => t.Namespace.Contains("ViewModels.Panes"))
-            .As(typeof(IPaneViewModel))
+            .As(typeof(AbstractPaneViewModel))
             .InstancePerLifetimeScope();
 
         builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
-        builder.RegisterType<SettingsConsoleViewModel>().As<ILoggingControlViewModel>().SingleInstance();
+        builder.RegisterType<SettingsConsoleViewModel>().As<AbstractLoggingControlViewModel>().SingleInstance();
         
         builder.RegisterType<ViewLogger>().AsSelf().SingleInstance().WithParameter("level", LogLevel.Trace);
         builder.RegisterType<TextLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Trace);

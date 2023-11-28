@@ -1,8 +1,8 @@
 ﻿using ReactiveUI;
 
-namespace LastfmDiscordRPC2.ViewModels.Logging;
+namespace LastfmDiscordRPC2.ViewModels.Controls;
 
-public class SettingsConsoleViewModel : ReactiveObject, ILoggingControlViewModel
+public class AbstractLoggingControlViewModel : AbstractControlViewModel
 {
     private string _consoleText = "";
     

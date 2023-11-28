@@ -1,8 +1,6 @@
-using ReactiveUI;
-
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class HomeViewModel : ReactiveObject, IPaneViewModel
+public sealed class HomeViewModel : AbstractPaneViewModel
 {
-    public string PaneName { get => "Home"; }
+    public override string Name { get => "Home"; }
 }

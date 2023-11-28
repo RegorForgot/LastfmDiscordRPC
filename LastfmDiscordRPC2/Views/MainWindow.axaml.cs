@@ -15,9 +15,9 @@ public partial class MainWindow : Window
         DataContext = dataContext;
         Background = OperatingSystem.CurrentOS == OSEnum.Windows ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Black);
         
-        foreach (IPaneViewModel viewModel in dataContext.Children)
+        foreach (AbstractPaneViewModel viewModel in dataContext.Children)
         {
-            UserControl? control = this.FindControl<UserControl>(viewModel.PaneName);
+            UserControl? control = this.FindControl<UserControl>(viewModel.Name);
             if (control != null)
             {
                 control.DataContext = viewModel;

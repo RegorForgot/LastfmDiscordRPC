@@ -1,14 +1,14 @@
 ﻿using DiscordRPC.Logging;
-using LastfmDiscordRPC2.ViewModels.Logging;
+using LastfmDiscordRPC2.ViewModels.Controls;
 
 namespace LastfmDiscordRPC2.Logging;
 
 public class ViewLogger : IRPCLogger
 {
-    private readonly ILoggingControlViewModel _loggingControlViewModel;
+    private readonly AbstractLoggingControlViewModel _loggingControlViewModel;
     public LogLevel Level { get; set; }
     
-    public ViewLogger(LogLevel level, ILoggingControlViewModel loggingControlViewModel)
+    public ViewLogger(LogLevel level, AbstractLoggingControlViewModel loggingControlViewModel)
     {
         _loggingControlViewModel = loggingControlViewModel;
         Level = level;

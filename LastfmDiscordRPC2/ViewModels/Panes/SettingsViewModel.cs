@@ -10,21 +10,22 @@ using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Utilities;
-using LastfmDiscordRPC2.ViewModels.Logging;
+using LastfmDiscordRPC2.ViewModels.Controls;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
+public sealed class SettingsViewModel : AbstractPaneViewModel
 {
     private const string AppIDRegExp = @"^\d{17,21}$";
+    private const string NotLoggedIn = "Not logged in";
 
     public ReactiveCommand<bool, Unit> LaunchOnStartup { get; }
     public ReactiveCommand<bool, Unit> LastfmLogin { get; }
     public ReactiveCommand<Unit, Unit> SaveAppID { get; }
     public bool StartUpVisible { get; set; }
-    public string PaneName { get; }
-    public SettingsConsoleViewModel? LoggingControlViewModel { get; }
+    public override string Name { get => "Settings"; }
+    public AbstractControlViewModel LoggingControlViewModel { get; }
 
     private bool _saveEnabled;
     private bool _startUpChecked;
@@ -63,10 +64,16 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         }
     }
 
-    public bool IsLoggedIn
+    private bool IsLoggedIn
     {
         get => _saveDataFileIO.ConfigData.UserAccount.SessionKey == "" || _saveDataFileIO.ConfigData.UserAccount.Username == "";
     }
+    
+    private string LoggedIn
+    {
+        get => $"Logged in as {_saveDataFileIO.ConfigData.UserAccount.Username}";
+    }
+
 
     [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
     public string AppID
@@ -81,20 +88,18 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
 
     public SettingsViewModel(
         LastfmAPIClient apiClient,
-        ILoggingControlViewModel loggingControlViewModel,
+        AbstractLoggingControlViewModel loggingControlViewModel,
         AbstractConfigFileIO<SaveData> saveDataFileIO,
         IRPCLogger logger)
     {
         _apiClient = apiClient;
         _saveDataFileIO = saveDataFileIO;
         _logger = logger;
-        LoggingControlViewModel = loggingControlViewModel as SettingsConsoleViewModel;
+        LoggingControlViewModel = loggingControlViewModel ;
 
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
-
-        PaneName = "Settings";
 
         if (OperatingSystem.CurrentOS == OSEnum.Windows)
         {
@@ -103,7 +108,7 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         }
 
         AppID = _saveDataFileIO.ConfigData.AppID;
-        LoginMessage = IsLoggedIn ? "Not logged in" : $"Logged in as {_saveDataFileIO.ConfigData.UserAccount.Username}";
+        LoginMessage = IsLoggedIn ? NotLoggedIn : LoggedIn;
     }
 
     private void SaveDiscordAppID()
@@ -144,7 +149,7 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         };
         _saveDataFileIO.SaveConfigData(data);
 
-        LoginMessage = "Not logged in";
+        LoginMessage = NotLoggedIn;
     }
 
     private async Task LogUserIn()
@@ -165,11 +170,11 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
             };
             _saveDataFileIO.SaveConfigData(data);
 
-            LoginMessage = $"Logged in as {_saveDataFileIO.ConfigData.UserAccount.Username}";
+            LoginMessage = LoggedIn;
         }
         catch (Exception e)
         {
-            LoginMessage = "";
+            LoginMessage = NotLoggedIn;
             _logger.Error(e.Message);
         }
     }
