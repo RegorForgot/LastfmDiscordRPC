@@ -17,7 +17,7 @@ public class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         using ILifetimeScope container = ContainerConfigurator.Configure().BeginLifetimeScope();
-        IWindowViewModel windowViewModel = container.Resolve<IWindowViewModel>();
+        MainViewModel windowViewModel = container.Resolve<MainViewModel>();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow(windowViewModel);

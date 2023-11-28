@@ -1,12 +1,13 @@
+using LastfmDiscordRPC2.Models;
 using Newtonsoft.Json;
 
-namespace LastfmDiscordRPC2.Models;
+namespace LastfmDiscordRPC2.IO.Schema;
 
-public class ApplicationData
+public class SaveData : IFileData
 {
-    public ApplicationData() { }
+    public SaveData() { }
     
-    public ApplicationData(ApplicationData savedData)
+    public SaveData(SaveData savedData)
     {
         UserAccount = savedData.UserAccount;
         UserRPCConfig = savedData.UserRPCConfig;

@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels;
 
-public class MainViewModel : ReactiveObject, IWindowViewModel
+public class MainViewModel : ReactiveObject
 {
     public ObservableCollection<IPaneViewModel> Children { get; }
     

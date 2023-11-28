@@ -1,6 +1,5 @@
 ﻿using DiscordRPC.Logging;
-using LastfmDiscordRPC2.ViewModels;
-using LastfmDiscordRPC2.ViewModels.Panes;
+using LastfmDiscordRPC2.ViewModels.Logging;
 
 namespace LastfmDiscordRPC2.Logging;
 

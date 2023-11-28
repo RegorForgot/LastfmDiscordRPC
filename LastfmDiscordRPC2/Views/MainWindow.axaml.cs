@@ -1,7 +1,6 @@
-using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Media;
-using LastfmDiscordRPC2.Models;
+using LastfmDiscordRPC2.Enums;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Panes;
 
@@ -12,12 +11,12 @@ public partial class MainWindow : Window
     private static readonly Color WindowsBackground = Color.FromArgb(0xD0, 0x00, 0x00, 0x00);
     private static readonly Color UnixBackground = Color.FromRgb(0x00, 0x00, 0x00);
     
-    public MainWindow(IWindowViewModel dataContext)
+    public MainWindow(MainViewModel dataContext)
     {
         InitializeComponent();
         
         DataContext = dataContext;
-        Background = Utilities.OS == OSPlatform.Windows ? 
+        Background = OperatingSystem.CurrentOS == OSEnum.Windows ? 
             new SolidColorBrush(WindowsBackground) : new SolidColorBrush(UnixBackground);
         
         foreach (IPaneViewModel viewModel in dataContext.Children)

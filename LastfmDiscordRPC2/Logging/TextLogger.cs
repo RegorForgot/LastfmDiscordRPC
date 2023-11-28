@@ -1,42 +1,19 @@
-﻿using System.IO;
-using DiscordRPC.Logging;
-using LastfmDiscordRPC2.Models;
+﻿using DiscordRPC.Logging;
+using LastfmDiscordRPC2.IO;
 
 namespace LastfmDiscordRPC2.Logging;
 
 public class TextLogger : IRPCLogger
 {
+    private readonly LogFileIO _logFileIO;
     private readonly ViewLogger _viewLogger;
-    private readonly string _filePath;
-    private readonly object _fileLock = new object();
-    
     public LogLevel Level { get; set; }
 
-    public TextLogger(LogLevel level, ViewLogger viewLogger)
+    public TextLogger(LogLevel level, LogFileIO logFileIO, ViewLogger viewLogger)
     {
         Level = level;
-        
+        _logFileIO = logFileIO;
         _viewLogger = viewLogger;
-        _filePath = Utilities.SaveAppData.FolderPath + "/Log.log";
-        
-        using (File.Create(_filePath))
-        {
-            // Doesn't need anything
-        }
-    }
-
-    private void WriteToFile(string msg)
-    {
-        lock (_fileLock)
-        {
-            if (File.Exists(_filePath))
-            {
-                File.AppendAllText(_filePath, msg);
-            } else
-            {
-                File.WriteAllText(_filePath, msg);
-            }
-        }
     }
     
     public void Trace(string message, params object[] args)
@@ -47,7 +24,7 @@ public class TextLogger : IRPCLogger
         }
         
         _viewLogger.Trace(message, args);
-        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Trace, message, args));
+        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Trace, message, args));
     }
 
     public void Info(string message, params object[] args)
@@ -58,7 +35,7 @@ public class TextLogger : IRPCLogger
         }
         
         _viewLogger.Info(message, args);
-        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Info, message, args));
+        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Info, message, args));
     }
 
     public void Warning(string message, params object[] args)
@@ -69,7 +46,7 @@ public class TextLogger : IRPCLogger
         }
         
         _viewLogger.Warning(message, args);
-        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Warning, message, args));
+        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Warning, message, args));
     }
 
     public void Error(string message, params object[] args)
@@ -80,6 +57,6 @@ public class TextLogger : IRPCLogger
         }
         
         _viewLogger.Error(message, args);
-        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Error, message, args));
+        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Error, message, args));
     }
 }

@@ -1,15 +1,17 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reactive;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.IO;
+using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
+using LastfmDiscordRPC2.ViewModels.Logging;
 using ReactiveUI;
-using static LastfmDiscordRPC2.Models.Utilities.SaveAppData;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
@@ -30,6 +32,7 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
     private string _loginMessage;
     private string _appID;
     private readonly LastfmAPIClient _apiClient;
+    private readonly AbstractConfigFileIO<SaveData> _saveDataFileIO;
     private readonly IRPCLogger _logger;
 
     public bool SaveEnabled
@@ -62,9 +65,9 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
 
     public bool IsLoggedIn
     {
-        get => SavedData.UserAccount.SessionKey == "" || SavedData.UserAccount.Username == "";
+        get => _saveDataFileIO.ConfigData.UserAccount.SessionKey == "" || _saveDataFileIO.ConfigData.UserAccount.Username == "";
     }
-    
+
     [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
     public string AppID
     {
@@ -76,35 +79,40 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         }
     }
 
-    public SettingsViewModel(LastfmAPIClient apiClient, ILoggingControlViewModel loggingControlViewModel, IRPCLogger logger)
+    public SettingsViewModel(
+        LastfmAPIClient apiClient,
+        ILoggingControlViewModel loggingControlViewModel,
+        AbstractConfigFileIO<SaveData> saveDataFileIO,
+        IRPCLogger logger)
     {
         _apiClient = apiClient;
+        _saveDataFileIO = saveDataFileIO;
         _logger = logger;
         LoggingControlViewModel = loggingControlViewModel as SettingsConsoleViewModel;
-        
+
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
-        
+
         PaneName = "Settings";
-        
-        if (Utilities.OS == OSPlatform.Windows)
+
+        if (OperatingSystem.CurrentOS == OSEnum.Windows)
         {
             StartUpVisible = true;
             StartUpChecked = Utilities.CheckRegistryExists();
         }
 
-        AppID = SavedData.AppID;
-        LoginMessage = IsLoggedIn ? "Not logged in" : $"Logged in as {SavedData.UserAccount.Username}";
+        AppID = _saveDataFileIO.ConfigData.AppID;
+        LoginMessage = IsLoggedIn ? "Not logged in" : $"Logged in as {_saveDataFileIO.ConfigData.UserAccount.Username}";
     }
 
     private void SaveDiscordAppID()
     {
-        ApplicationData data = new ApplicationData(SavedData)
+        SaveData data = new SaveData(_saveDataFileIO.ConfigData)
         {
             AppID = AppID
         };
-        SaveData(data);
+        _saveDataFileIO.SaveConfigData(data);
     }
 
     private void SetLaunchOnStartup(bool startUpValue)
@@ -115,7 +123,7 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
     private async Task SetLastfmLogin(bool logIn)
     {
         IsInProgress = true;
-        
+
         if (logIn)
         {
             await LogUserIn();
@@ -130,11 +138,11 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
 
     private void LogUserOut()
     {
-        ApplicationData data = new ApplicationData(SavedData)
+        SaveData data = new SaveData(_saveDataFileIO.ConfigData)
         {
-            UserAccount = new ApplicationData.Account()
+            UserAccount = new SaveData.Account()
         };
-        SaveData(data);
+        _saveDataFileIO.SaveConfigData(data);
 
         LoginMessage = "Not logged in";
     }
@@ -144,25 +152,25 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         try
         {
             TokenResponse token = await _apiClient.GetToken();
-            Utilities.OpenWebpage(@$"https://www.last.fm/api/auth/?api_key={Utilities.APIKey}&token={token.Token}");
-            
+            Utilities.OpenWebpage($"https://www.last.fm/api/auth/?api_key={Utilities.LastfmAPIKey}&token={token.Token}");
             SessionResponse? sessionResponse = await _apiClient.GetSession(token.Token);
-            
-            ApplicationData data = new ApplicationData(SavedData)
+
+            SaveData data = new SaveData(_saveDataFileIO.ConfigData)
             {
-                UserAccount = new ApplicationData.Account
+                UserAccount = new SaveData.Account
                 {
                     SessionKey = sessionResponse.LfmSession.SessionKey,
                     Username = sessionResponse.LfmSession.Username
                 }
             };
-            SaveData(data);
+            _saveDataFileIO.SaveConfigData(data);
 
-            LoginMessage = $"Logged in as {SavedData.UserAccount.Username}";
+            LoginMessage = $"Logged in as {_saveDataFileIO.ConfigData.UserAccount.Username}";
         }
         catch (Exception e)
         {
-            LoginMessage = e.Message;
+            LoginMessage = "";
+            _logger.Error(e.Message);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using LastfmDiscordRPC2.IO.Schema;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -13,31 +13,7 @@ namespace LastfmDiscordRPC2.Models;
 public static class Utilities
 {
     public static readonly string DefaultAppID = "997756398664421446";
-    public static readonly string APIKey = "79d35013754ac3b3225b73bba566afca";
-    public static readonly OSPlatform OS;
-
-    static Utilities()
-    {
-        OS = GetOperatingSystem();
-    }
-
-    private static OSPlatform GetOperatingSystem()
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            return OSPlatform.OSX;
-        }
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            return OSPlatform.Linux;
-        }
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            return OSPlatform.Windows;
-        }
-
-        throw new Exception("Cannot determine operating system!");
-    }
+    public static readonly string LastfmAPIKey = "79d35013754ac3b3225b73bba566afca";
 
     public static bool CheckRegistryExists()
     {
@@ -70,63 +46,5 @@ public static class Utilities
                 UseShellExecute = true
             }
         );
-    }
-
-    public static class SaveAppData
-    {
-        public static ApplicationData SavedData { get; private set; }
-        public static readonly string FolderPath;
-        private static readonly string FilePath;
-        private static readonly object Lock = new object();
-
-        static SaveAppData()
-        {
-            FolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            FolderPath += OS.ToString() switch
-            {
-                "WINDOWS" => @"/AppData/Local/LastfmDiscordRPC",
-                "LINUX" => @"/.LastfmDiscordRPC",
-                "OSX" => @"/Library/Application Support/LastfmDiscordRPC",
-                _ => FolderPath
-            };
-
-            FilePath = $@"{FolderPath}/config.json";
-            ReadData();
-        }
-
-        private static void ReadData()
-        {
-            try
-            {
-                string json;
-                lock (Lock) json = File.ReadAllText(FilePath);
-                ApplicationData applicationData = JsonConvert.DeserializeObject<ApplicationData>(json) ?? throw new Exception();
-                SavedData = applicationData;
-            }
-            catch (Exception)
-            {
-                SaveData(new ApplicationData());
-            }
-        }
-
-        public static void SaveData(ApplicationData applicationData)
-        {
-            try
-            {
-                lock (Lock) File.WriteAllText(FilePath, JsonConvert.SerializeObject(applicationData));
-            }
-            catch (IOException)
-            {
-                if (Directory.Exists(FolderPath))
-                {
-                    throw;
-                }
-
-                Directory.CreateDirectory(FolderPath);
-                SaveData(applicationData);
-            }
-
-            SavedData = applicationData;
-        }
     }
 }

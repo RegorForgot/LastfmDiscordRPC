@@ -5,8 +5,6 @@ namespace LastfmDiscordRPC2.Logging;
 
 public interface IRPCLogger : ILogger
 {
-    
-
     public static string GetLoggingString(LogLevel level, string message, params object[] args)
     {
         string GetCurrentTimeString()

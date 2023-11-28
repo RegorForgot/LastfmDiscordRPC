@@ -18,5 +18,6 @@ public enum LastfmErrorCode
     ExpiredToken = 15,
     Temporary = 16,
     SuspendedKey = 26,
-    RateLimit = 29
+    RateLimit = 29,
+    Unknown = int.MaxValue, 
 }
