@@ -4,7 +4,7 @@ using LastfmDiscordRPC2.Models;
 
 namespace LastfmDiscordRPC2.Logging;
 
-public class TextLogger : ILastfmLogger
+public class TextLogger : IRPCLogger
 {
     private readonly ViewLogger _viewLogger;
     private readonly string _filePath;
@@ -17,7 +17,7 @@ public class TextLogger : ILastfmLogger
         Level = level;
         
         _viewLogger = viewLogger;
-        _filePath = Utilities.SaveAppData.FolderPath + "/errorLog.log";
+        _filePath = Utilities.SaveAppData.FolderPath + "/Log.log";
         
         using (File.Create(_filePath))
         {
@@ -47,10 +47,7 @@ public class TextLogger : ILastfmLogger
         }
         
         _viewLogger.Trace(message, args);
-
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""TRCE"": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        WriteToFile(msgText);
+        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Trace, message, args));
     }
 
     public void Info(string message, params object[] args)
@@ -61,10 +58,7 @@ public class TextLogger : ILastfmLogger
         }
         
         _viewLogger.Info(message, args);
-        
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""INFO"": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        WriteToFile(msgText);
+        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Info, message, args));
     }
 
     public void Warning(string message, params object[] args)
@@ -75,10 +69,7 @@ public class TextLogger : ILastfmLogger
         }
         
         _viewLogger.Warning(message, args);
-        
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""WARN"": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        WriteToFile(msgText);
+        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Warning, message, args));
     }
 
     public void Error(string message, params object[] args)
@@ -89,10 +80,6 @@ public class TextLogger : ILastfmLogger
         }
         
         _viewLogger.Error(message, args);
-        
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""ERR "": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        
-        WriteToFile(msgText);
+        WriteToFile(IRPCLogger.GetLoggingString(LogLevel.Error, message, args));
     }
 }

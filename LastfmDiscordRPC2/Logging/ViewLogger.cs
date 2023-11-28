@@ -4,12 +4,12 @@ using LastfmDiscordRPC2.ViewModels.Panes;
 
 namespace LastfmDiscordRPC2.Logging;
 
-public class ViewLogger : ILastfmLogger
+public class ViewLogger : IRPCLogger
 {
-    private readonly SettingsConsoleViewModel _loggingControlViewModel;
+    private readonly ILoggingControlViewModel _loggingControlViewModel;
     public LogLevel Level { get; set; }
     
-    public ViewLogger(LogLevel level, SettingsConsoleViewModel loggingControlViewModel)
+    public ViewLogger(LogLevel level, ILoggingControlViewModel loggingControlViewModel)
     {
         _loggingControlViewModel = loggingControlViewModel;
         Level = level;
@@ -23,10 +23,7 @@ public class ViewLogger : ILastfmLogger
             return;
         }
 
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""TRCE"": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        
-        _loggingControlViewModel.ConsoleText = msgText;
+        _loggingControlViewModel.ConsoleText += IRPCLogger.GetLoggingString(LogLevel.Trace, message, args);
     }
     
     public void Info(string message, params object[] args)
@@ -36,10 +33,7 @@ public class ViewLogger : ILastfmLogger
             return;
         }
         
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""INFO"": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        
-        _loggingControlViewModel.ConsoleText = msgText;
+        _loggingControlViewModel.ConsoleText += IRPCLogger.GetLoggingString(LogLevel.Info, message, args);
     }
     
     public void Warning(string message, params object[] args)
@@ -49,10 +43,7 @@ public class ViewLogger : ILastfmLogger
             return;
         }
         
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""WARN"": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        
-        _loggingControlViewModel.ConsoleText = msgText;
+        _loggingControlViewModel.ConsoleText += IRPCLogger.GetLoggingString(LogLevel.Warning, message, args);
     }
     
     public void Error(string message, params object[] args)
@@ -62,9 +53,6 @@ public class ViewLogger : ILastfmLogger
             return;
         }
 
-        string msgText = @$"\n+ [{ILastfmLogger.GetCurrentTimeString()}] ""ERR "": " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}";
-        
-        _loggingControlViewModel.ConsoleText = msgText;
+        _loggingControlViewModel.ConsoleText += IRPCLogger.GetLoggingString(LogLevel.Error, message, args);
     }
 }

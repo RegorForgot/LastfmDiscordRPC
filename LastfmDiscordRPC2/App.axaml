@@ -1,21 +1,23 @@
-<Application xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="LastfmDiscordRPC2.App">
-    
+<Application
+    x:Class="LastfmDiscordRPC2.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <Application.Styles>
         <FluentTheme />
         <Style Selector="DataValidationErrors">
             <Setter Property="Template">
                 <ControlTemplate>
                     <DockPanel LastChildFill="True">
-                        <ContentPresenter Name="PART_ContentPresenter"
-                                          Background="{TemplateBinding Background}"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}"
-                                          CornerRadius="{TemplateBinding CornerRadius}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          Content="{TemplateBinding Content}"
-                                          Padding="{TemplateBinding Padding}" />
+                        <ContentPresenter
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Name="PART_ContentPresenter"
+                            Padding="{TemplateBinding Padding}" />
                     </DockPanel>
                 </ControlTemplate>
             </Setter>

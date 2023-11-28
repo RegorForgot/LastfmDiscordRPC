@@ -19,9 +19,9 @@ public static class ContainerConfigurator
             .As(typeof(IPaneViewModel))
             .InstancePerLifetimeScope();
 
-        builder.RegisterType<SettingsConsoleViewModel>();
-        builder.RegisterType<MainViewModel>().As<IWindowViewModel>();
-        builder.RegisterType<TextLogger>().As<ILastfmLogger>().SingleInstance().WithParameter("level", LogLevel.Trace);
+        builder.RegisterType<MainViewModel>().As<IWindowViewModel>().SingleInstance();
+        builder.RegisterType<SettingsConsoleViewModel>().As<ILoggingControlViewModel>().SingleInstance();
+        builder.RegisterType<TextLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Trace);
         builder.RegisterType<ViewLogger>().SingleInstance().WithParameter("level", LogLevel.Trace);
         builder.RegisterType<LastfmAPIClient>().SingleInstance();
         builder.RegisterType<SignatureLocalClient>().As<ISignatureAPIClient>().SingleInstance();

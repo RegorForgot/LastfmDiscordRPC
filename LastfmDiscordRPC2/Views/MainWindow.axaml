@@ -1,17 +1,20 @@
-<Window x:Class="LastfmDiscordRPC2.Views.MainWindow"
-        xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
-        xmlns:panes="clr-namespace:LastfmDiscordRPC2.Views.Panes"
-        Title="LastfmDiscordRPC2"
-        ExtendClientAreaToDecorationsHint="True"
-        Icon="/Assets/icon.ico"
-        TransparencyLevelHint="AcrylicBlur"
-        ExtendClientAreaChromeHints="PreferSystemChrome"
-        mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
-    
+<Window
+    ExtendClientAreaChromeHints="PreferSystemChrome"
+    ExtendClientAreaToDecorationsHint="True"
+    Icon="/Assets/icon.ico"
+    Title="LastfmDiscordRPC2"
+    TransparencyLevelHint="AcrylicBlur"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="LastfmDiscordRPC2.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:panes="clr-namespace:LastfmDiscordRPC2.Views.Panes"
+    xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
@@ -88,7 +91,7 @@
                     </Border>
                 </TabItem.Header>
                 <Border Classes="PageContent">
-                    <panes:AboutView Name="About"/>
+                    <panes:AboutView Name="About" />
                 </Border>
             </TabItem>
         </TabControl>

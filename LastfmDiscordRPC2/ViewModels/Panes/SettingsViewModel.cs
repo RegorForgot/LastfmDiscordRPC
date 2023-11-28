@@ -13,7 +13,7 @@ using static LastfmDiscordRPC2.Models.Utilities.SaveAppData;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public class SettingsViewModel : ReactiveObject, IPaneViewModel
+public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
 {
     private const string AppIDRegExp = @"^\d{17,21}$";
 
@@ -30,7 +30,7 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
     private string _loginMessage;
     private string _appID;
     private readonly LastfmAPIClient _apiClient;
-    private readonly ILastfmLogger _logger;
+    private readonly IRPCLogger _logger;
 
     public bool SaveEnabled
     {
@@ -73,19 +73,19 @@ public class SettingsViewModel : ReactiveObject, IPaneViewModel
         {
             this.RaiseAndSetIfChanged(ref _appID, value);
             SaveEnabled = Regex.IsMatch(value, AppIDRegExp);
-            _logger.Trace("test");
         }
     }
 
-    public SettingsViewModel(LastfmAPIClient apiClient, SettingsConsoleViewModel loggingControlViewModel, ILastfmLogger logger)
+    public SettingsViewModel(LastfmAPIClient apiClient, ILoggingControlViewModel loggingControlViewModel, IRPCLogger logger)
     {
         _apiClient = apiClient;
         _logger = logger;
-        LoggingControlViewModel = loggingControlViewModel;
+        LoggingControlViewModel = loggingControlViewModel as SettingsConsoleViewModel;
         
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
+        
         PaneName = "Settings";
         
         if (Utilities.OS == OSPlatform.Windows)

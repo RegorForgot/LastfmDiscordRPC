@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public class AboutViewModel : ReactiveObject, IPaneViewModel
+public sealed class AboutViewModel : ReactiveObject, IPaneViewModel
 {
     public ReactiveCommand<Unit, Unit> GithubPage { get; }
     public string PaneName { get; }
@@ -17,6 +17,6 @@ public class AboutViewModel : ReactiveObject, IPaneViewModel
 
     private void OpenGithubPage()
     {
-        Utilities.OpenWebpage(@"https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
+        Utilities.OpenWebpage("https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
     }
 }

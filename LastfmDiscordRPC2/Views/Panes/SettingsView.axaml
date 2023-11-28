@@ -1,15 +1,18 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
-             xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="LastfmDiscordRPC2.Views.Panes.SettingsView">
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="LastfmDiscordRPC2.Views.Panes.SettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
         <converters:LoginTextConverter x:Key="LoginTextConverter" />
     </UserControl.Resources>
-    
+
     <Design.DataContext>
         <panes:SettingsViewModel />
     </Design.DataContext>
@@ -21,50 +24,56 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <ToggleSwitch
-                Content="Launch on Startup"
-                IsVisible="{Binding StartUpVisible}"
-                IsChecked="{Binding StartUpChecked}"
                 Command="{Binding LaunchOnStartup}"
-                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}"
+                Content="Launch on Startup"
+                IsChecked="{Binding StartUpChecked}"
+                IsVisible="{Binding StartUpVisible}" />
             <StackPanel Orientation="Horizontal">
                 <Button
-                    Content="{Binding IsLoggedIn, Converter={StaticResource LoginTextConverter}}"
                     Command="{Binding LastfmLogin}"
                     CommandParameter="{Binding IsLoggedIn}"
+                    Content="{Binding IsLoggedIn, Converter={StaticResource LoginTextConverter}}"
                     IsEnabled="{Binding !IsInProgress}"
-                    Margin="0 10 10 10" />
-                <Label
-                    Content="{Binding LoginMessage}"
-                    Margin="0 10 0 10" />
+                    Margin="0,10,10,10" />
+                <Label Content="{Binding LoginMessage}" Margin="0,10,0,10" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="50">
-                <TextBox Text="{Binding AppID}"
-                         Watermark="Discord ID"
-                         AcceptsReturn="False"
-                         MaxLength="21"
-                         Height="30"
-                         VerticalContentAlignment="Center"
-                         Width="400" />
+            <StackPanel Height="50" Orientation="Horizontal">
+                <TextBox
+                    AcceptsReturn="False"
+                    Height="30"
+                    MaxLength="21"
+                    Text="{Binding AppID}"
+                    VerticalContentAlignment="Center"
+                    Watermark="Discord ID"
+                    Width="400" />
                 <Button
-                    Content="Save"
                     Command="{Binding SaveAppID}"
+                    Content="Save"
                     IsEnabled="{Binding SaveEnabled}"
-                    Margin="0 10 10 10" />
+                    Margin="0,10,10,10" />
             </StackPanel>
             <StackPanel>
-                <TextBlock DataContext="{Binding LoggingControlViewModel}"
-                         Text="{Binding ConsoleText, Mode=TwoWay}"/>
+                <TextBox
+                    AcceptsReturn="True"
+                    DataContext="{Binding LoggingControlViewModel}"
+                    Focusable="False"
+                    Height="200"
+                    IsReadOnly="True"
+                    Text="{Binding ConsoleText, Mode=TwoWay}"
+                    TextChanged="RPCConsoleOnTextChanged"
+                    TextWrapping="WrapWithOverflow" />
             </StackPanel>
         </StackPanel>
         <StackPanel
+            Grid.Row="1"
             HorizontalAlignment="Center"
-            Orientation="Vertical"
-            Grid.Row="1">
+            Orientation="Vertical">
             <Label
                 Content="Please enter a valid Discord App ID."
                 Foreground="Yellow"
-                IsVisible="{Binding !SaveEnabled}"
-                HorizontalAlignment="Center" />
+                HorizontalAlignment="Center"
+                IsVisible="{Binding !SaveEnabled}" />
             <ProgressBar
                 IsIndeterminate="True"
                 IsVisible="{Binding IsInProgress}"
