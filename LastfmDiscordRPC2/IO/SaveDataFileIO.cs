@@ -7,5 +7,5 @@ public class SaveDataFileIO : AbstractConfigFileIO<SaveData>
 {
     public override string FilePath { get; protected set; } = $"{SaveFolder}/config.json";
     
-    public SaveDataFileIO(IRPCLogger logger) : base(logger) { }
+    public SaveDataFileIO(AbstractLoggingService loggingService) : base(loggingService) { }
 }

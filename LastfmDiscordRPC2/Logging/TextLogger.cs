@@ -6,14 +6,12 @@ namespace LastfmDiscordRPC2.Logging;
 public class TextLogger : IRPCLogger
 {
     private readonly LogFileIO _logFileIO;
-    private readonly ViewLogger _viewLogger;
     public LogLevel Level { get; set; }
 
-    public TextLogger(LogLevel level, LogFileIO logFileIO, ViewLogger viewLogger)
+    public TextLogger(LogLevel level, LogFileIO logFileIO)
     {
         Level = level;
         _logFileIO = logFileIO;
-        _viewLogger = viewLogger;
     }
     
     public void Trace(string message, params object[] args)
@@ -23,7 +21,6 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _viewLogger.Trace(message, args);
         _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Trace, message, args));
     }
 
@@ -34,7 +31,6 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _viewLogger.Info(message, args);
         _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Info, message, args));
     }
 
@@ -45,7 +41,6 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _viewLogger.Warning(message, args);
         _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Warning, message, args));
     }
 
@@ -56,7 +51,6 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _viewLogger.Error(message, args);
         _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Error, message, args));
     }
 }

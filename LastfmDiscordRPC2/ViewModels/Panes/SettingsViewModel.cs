@@ -34,7 +34,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
     private string _appID;
     private readonly LastfmAPIClient _apiClient;
     private readonly AbstractConfigFileIO<SaveData> _saveDataFileIO;
-    private readonly IRPCLogger _logger;
+    private readonly AbstractLoggingService _loggingService;
 
     public bool SaveEnabled
     {
@@ -90,11 +90,11 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
         LastfmAPIClient apiClient,
         AbstractLoggingControlViewModel loggingControlViewModel,
         AbstractConfigFileIO<SaveData> saveDataFileIO,
-        IRPCLogger logger)
+        AbstractLoggingService loggingService)
     {
         _apiClient = apiClient;
         _saveDataFileIO = saveDataFileIO;
-        _logger = logger;
+        _loggingService = loggingService;
         LoggingControlViewModel = loggingControlViewModel ;
 
         LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
@@ -175,7 +175,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
         catch (Exception e)
         {
             LoginMessage = NotLoggedIn;
-            _logger.Error(e.Message);
+            _loggingService.Error(e.Message);
         }
     }
 }

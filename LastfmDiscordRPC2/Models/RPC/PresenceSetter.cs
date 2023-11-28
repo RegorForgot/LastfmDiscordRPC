@@ -2,7 +2,7 @@
 // using System.Net.Http;
 // using System.Threading;
 //
-// namespace LastfmDiscordRPC2.Models;
+// namespace LastfmDiscordRPC2.Models.RPC;
 //
 // public class PresenceSetter : IDisposable
 // {

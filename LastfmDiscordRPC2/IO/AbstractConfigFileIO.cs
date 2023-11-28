@@ -8,16 +8,16 @@ namespace LastfmDiscordRPC2.IO;
 
 public abstract class AbstractConfigFileIO<T> : AbstractFileIO where T : IFileData, new()
 {
-    private readonly IRPCLogger _logger;
+    private readonly AbstractLoggingService _loggingService;
     public T ConfigData { get; private set; }
     
-    protected AbstractConfigFileIO(IRPCLogger logger)
+    protected AbstractConfigFileIO(AbstractLoggingService loggingService)
     {
-        _logger = logger;
+        _loggingService = loggingService;
         ReadConfigData();
     }
 
-    protected void ReadConfigData()
+    private void ReadConfigData()
     {
         try
         {
@@ -49,7 +49,7 @@ public abstract class AbstractConfigFileIO<T> : AbstractFileIO where T : IFileDa
         } 
         catch (Exception ex) when (ex is IOException or JsonException)
         {
-            _logger.Error("Fatal IO Exception!");
+            _loggingService.Error("Fatal IO Exception!");
         }
     }
     

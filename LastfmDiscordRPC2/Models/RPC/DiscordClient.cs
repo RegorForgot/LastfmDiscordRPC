@@ -3,17 +3,19 @@
 // using System.Text;
 // using DiscordRPC;
 // using DiscordRPC.Exceptions;
-// using DiscordRPC.Logging;
+// using LastfmDiscordRPC2.IO;
+// using LastfmDiscordRPC2.IO.Schema;
 // using LastfmDiscordRPC2.Logging;
 // using LastfmDiscordRPC2.Models.Responses;
-// using LastfmDiscordRPC2.ViewModels;
-// using static LastfmDiscordRPC2.Models.Utilities.SaveAppData;
 //
-// namespace LastfmDiscordRPC2.Models;
+// namespace LastfmDiscordRPC2.Models.RPC;
 //
 // public class DiscordClient : IDisposable
 // {
 //     private DiscordRpcClient? _client;
+//     private readonly AbstractConfigFileIO<SaveData> _saveData;
+//     private readonly IRPCLogger _logger;
+//
 //     private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
 //     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
 //
@@ -21,6 +23,13 @@
 //     {
 //         get => _client != null;
 //     }
+//     
+//     public DiscordClient(AbstractConfigFileIO<SaveData> saveData, IRPCLogger logger)
+//     {
+//         _saveData = saveData;
+//         _logger = logger;
+//     }
+//     
 //     public bool IsReady { get; private set; }
 //     public long LastScrobbleTime { get; private set; }
 //
@@ -31,9 +40,9 @@
 //             return;
 //         }
 //
-//         _client = new DiscordRpcClient(SavedData.AppID);
+//         _client = new DiscordRpcClient(_saveData.ConfigData.AppID);
 //         _client.Initialize();
-//         _client.Logger = new TextLogger(LogLevel.Warning);
+//         _client.Logger = _logger;
 //
 //         SetEventHandlers();
 //     }
@@ -45,30 +54,30 @@
 //             return;
 //         }
 //
-//         // _client.OnClose += (_, _) =>
-//         // {
-//         //     _mainViewModel.Logger.ErrorOverride("Could not connect to Discord.");
-//         //     IsReady = false;
-//         // };
-//         // _client.OnError += (_, _) =>
-//         // {
-//         //     _mainViewModel.Logger.ErrorOverride("There has been an error trying to connect to Discord.");
-//         //     IsReady = false;
-//         // };
-//         // _client.OnConnectionFailed += (_, _) =>
-//         // {
-//         //     _mainViewModel.Logger.ErrorOverride("Connection to discord failed. Check if your Discord app is open.");
-//         //     IsReady = false;
-//         // };
-//         // _client.OnConnectionEstablished += (_, _) =>
-//         // {
-//         //     _mainViewModel.Logger.InfoOverride("Connection to discord succeeded.");
-//         // };
-//         // _client.OnReady += (_, _) =>
-//         // {
-//         //     _mainViewModel.Logger.InfoOverride("Client ready.");
-//         //     IsReady = true;
-//         // };
+//         _client.OnClose += (_, _) =>
+//         {
+//             _logger.Error("Could not connect to Discord.");
+//             IsReady = false;
+//         };
+//         _client.OnError += (_, _) =>
+//         {
+//             _logger.Error("There has been an error trying to connect to Discord.");
+//             IsReady = false;
+//         };
+//         _client.OnConnectionFailed += (_, _) =>
+//         {
+//             _logger.Error("Connection to discord failed. Check if your Discord app is open.");
+//             IsReady = false;
+//         };
+//         _client.OnConnectionEstablished += (_, _) =>
+//         {
+//             _logger.Info("Connection to discord succeeded.");
+//         };
+//         _client.OnReady += (_, _) =>
+//         {
+//             _logger.Info("Client ready.");
+//             IsReady = true;
+//         };
 //     }
 //
 //     /// <summary>
@@ -78,13 +87,10 @@
 //     /// <param name="username">The username provided by user</param>
 //     public void SetPresence(TrackResponse response, string username)
 //     {
-//         // Null ignore - handling done in SetPresenceCommand's Execute method.
 //         Track track = response.Track;
 //         string smallImage;
 //         string smallText;
 //         string albumName = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
-//
-//         // Adding just one is fine: all tracks have to have at least one character in the Last.fm database.
 //
 //         if (response.Track.NowPlaying.State == "true")
 //         {
@@ -162,12 +168,9 @@
 //         }
 //     }
 //
-//     public void ClearPresence()
+//     private void ClearPresence()
 //     {
-//         if (IsInitialised)
-//         {
-//             _client?.ClearPresence();
-//         }
+//         _client?.ClearPresence();
 //     }
 //
 //     /// <inheritdoc />
@@ -184,17 +187,13 @@
 //             _client.Deinitialize();
 //             _client.Dispose();
 //         }
-//         catch (ObjectDisposedException)
+//         catch (Exception ex) when (ex is ObjectDisposedException or UninitializedException)
 //         {
 //             // If either of these are run, the client did not need to be disposed in the first place.
 //         }
-//         catch (UninitializedException)
-//         {
-//             // Same as above
-//         }
 //         finally
 //         {
-//             SuppressFinalize(this);
+//             GC.SuppressFinalize(this);
 //         }
 //     }
 // }

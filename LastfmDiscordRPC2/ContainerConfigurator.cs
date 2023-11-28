@@ -24,9 +24,11 @@ public static class ContainerConfigurator
 
         builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
         builder.RegisterType<SettingsConsoleViewModel>().As<AbstractLoggingControlViewModel>().SingleInstance();
+
+        builder.RegisterType<ViewLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Info);
+        builder.RegisterType<TextLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Warning);
         
-        builder.RegisterType<ViewLogger>().AsSelf().SingleInstance().WithParameter("level", LogLevel.Trace);
-        builder.RegisterType<TextLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Trace);
+        builder.RegisterType<LoggingService>().As<AbstractLoggingService>().SingleInstance();
         
         builder.RegisterType<LastfmAPIClient>().AsSelf().SingleInstance();
         builder.RegisterType<SignatureLocalClient>().As<ISignatureAPIClient>().SingleInstance();
