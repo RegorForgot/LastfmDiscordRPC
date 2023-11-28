@@ -7,9 +7,9 @@ using LastfmDiscordRPC2.Enums;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
-using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
+using LastfmDiscordRPC2.Utilities;
 using LastfmDiscordRPC2.ViewModels.Logging;
 using ReactiveUI;
 
@@ -99,7 +99,7 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         if (OperatingSystem.CurrentOS == OSEnum.Windows)
         {
             StartUpVisible = true;
-            StartUpChecked = Utilities.CheckRegistryExists();
+            StartUpChecked = WinRegistry.CheckRegistryExists();
         }
 
         AppID = _saveDataFileIO.ConfigData.AppID;
@@ -115,9 +115,9 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         _saveDataFileIO.SaveConfigData(data);
     }
 
-    private void SetLaunchOnStartup(bool startUpValue)
+    private static void SetLaunchOnStartup(bool startUpValue)
     {
-        Utilities.SetRegistry(startUpValue);
+        WinRegistry.SetRegistry(startUpValue);
     }
 
     private async Task SetLastfmLogin(bool logIn)
@@ -152,7 +152,7 @@ public sealed class SettingsViewModel : ReactiveObject, IPaneViewModel
         try
         {
             TokenResponse token = await _apiClient.GetToken();
-            Utilities.OpenWebpage($"https://www.last.fm/api/auth/?api_key={Utilities.LastfmAPIKey}&token={token.Token}");
+            Utilities.Utilities.OpenWebpage($"https://www.last.fm/api/auth/?api_key={Utilities.Utilities.LastfmAPIKey}&token={token.Token}");
             SessionResponse? sessionResponse = await _apiClient.GetSession(token.Token);
 
             SaveData data = new SaveData(_saveDataFileIO.ConfigData)

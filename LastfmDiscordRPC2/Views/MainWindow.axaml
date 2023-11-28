@@ -3,7 +3,7 @@
     ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/icon.ico"
     Title="LastfmDiscordRPC2"
-    TransparencyLevelHint="AcrylicBlur"
+    TransparencyLevelHint="Mica"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d"

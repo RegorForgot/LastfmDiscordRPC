@@ -29,7 +29,7 @@ public class LastfmAPIClient : IAPIClient
 
         request.AddParameter("format", "json");
         request.AddParameter("method", "auth.gettoken");
-        request.AddParameter("api_key", Utilities.LastfmAPIKey);
+        request.AddParameter("api_key", Utilities.Utilities.LastfmAPIKey);
         request.Timeout = 20000;
 
         RestResponse response = await APIRestClient.ExecuteAsync(request);
@@ -38,13 +38,13 @@ public class LastfmAPIClient : IAPIClient
 
     public async Task<SessionResponse> GetSession(string token)
     {
-        string signature = await _signatureAPIClient.GetSignature($"api_key{Utilities.LastfmAPIKey}methodauth.getsessiontoken{token}");
+        string signature = await _signatureAPIClient.GetSignature($"api_key{Utilities.Utilities.LastfmAPIKey}methodauth.getsessiontoken{token}");
 
         RestRequest request = new RestRequest();
         request.AddParameter("format", "json");
         request.AddParameter("method", "auth.getsession");
         request.AddParameter("token", token);
-        request.AddParameter("api_key", Utilities.LastfmAPIKey);
+        request.AddParameter("api_key", Utilities.Utilities.LastfmAPIKey);
         request.AddParameter("api_sig", signature);
         request.Timeout = 10000;
 
@@ -80,7 +80,7 @@ public class LastfmAPIClient : IAPIClient
         request.AddParameter("method", "user.getrecenttracks");
         request.AddParameter("limit", "1");
         request.AddParameter("user", username);
-        request.AddParameter("api_key", Utilities.LastfmAPIKey);
+        request.AddParameter("api_key", Utilities.Utilities.LastfmAPIKey);
         request.Timeout = 20000;
 
         RestResponse response = await APIRestClient.ExecuteAsync(request);

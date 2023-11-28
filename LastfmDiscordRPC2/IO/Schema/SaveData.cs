@@ -17,7 +17,7 @@ public class SaveData : IFileData
     
     [JsonProperty] public Account UserAccount { get; set; } = new Account();
     [JsonProperty] public RPCConfig UserRPCConfig { get; set; } = new RPCConfig();
-    [JsonProperty] public string AppID { get; set; } = Utilities.DefaultAppID;
+    [JsonProperty] public string AppID { get; set; } = Utilities.Utilities.DefaultAppID;
     [JsonProperty] public int SleepTime { get; set; }
 
     public class Account

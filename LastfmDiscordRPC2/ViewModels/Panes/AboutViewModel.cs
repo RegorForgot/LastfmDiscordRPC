@@ -17,6 +17,6 @@ public sealed class AboutViewModel : ReactiveObject, IPaneViewModel
 
     private void OpenGithubPage()
     {
-        Utilities.OpenWebpage("https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
+        Utilities.Utilities.OpenWebpage("https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
     }
 }
