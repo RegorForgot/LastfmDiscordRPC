@@ -2,11 +2,11 @@
 
 namespace LastfmDiscordRPC2.IO;
 
-public sealed class LogFileIO : AbstractFileIO
+public sealed class LogIOService : AbstractIOService
 {
     public override string FilePath { get; protected set; } = $"{SaveFolder}/log.log";
 
-    public LogFileIO()
+    public LogIOService()
     {
         if (!FileExists())
         {

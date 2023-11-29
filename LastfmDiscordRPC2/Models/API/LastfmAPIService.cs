@@ -10,17 +10,18 @@ using RestSharp;
 
 namespace LastfmDiscordRPC2.Models.API;
 
-public abstract class AbstractLastfmAPIClient : IAPIClient
+public class LastfmAPIService : IAPIService
 {
+    public long LastScrobbleTime { get; set; }
     public RestClient APIRestClient { get; }
-    private readonly ISignatureAPIClient _signatureAPIClient;
+    private readonly ISignatureAPIService _signatureAPIService;
 
-    protected AbstractLastfmAPIClient(ISignatureAPIClient signatureAPIClient)
+    public LastfmAPIService(ISignatureAPIService signatureAPIService)
     {
         APIRestClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
         APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
         
-        _signatureAPIClient = signatureAPIClient;
+        _signatureAPIService = signatureAPIService;
     }
 
     public async Task<TokenResponse> GetToken()
@@ -38,7 +39,7 @@ public abstract class AbstractLastfmAPIClient : IAPIClient
 
     public async Task<SessionResponse> GetSession(string token)
     {
-        string signature = await _signatureAPIClient.GetSignature($"api_key{Utilities.Utilities.LastfmAPIKey}methodauth.getsessiontoken{token}");
+        string signature = await _signatureAPIService.GetSignature($"api_key{Utilities.Utilities.LastfmAPIKey}methodauth.getsessiontoken{token}");
 
         RestRequest request = new RestRequest();
         request.AddParameter("format", "json");

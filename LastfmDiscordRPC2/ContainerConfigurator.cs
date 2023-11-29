@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Autofac;
 using DiscordRPC.Logging;
+using LastfmDiscordRPC2.Assets;
 using LastfmDiscordRPC2.IO;
-using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.RPC;
@@ -18,27 +18,34 @@ public static class ContainerConfigurator
     {
         ContainerBuilder builder = new ContainerBuilder();
 
+        builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
+        
         builder.RegisterAssemblyTypes(Assembly.Load(nameof(LastfmDiscordRPC2)))
             .Where(t => t.Namespace.Contains("ViewModels.Panes"))
             .As(typeof(AbstractPaneViewModel))
             .InstancePerLifetimeScope();
 
-        builder.RegisterType<MainViewModel>().AsSelf().SingleInstance();
-        builder.RegisterType<SettingsConsoleViewModel>().As<AbstractLoggingControlViewModel>().SingleInstance();
+        builder.RegisterAssemblyTypes(Assembly.Load(nameof(LastfmDiscordRPC2)))
+            .Where(t => t.Namespace.Contains("ViewModels.Controls"))
+            .AsSelf()
+            .InstancePerLifetimeScope();
 
+        builder.RegisterType<LoggingService>().AsSelf().SingleInstance();
+        
         builder.RegisterType<ViewLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Info);
         builder.RegisterType<TextLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Warning);
+
+        builder.RegisterType<LastfmAPIService>().AsSelf().SingleInstance();
         
-        builder.RegisterType<LoggingService>().As<AbstractLoggingService>().SingleInstance();
+        builder.RegisterType<SecretKey>().As<ISecretKey>().InstancePerLifetimeScope();
+        builder.RegisterType<SignatureLocalAPIService>().As<ISignatureAPIService>().SingleInstance();
+        builder.RegisterType<SignatureAPIService>().As<ISignatureAPIService>().SingleInstance().PreserveExistingDefaults();
 
         builder.RegisterType<DiscordClient>().As<IDiscordClient>().SingleInstance();
         builder.RegisterType<PresenceService>().As<IPresenceService>().SingleInstance();
-        
-        builder.RegisterType<LastfmService>().AsSelf().SingleInstance();
-        builder.RegisterType<SignatureLocalClient>().As<ISignatureAPIClient>().SingleInstance();
 
-        builder.RegisterType<LogFileIO>().AsSelf().SingleInstance();
-        builder.RegisterType<SaveDataFileIO>().As<AbstractConfigFileIO<SaveData>>().SingleInstance();
+        builder.RegisterType<LogIOService>().AsSelf().SingleInstance();
+        builder.RegisterType<SaveCfgIOService>().AsSelf().SingleInstance();
             
         return builder.Build();
     }

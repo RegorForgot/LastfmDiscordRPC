@@ -45,11 +45,16 @@
         <DependentUpon>AboutView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Remove="IO\RichPresenceCfgIO.cs" />
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="Avalonia.Themes.Fluent">
         <HintPath>..\..\..\..\..\..\.nuget\packages\avalonia\0.10.18\lib\netcoreapp2.0\Avalonia.Themes.Fluent.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AvaloniaXaml Remove="Views\Control\PresencePreviewControl.axaml" />
     </ItemGroup>
 </Project>

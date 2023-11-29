@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
-using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
 using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.IO;
 
-public abstract class AbstractConfigFileIO<T> : AbstractFileIO where T : IFileData, new()
+public class SaveCfgIOService : AbstractIOService
 {
-    private readonly AbstractLoggingService _loggingService;
-    public T ConfigData { get; private set; }
+    private readonly LoggingService _loggingService;
+    public SaveCfg SaveCfg { get; private set; }
+    public override string FilePath { get; protected set; } = $"{SaveFolder}/config.json";
     
-    protected AbstractConfigFileIO(AbstractLoggingService loggingService)
+    public SaveCfgIOService(LoggingService loggingService)
     {
         _loggingService = loggingService;
         ReadConfigData();
@@ -27,16 +27,16 @@ public abstract class AbstractConfigFileIO<T> : AbstractFileIO where T : IFileDa
                 json = File.ReadAllText(FilePath);
             }
 
-            T configData = DeserializeFileData(json);
-            ConfigData = configData;
+            SaveCfg configData = JsonConvert.DeserializeObject<SaveCfg>(json) ?? throw new Exception();
+            SaveCfg = configData;
         }
         catch (Exception ex) when (ex is IOException or JsonException)
         {
-            SaveConfigData(new T());
+            SaveConfigData(new SaveCfg());
         }
     }
 
-    public void SaveConfigData(T configData)
+    public void SaveConfigData(SaveCfg configData)
     {
         try
         {
@@ -44,17 +44,12 @@ public abstract class AbstractConfigFileIO<T> : AbstractFileIO where T : IFileDa
             {
                 string serializedData = JsonConvert.SerializeObject(configData);
                 WriteToFile(serializedData);
-                ConfigData = configData;
+                SaveCfg = configData;
             }
         } 
         catch (Exception ex) when (ex is IOException or JsonException)
         {
             _loggingService.Error("Fatal IO Exception!");
         }
-    }
-    
-    private static T DeserializeFileData(string json)
-    {
-        return JsonConvert.DeserializeObject<T>(json) ?? throw new Exception();
     }
 }

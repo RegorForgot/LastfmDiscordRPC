@@ -5,13 +5,13 @@ namespace LastfmDiscordRPC2.Logging;
 
 public class TextLogger : IRPCLogger
 {
-    private readonly LogFileIO _logFileIO;
+    private readonly LogIOService _logIOService;
     public LogLevel Level { get; set; }
 
-    public TextLogger(LogLevel level, LogFileIO logFileIO)
+    public TextLogger(LogLevel level, LogIOService logIOService)
     {
         Level = level;
-        _logFileIO = logFileIO;
+        _logIOService = logIOService;
     }
     
     public void Trace(string message, params object[] args)
@@ -21,7 +21,7 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Trace, message, args));
+        _logIOService.Log(IRPCLogger.GetLoggingString(LogLevel.Trace, message, args));
     }
 
     public void Info(string message, params object[] args)
@@ -31,7 +31,7 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Info, message, args));
+        _logIOService.Log(IRPCLogger.GetLoggingString(LogLevel.Info, message, args));
     }
 
     public void Warning(string message, params object[] args)
@@ -41,7 +41,7 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Warning, message, args));
+        _logIOService.Log(IRPCLogger.GetLoggingString(LogLevel.Warning, message, args));
     }
 
     public void Error(string message, params object[] args)
@@ -51,6 +51,6 @@ public class TextLogger : IRPCLogger
             return;
         }
         
-        _logFileIO.Log(IRPCLogger.GetLoggingString(LogLevel.Error, message, args));
+        _logIOService.Log(IRPCLogger.GetLoggingString(LogLevel.Error, message, args));
     }
 }

@@ -5,11 +5,11 @@ using RestSharp;
 
 namespace LastfmDiscordRPC2.Models.API;
 
-public class SignatureAPIClient : ISignatureAPIClient
+public class SignatureAPIService : ISignatureAPIService
 {
     public RestClient APIRestClient { get; }
     
-    public SignatureAPIClient()
+    public SignatureAPIService()
     {
         APIRestClient = new RestClient(@"https://crygup.com/regor/");
         APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");

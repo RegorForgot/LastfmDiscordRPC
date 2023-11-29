@@ -5,10 +5,10 @@ namespace LastfmDiscordRPC2.Logging;
 
 public class ViewLogger : IRPCLogger
 {
-    private readonly AbstractLoggingControlViewModel _loggingControlViewModel;
+    private readonly LoggingControlViewModel _loggingControlViewModel;
     public LogLevel Level { get; set; }
     
-    public ViewLogger(LogLevel level, AbstractLoggingControlViewModel loggingControlViewModel)
+    public ViewLogger(LogLevel level, LoggingControlViewModel loggingControlViewModel)
     {
         _loggingControlViewModel = loggingControlViewModel;
         Level = level;

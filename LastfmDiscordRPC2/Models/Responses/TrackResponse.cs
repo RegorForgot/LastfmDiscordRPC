@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-// I feel safe doing this because all the "nulled" items are either filled by Newtonsoft or handled in LastfmClient with the 
-// Lastfm and HTTPRequest exceptions
 #pragma warning disable CS8618
 #pragma warning disable CS8601
 
@@ -28,22 +24,6 @@ public record TrackResponse : ILastfmAPIResponse
 
 public record Track
 {
-    public virtual bool Equals(Track? other)
-    {
-        if (other is null)
-        {
-            return false;
-        }
-
-        return Name == other.Name && Artist == other.Artist && Album == other.Album && NowPlaying == other.NowPlaying && Date == other.Date && Images.SequenceEqual(other.Images);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, Artist, Album, NowPlaying, Date, Images);
-    }
-
-
     private const string DefaultSingleCover
         = @"https://lastfm.freetls.fastly.net/i/u/300x300/4128a6eb29f94943c9d206c08e625904.png";
 

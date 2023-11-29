@@ -2,8 +2,10 @@
 
 namespace LastfmDiscordRPC2.ViewModels.Controls;
 
-public class AbstractLoggingControlViewModel : AbstractControlViewModel
+public class LoggingControlViewModel : AbstractControlViewModel
 {
+    public override string Name { get => "LoggingControl"; }
+    
     private string _consoleText = "";
     
     public string ConsoleText

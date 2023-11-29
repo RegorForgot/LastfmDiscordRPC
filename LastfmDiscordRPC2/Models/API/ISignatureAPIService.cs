@@ -2,7 +2,7 @@
 
 namespace LastfmDiscordRPC2.Models.API;
 
-public interface ISignatureAPIClient : IAPIClient
+public interface ISignatureAPIService : IAPIService
 {
     public Task<string> GetSignature(string message);
 }

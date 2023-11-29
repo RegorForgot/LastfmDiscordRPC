@@ -1,22 +1,25 @@
 using Newtonsoft.Json;
+using ReactiveUI;
 
-namespace LastfmDiscordRPC2.IO.Schema;
+namespace LastfmDiscordRPC2.IO;
 
-public record SaveData : IFileData
+public record SaveCfg
 {
-    public SaveData() { }
+    private const string DefaultAppID = "997756398664421446";
     
-    public SaveData(SaveData savedData)
+    public SaveCfg() { }
+    
+    public SaveCfg(SaveCfg other)
     {
-        UserAccount = savedData.UserAccount;
-        UserRPCConfig = savedData.UserRPCConfig;
-        AppID = savedData.AppID;
-        SleepTime = savedData.SleepTime;
+        UserAccount = other.UserAccount;
+        UserRPCCfg = other.UserRPCCfg;
+        AppID = other.AppID;
+        SleepTime = other.SleepTime;
     }
     
     [JsonProperty] public Account UserAccount { get; set; } = new Account();
-    [JsonProperty] public RPCConfig UserRPCConfig { get; set; } = new RPCConfig();
-    [JsonProperty] public string AppID { get; set; } = Utilities.Utilities.DefaultAppID;
+    [JsonProperty] public RPCCfg UserRPCCfg { get; set; } = new RPCCfg();
+    [JsonProperty] public string AppID { get; set; } = DefaultAppID;
     [JsonProperty] public int SleepTime { get; set; } = 3600;
 
     public record Account
@@ -25,7 +28,7 @@ public record SaveData : IFileData
         [JsonProperty] public string SessionKey { get; set; } = Empty;
     }
 
-    public record RPCConfig
+    public record RPCCfg
     {
         [JsonProperty] public string Description { get; set; } = Empty;
         [JsonProperty] public string State { get; set; } = Empty;

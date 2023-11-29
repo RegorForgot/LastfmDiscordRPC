@@ -5,14 +5,14 @@ using LastfmDiscordRPC2.Enums;
 
 namespace LastfmDiscordRPC2.IO;
 
-public abstract class AbstractFileIO
+public abstract class AbstractIOService
 {
     public virtual string FilePath { get; protected set; }
     
     protected static readonly string SaveFolder;
     protected static readonly object FileLock;
 
-    static AbstractFileIO()
+    static AbstractIOService()
     {
         SaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         SaveFolder += OperatingSystem.CurrentOS switch

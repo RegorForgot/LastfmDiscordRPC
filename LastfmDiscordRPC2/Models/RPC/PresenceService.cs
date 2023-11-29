@@ -4,7 +4,6 @@ using System.Threading;
 using LastfmDiscordRPC2.Enums;
 using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.IO;
-using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
@@ -13,10 +12,10 @@ namespace LastfmDiscordRPC2.Models.RPC;
 
 public class PresenceService : IPresenceService
 {
-    private readonly AbstractLoggingService _loggingService;
-    private readonly LastfmService _lastfmService;
+    private readonly LoggingService _loggingService;
+    private readonly LastfmAPIService _lastfmService;
     private readonly IDiscordClient _discordClient;
-    private readonly AbstractConfigFileIO<SaveData> _saveData;
+    private readonly SaveCfgIOService _saveCfgService;
 
     private static readonly SemaphoreSlim PresenceLock = new SemaphoreSlim(1, 1);
     private PeriodicTimer? _timer;
@@ -24,15 +23,15 @@ public class PresenceService : IPresenceService
     private int _exceptionCount;
 
     public PresenceService(
-        AbstractLoggingService loggingService,
-        LastfmService lastfmService,
+        LoggingService loggingService,
+        LastfmAPIService lastfmService,
         IDiscordClient discordClient,
-        AbstractConfigFileIO<SaveData> saveData)
+        SaveCfgIOService saveCfgService)
     {
         _loggingService = loggingService;
         _lastfmService = lastfmService;
         _discordClient = discordClient;
-        _saveData = saveData;
+        _saveCfgService = saveCfgService;
     }
 
     public async void SetPresence()
@@ -52,7 +51,7 @@ public class PresenceService : IPresenceService
                 {
                     try
                     {
-                        TrackResponse response = await _lastfmService.GetRecentTracks(_saveData.ConfigData.UserAccount.Username);
+                        TrackResponse response = await _lastfmService.GetRecentTracks(_saveCfgService.SaveCfg.UserAccount.Username);
                         UpdatePresence(response);
                     }
                     catch (Exception e)
@@ -67,8 +66,8 @@ public class PresenceService : IPresenceService
                     
                     // Use a LastfmService here too... there needs to be a fucking rewrite for this
                     long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
-                    turnOffPresence = timeSinceStart > _saveData.ConfigData.SleepTime &&
-                                      timeSinceLastScrobble > _saveData.ConfigData.SleepTime;
+                    turnOffPresence = timeSinceStart > _saveCfgService.SaveCfg.SleepTime &&
+                                      timeSinceLastScrobble > _saveCfgService.SaveCfg.SleepTime;
                 }
             }
 

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
 using LastfmDiscordRPC2.IO;
-using LastfmDiscordRPC2.IO.Schema;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
@@ -14,9 +15,9 @@ namespace LastfmDiscordRPC2.Models.RPC;
 public class DiscordClient : IDisposable, IDiscordClient
 {
     private DiscordRpcClient? _client;
-    private readonly AbstractConfigFileIO<SaveData> _saveData;
-    private readonly AbstractLoggingService _loggingService;
-    private readonly LastfmService _lastfmService;
+    private readonly SaveCfgIOService _saveCfgService;
+    private readonly LoggingService _loggingService;
+    private readonly LastfmAPIService _lastfmService;
 
     private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
@@ -26,9 +27,9 @@ public class DiscordClient : IDisposable, IDiscordClient
         get => _client?.IsInitialized == true;
     }
 
-    public DiscordClient(AbstractConfigFileIO<SaveData> saveData, LastfmService lastfmService, AbstractLoggingService loggingService)
+    public DiscordClient(SaveCfgIOService saveCfgService, LastfmAPIService lastfmService, LoggingService loggingService)
     {
-        _saveData = saveData;
+        _saveCfgService = saveCfgService;
         _lastfmService = lastfmService;
         _loggingService = loggingService;
     }
@@ -42,7 +43,7 @@ public class DiscordClient : IDisposable, IDiscordClient
             return;
         }
 
-        _client = new DiscordRpcClient(_saveData.ConfigData.AppID);
+        _client = new DiscordRpcClient(_saveCfgService.SaveCfg.AppID);
         _client.Initialize();
         _client.Logger = _loggingService;
 
@@ -111,11 +112,15 @@ public class DiscordClient : IDisposable, IDiscordClient
             }
         }
 
-        Button button = new Button
-        {
-            Label = $"{int.Parse(response.RecentTracks.Footer.Playcount):n0} scrobbles",
-            Url = $"https://www.last.fm/user/{_saveData.ConfigData.UserAccount.Username}/"
-        };
+        Button[] buttons = _saveCfgService.SaveCfg.UserRPCCfg.UserButtons
+            .Select(
+                button => new Button
+                {
+                    Label = button.Label,
+                    Url = button.Link
+                }
+            )
+            .ToArray();
 
         RichPresence presence = new RichPresence
         {
@@ -128,7 +133,7 @@ public class DiscordClient : IDisposable, IDiscordClient
                 SmallImageKey = smallImage,
                 SmallImageText = smallText
             },
-            Buttons = new[] { button }
+            Buttons = buttons
         };
 
         _client?.SetPresence(presence);
