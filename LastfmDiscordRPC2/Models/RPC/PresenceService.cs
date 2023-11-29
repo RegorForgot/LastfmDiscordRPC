@@ -11,11 +11,11 @@ using LastfmDiscordRPC2.Models.Responses;
 
 namespace LastfmDiscordRPC2.Models.RPC;
 
-public class PresenceSetter : IDisposable
+public class PresenceService : IPresenceService
 {
     private readonly AbstractLoggingService _loggingService;
     private readonly LastfmService _lastfmService;
-    private readonly DiscordClient _discordClient;
+    private readonly IDiscordClient _discordClient;
     private readonly AbstractConfigFileIO<SaveData> _saveData;
 
     private static readonly SemaphoreSlim PresenceLock = new SemaphoreSlim(1, 1);
@@ -23,10 +23,10 @@ public class PresenceSetter : IDisposable
     private bool _firstSuccess;
     private int _exceptionCount;
 
-    public PresenceSetter(
+    public PresenceService(
         AbstractLoggingService loggingService,
         LastfmService lastfmService,
-        DiscordClient discordClient,
+        IDiscordClient discordClient,
         AbstractConfigFileIO<SaveData> saveData)
     {
         _loggingService = loggingService;
@@ -35,7 +35,7 @@ public class PresenceSetter : IDisposable
         _saveData = saveData;
     }
 
-    public async void UpdatePresence()
+    public async void SetPresence()
     {
         long timeOfStart = DateTimeOffset.Now.ToUnixTimeSeconds();
         bool turnOffPresence = false;
@@ -53,7 +53,7 @@ public class PresenceSetter : IDisposable
                     try
                     {
                         TrackResponse response = await _lastfmService.GetRecentTracks(_saveData.ConfigData.UserAccount.Username);
-                        TrySetPresence(response);
+                        UpdatePresence(response);
                     }
                     catch (Exception e)
                     {
@@ -77,6 +77,7 @@ public class PresenceSetter : IDisposable
                 _loggingService.Info("Turned off presence due to inactivity");
                 Dispose();
             }
+            
             PresenceLock.Release();
         }
         catch
@@ -85,7 +86,7 @@ public class PresenceSetter : IDisposable
         }
     }
 
-    private void TrySetPresence(TrackResponse response)
+    public void UpdatePresence(TrackResponse response)
     {
         if (response.RecentTracks.Tracks.Count == 0)
         {
@@ -127,10 +128,11 @@ public class PresenceSetter : IDisposable
             }
         }
     }
-
-    private bool IsRetry()
+    
+    public void ClearPresence()
     {
-        return _exceptionCount++ < 3;
+        _timer?.Dispose();
+        _discordClient.ClearPresence();
     }
 
     private void HandleError(Exception e)
@@ -175,15 +177,14 @@ public class PresenceSetter : IDisposable
     private void TryReconnect()
     {
         ClearPresence();
-        UpdatePresence();
+        SetPresence();
         _loggingService.Info($"Attempting to reconnect... Try {_exceptionCount}");
     }
 
-    private void ClearPresence()
+    private bool IsRetry()
     {
-        _timer?.Dispose();
-        _discordClient.ClearPresence();
+        return _exceptionCount++ < 3;
     }
-    
+
     public void Dispose() => ClearPresence();
 }

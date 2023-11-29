@@ -11,7 +11,7 @@ using LastfmDiscordRPC2.Models.Responses;
 
 namespace LastfmDiscordRPC2.Models.RPC;
  
-public class DiscordClient : IDisposable
+public class DiscordClient : IDisposable, IDiscordClient
 {
     private DiscordRpcClient? _client;
     private readonly AbstractConfigFileIO<SaveData> _saveData;
@@ -33,7 +33,7 @@ public class DiscordClient : IDisposable
         _loggingService = loggingService;
     }
 
-    public bool IsReady { get; private set; }
+    public bool IsReady { get; set; }
 
     public void Initialize()
     {

@@ -6,18 +6,18 @@ namespace LastfmDiscordRPC2.ViewModels.Panes;
 
 public sealed class HomeViewModel : AbstractPaneViewModel
 {
-    private readonly PresenceSetter _presenceSetter;
+    private readonly IPresenceService _presenceService;
     public override string Name { get => "Home"; }
     public ReactiveCommand<Unit, Unit> StartPresence { get; }
     
-    public HomeViewModel(PresenceSetter presenceSetter)
+    public HomeViewModel(IPresenceService presenceService)
     {
-        _presenceSetter = presenceSetter;
+        _presenceService = presenceService;
         StartPresence = ReactiveCommand.Create(StartPresenceCommand);
     }
 
     public void StartPresenceCommand()
     {
-        _presenceSetter.UpdatePresence();
+        _presenceService.SetPresence();
     }
 }
