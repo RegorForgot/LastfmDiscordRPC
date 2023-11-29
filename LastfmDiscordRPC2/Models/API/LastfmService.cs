@@ -1,13 +1,8 @@
 ﻿namespace LastfmDiscordRPC2.Models.API;
 
-public class LastfmService : LastfmAPIClient
+public class LastfmService : AbstractLastfmAPIClient
 {
-    private readonly LastfmAPIClient _lastfmAPIClient;
-    
-    public LastfmService(LastfmAPIClient lastfmAPIClient, ISignatureAPIClient apiClient) : base(apiClient)
-    {
-        _lastfmAPIClient = lastfmAPIClient;
-    }
-    
+    public LastfmService(ISignatureAPIClient apiClient) : base(apiClient) { }
+
     public long LastScrobbleTime { get; set; }
 }

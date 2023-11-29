@@ -32,7 +32,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
     private bool _isInProgress;
     private string _loginMessage;
     private string _appID;
-    private readonly LastfmAPIClient _apiClient;
+    private readonly LastfmService _lastfmService;
     private readonly AbstractConfigFileIO<SaveData> _saveDataFileIO;
     private readonly AbstractLoggingService _loggingService;
 
@@ -87,12 +87,12 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
     }
 
     public SettingsViewModel(
-        LastfmAPIClient apiClient,
+        LastfmService lastfmService,
         AbstractLoggingControlViewModel loggingControlViewModel,
         AbstractConfigFileIO<SaveData> saveDataFileIO,
         AbstractLoggingService loggingService)
     {
-        _apiClient = apiClient;
+        _lastfmService = lastfmService;
         _saveDataFileIO = saveDataFileIO;
         _loggingService = loggingService;
         LoggingControlViewModel = loggingControlViewModel;
@@ -156,9 +156,9 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
     {
         try
         {
-            TokenResponse token = await _apiClient.GetToken();
+            TokenResponse token = await _lastfmService.GetToken();
             Utilities.Utilities.OpenWebpage($"https://www.last.fm/api/auth/?api_key={Utilities.Utilities.LastfmAPIKey}&token={token.Token}");
-            SessionResponse? sessionResponse = await _apiClient.GetSession(token.Token);
+            SessionResponse? sessionResponse = await _lastfmService.GetSession(token.Token);
 
             SaveData data = new SaveData(_saveDataFileIO.ConfigData)
             {

@@ -2,13 +2,13 @@
 
 namespace LastfmDiscordRPC2.Models.Responses;
 
-public class SessionResponse : ILastfmAPIResponse
+public record SessionResponse : ILastfmAPIResponse
 {
-    [JsonProperty("session")] public Session LfmSession { get; set; }
+    [JsonProperty("session")] public Session LfmSession { get; init; }
     
-    public class Session
+    public record Session 
     {
-        [JsonProperty("name")] public string Username { get; set; } = Empty;
-        [JsonProperty("key")] public string SessionKey { get; set; } = Empty;
+        [JsonProperty("name")] public string Username { get; init; } = Empty;
+        [JsonProperty("key")] public string SessionKey { get; init; } = Empty;
     }
 }

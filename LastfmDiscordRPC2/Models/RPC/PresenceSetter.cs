@@ -87,7 +87,7 @@ public class PresenceSetter : IDisposable
 
     private void TrySetPresence(TrackResponse response)
     {
-        if (response.Track == null)
+        if (response.RecentTracks.Tracks.Count == 0)
         {
             _loggingService.Info("No tracks found for user.");
             ClearPresence();

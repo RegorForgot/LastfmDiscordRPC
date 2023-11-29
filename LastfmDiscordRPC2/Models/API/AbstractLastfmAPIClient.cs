@@ -10,12 +10,12 @@ using RestSharp;
 
 namespace LastfmDiscordRPC2.Models.API;
 
-public class LastfmAPIClient : IAPIClient
+public abstract class AbstractLastfmAPIClient : IAPIClient
 {
     public RestClient APIRestClient { get; }
     private readonly ISignatureAPIClient _signatureAPIClient;
 
-    public LastfmAPIClient(ISignatureAPIClient signatureAPIClient)
+    protected AbstractLastfmAPIClient(ISignatureAPIClient signatureAPIClient)
     {
         APIRestClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
         APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");

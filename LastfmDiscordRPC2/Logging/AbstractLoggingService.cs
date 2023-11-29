@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DiscordRPC.Logging;
 
@@ -7,7 +6,7 @@ namespace LastfmDiscordRPC2.Logging;
 
 public abstract class AbstractLoggingService : ILogger
 {
-    protected readonly List<IRPCLogger> _loggers;
+    private readonly List<IRPCLogger> _loggers;
     public LogLevel Level { get; set; } = LogLevel.None;
 
     protected AbstractLoggingService(IEnumerable<IRPCLogger> loggers)

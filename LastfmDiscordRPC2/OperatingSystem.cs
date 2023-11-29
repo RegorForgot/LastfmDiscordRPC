@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using LastfmDiscordRPC2.Enums;
 
 namespace LastfmDiscordRPC2;
@@ -6,7 +7,7 @@ namespace LastfmDiscordRPC2;
 public static class OperatingSystem
 {
     public static OSEnum CurrentOS { get; }
-    
+
     static OperatingSystem()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -17,9 +18,13 @@ public static class OperatingSystem
         {
             CurrentOS = OSEnum.Linux;
         }
-        else
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             CurrentOS = OSEnum.Windows;
+        }
+        else
+        {
+            throw new Exception("Unsupported operating system... How did you even get here!?");
         }
     }
 }

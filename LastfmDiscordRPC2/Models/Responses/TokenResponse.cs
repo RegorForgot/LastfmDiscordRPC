@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.Models.Responses;
 
-public class TokenResponse : ILastfmAPIResponse
+public record TokenResponse : ILastfmAPIResponse
 {
-    [JsonProperty("token")] public string Token { get; set; } = Empty;
+    [JsonProperty("token")] public string Token { get; init; } = Empty;
 }

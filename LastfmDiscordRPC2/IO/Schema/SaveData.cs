@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.IO.Schema;
 
-public class SaveData : IFileData
+public record SaveData : IFileData
 {
     public SaveData() { }
     
@@ -19,20 +19,20 @@ public class SaveData : IFileData
     [JsonProperty] public string AppID { get; set; } = Utilities.Utilities.DefaultAppID;
     [JsonProperty] public int SleepTime { get; set; } = 3600;
 
-    public class Account
+    public record Account
     {
         [JsonProperty] public string Username { get; set; } = Empty;
         [JsonProperty] public string SessionKey { get; set; } = Empty;
     }
 
-    public class RPCConfig
+    public record RPCConfig
     {
         [JsonProperty] public string Description { get; set; } = Empty;
         [JsonProperty] public string State { get; set; } = Empty;
         [JsonProperty] public Button[] UserButtons { get; set; } = {};
     }
     
-    public class Button
+    public record Button
     {
         [JsonProperty] public string Link { get; set; } = Empty;
         [JsonProperty] public string Label { get; set; } = Empty;

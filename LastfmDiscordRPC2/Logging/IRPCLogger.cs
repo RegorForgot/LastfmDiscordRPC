@@ -7,11 +7,17 @@ public interface IRPCLogger : ILogger
 {
     public static string GetLoggingString(LogLevel level, string message, params object[] args)
     {
+
+        string msgText = $"+ [{GetCurrentTimeString()}] {GetLevelText(level)}: " +
+                         $"{(args.Length != 0 ? Format(message, args) : message)}\n";
+
+        return msgText;
+
         string GetCurrentTimeString()
         {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
-        
+
         string GetLevelText(LogLevel logLevel)
         {
             string levelText = logLevel switch
@@ -25,10 +31,5 @@ public interface IRPCLogger : ILogger
             
             return levelText;
         }
-        
-        string msgText = $"+ [{GetCurrentTimeString()}] {GetLevelText(level)}: " +
-                         $"{(args.Length != 0 ? Format(message, args) : message)}\n";
-
-        return msgText;
     }
 }

@@ -13,6 +13,8 @@ public partial class MainWindow : Window
         InitializeComponent();
         
         DataContext = dataContext;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
+
         Background = OperatingSystem.CurrentOS == OSEnum.Windows ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Black);
         
         foreach (AbstractPaneViewModel viewModel in dataContext.Children)

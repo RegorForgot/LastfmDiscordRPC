@@ -15,8 +15,8 @@ public class DiscordClient : IDisposable
 {
     private DiscordRpcClient? _client;
     private readonly AbstractConfigFileIO<SaveData> _saveData;
-    private readonly LastfmService _lastfmService;
     private readonly AbstractLoggingService _loggingService;
+    private readonly LastfmService _lastfmService;
 
     private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
@@ -81,20 +81,15 @@ public class DiscordClient : IDisposable
             IsReady = true;
         };
     }
-
-    /// <summary>
-    /// Sets the discord presence of the user to the response that was received from Last.fm
-    /// </summary>
-    /// <param name="response">The API response received from last.fm</param>
-    /// <param name="username">The username provided by user</param>
+    
     public void SetPresence(TrackResponse response)
     {
-        Track track = response.Track;
+        Track track = response.RecentTracks.Tracks[0];
         string smallImage;
         string smallText;
         string albumName = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
 
-        if (response.Track.NowPlaying.State == "true")
+        if (track.NowPlaying.State == "true")
         {
             smallImage = PlayIconURL;
             smallText = "Now playing";
@@ -104,7 +99,7 @@ public class DiscordClient : IDisposable
         {
             smallImage = PauseIconURL;
 
-            if (long.TryParse(response.Track.Date.Timestamp, NumberStyles.Number, null, out long lastScrobbleTime))
+            if (long.TryParse(track.Date.Timestamp, NumberStyles.Number, null, out long lastScrobbleTime))
             {
                 _lastfmService.LastScrobbleTime = lastScrobbleTime;
                 TimeSpan timeSince = TimeSpan.FromSeconds(DateTimeOffset.Now.ToUnixTimeSeconds() - _lastfmService.LastScrobbleTime);
@@ -118,7 +113,7 @@ public class DiscordClient : IDisposable
 
         Button button = new Button
         {
-            Label = $"{int.Parse(response.PlayCount):n0} scrobbles",
+            Label = $"{int.Parse(response.RecentTracks.Footer.Playcount):n0} scrobbles",
             Url = $"https://www.last.fm/user/{_saveData.ConfigData.UserAccount.Username}/"
         };
 
@@ -135,7 +130,10 @@ public class DiscordClient : IDisposable
             },
             Buttons = new[] { button }
         };
+
         _client?.SetPresence(presence);
+        
+        return;
 
         string GetTimeString(TimeSpan timeSince)
         {

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 // I feel safe doing this because all the "nulled" items are either filled by Newtonsoft or handled in LastfmClient with the 
@@ -8,70 +10,71 @@ using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.Models.Responses;
 
-public class TrackResponse : ILastfmAPIResponse
+public record TrackResponse : ILastfmAPIResponse
 {
-    private RecentTrackList _recentTracks;
+    [JsonProperty("recenttracks")] public RecentTrackList RecentTracks { get; init; }
 
-    [JsonProperty("recenttracks")]
-    public RecentTrackList RecentTracks
+    public record RecentTrackList
     {
-        get => _recentTracks;
-        set
-        {
-            _recentTracks = value;
-            Track = _recentTracks.Tracks.Count == 0 ? null : _recentTracks.Tracks[0];
-            PlayCount = _recentTracks.Footer.Playcount;
-        }
+        [JsonProperty("track")] public List<Track> Tracks { get; init; }
+        [JsonProperty("@attr")] public ResponseFooter Footer { get; init; }
     }
 
-    public Track? Track { get; private set; }
-    public string PlayCount { get; private set; }
-
-    public class RecentTrackList
+    public record ResponseFooter
     {
-        [JsonProperty("track")] public List<Track> Tracks { get; set; }
-        [JsonProperty("@attr")] public ResponseFooter Footer { get; set; }
-    }
-    
-    public class ResponseFooter
-    {
-        [JsonProperty("total")] public string Playcount { get; set; }
+        [JsonProperty("total")] public string Playcount { get; init; }
     }
 }
 
-public class Track
+public record Track
 {
-    public const string DefaultSingleCover 
+    public virtual bool Equals(Track? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        return Name == other.Name && Artist == other.Artist && Album == other.Album && NowPlaying == other.NowPlaying && Date == other.Date && Images.SequenceEqual(other.Images);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Artist, Album, NowPlaying, Date, Images);
+    }
+
+
+    private const string DefaultSingleCover
         = @"https://lastfm.freetls.fastly.net/i/u/300x300/4128a6eb29f94943c9d206c08e625904.png";
 
     public const string DefaultAlbumCover
         = @"https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png";
 
-    [JsonProperty("name")] public string Name { get; set; } = Empty;
-    [JsonProperty("artist")] public TrackArtist Artist { get; set; } = new TrackArtist();
-    [JsonProperty("album")] public TrackAlbum Album { get; set; } = new TrackAlbum();
-    [JsonProperty("@attr")] public TrackNowPlaying NowPlaying { get; set; } = new TrackNowPlaying();
-    [JsonProperty("date")] public PlayDate Date { get; set; } = new PlayDate();
-    [JsonProperty("image")] public List<AlbumImage> Images { get; set; } = new List<AlbumImage>(4);
+    [JsonProperty("name")] public string Name { get; init; } = Empty;
+    [JsonProperty("artist")] public TrackArtist Artist { get; init; } = new TrackArtist();
+    [JsonProperty("album")] public TrackAlbum Album { get; init; } = new TrackAlbum();
+    [JsonProperty("@attr")] public TrackNowPlaying NowPlaying { get; init; } = new TrackNowPlaying();
+    [JsonProperty("date")] public PlayDate Date { get; init; } = new PlayDate();
+    [JsonProperty("image")] public List<AlbumImage> Images { get; init; } = new List<AlbumImage>(4);
 
-    public class TrackArtist
+    public record TrackArtist
     {
-        [JsonProperty("#text")] public string Name { get; set; } = Empty;
+        [JsonProperty("#text")] public string Name { get; init; } = Empty;
     }
 
-    public class TrackAlbum
+    public record TrackAlbum
     {
-        [JsonProperty("#text")] public string Name { get; set; } = Empty;
+        [JsonProperty("#text")] public string Name { get; init; } = Empty;
     }
 
-    public class AlbumImage
+    public record AlbumImage
     {
         private string _url = DefaultSingleCover;
         [JsonProperty("#text")]
         public string URL
         {
             get => _url;
-            set
+            init
             {
                 if (!IsNullOrEmpty(value))
                 {
@@ -81,13 +84,13 @@ public class Track
         }
     }
 
-    public class TrackNowPlaying
+    public record TrackNowPlaying
     {
-        [JsonProperty("nowplaying")] public string State { get; set; }
+        [JsonProperty("nowplaying")] public string State { get; init; } = Empty;
     }
 
-    public class PlayDate
+    public record PlayDate
     {
-        [JsonProperty("uts")] public string Timestamp { get; set; }
+        [JsonProperty("uts")] public string Timestamp { get; init; } = Empty;
     }
 }

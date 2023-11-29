@@ -3,8 +3,8 @@ using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.Models.Responses;
 
-public class LastfmErrorResponse : ILastfmAPIResponse
+public record LastfmErrorResponse : ILastfmAPIResponse
 {
-    [JsonProperty("message")] public string Message { get; set; } = "OK";
-    [JsonProperty("error")] public LastfmErrorCode Error { get; set; } = LastfmErrorCode.OK;
+    [JsonProperty("message")] public string Message { get; init; } = "OK";
+    [JsonProperty("error")] public LastfmErrorCode Error { get; init; } = LastfmErrorCode.OK;
 }
