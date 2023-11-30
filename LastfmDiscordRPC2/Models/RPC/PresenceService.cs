@@ -58,16 +58,14 @@ public class PresenceService : IPresenceService
                     {
                         HandleError(e);
                     }
-
-                    // Turn off rich presence updating and close presence when time since last scrobble
-                    // AND time since presence starting is longer than an hour.
+                    
                     long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
                     long timeSinceStart = currentTime - timeOfStart;
-                    
-                    // Use a LastfmService here too... there needs to be a fucking rewrite for this
+
                     long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
-                    turnOffPresence = timeSinceStart > _saveCfgService.SaveCfg.SleepTime &&
-                                      timeSinceLastScrobble > _saveCfgService.SaveCfg.SleepTime;
+                    
+                    int sleepTime = _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
+                    turnOffPresence = timeSinceStart > sleepTime && timeSinceLastScrobble > sleepTime;
                 }
             }
 
@@ -76,7 +74,7 @@ public class PresenceService : IPresenceService
                 _loggingService.Info("Turned off presence due to inactivity");
                 Dispose();
             }
-            
+
             PresenceLock.Release();
         }
         catch
@@ -127,7 +125,7 @@ public class PresenceService : IPresenceService
             }
         }
     }
-    
+
     public void ClearPresence()
     {
         _timer?.Dispose();

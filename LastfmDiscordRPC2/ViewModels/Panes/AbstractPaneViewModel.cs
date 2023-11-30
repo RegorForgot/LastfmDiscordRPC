@@ -1,3 +1,13 @@
-﻿namespace LastfmDiscordRPC2.ViewModels.Panes;
+﻿using LastfmDiscordRPC2.Models;
 
-public abstract class AbstractPaneViewModel : AbstractViewModel { }
+namespace LastfmDiscordRPC2.ViewModels.Panes;
+
+public abstract class AbstractPaneViewModel : AbstractViewModel
+{
+    public CurrentState State { get; }
+
+    protected AbstractPaneViewModel(CurrentState state)
+    {
+        State = state;
+    }
+}

@@ -4,6 +4,7 @@ using DiscordRPC.Logging;
 using LastfmDiscordRPC2.Assets;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
+using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
@@ -30,6 +31,8 @@ public static class ContainerConfigurator
             .AsSelf()
             .InstancePerLifetimeScope();
 
+        builder.RegisterType<CurrentState>().AsSelf().SingleInstance();
+        
         builder.RegisterType<LoggingService>().AsSelf().SingleInstance();
         
         builder.RegisterType<ViewLogger>().As<IRPCLogger>().SingleInstance().WithParameter("level", LogLevel.Info);

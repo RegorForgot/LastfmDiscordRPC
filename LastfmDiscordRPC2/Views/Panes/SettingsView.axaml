@@ -29,15 +29,17 @@
                 Content="Launch on Startup"
                 IsChecked="{Binding StartUpChecked}"
                 IsVisible="{Binding StartUpVisible}" />
+
             <StackPanel Orientation="Horizontal">
                 <Button
                     Command="{Binding LastfmLogin}"
-                    CommandParameter="{Binding IsLoggedIn}"
-                    Content="{Binding IsLoggedIn, Converter={StaticResource LoginTextConverter}}"
-                    IsEnabled="{Binding !IsInProgress}"
+                    CommandParameter="{Binding !State.IsLoggedIn}"
+                    Content="{Binding !State.IsLoggedIn, Converter={StaticResource LoginTextConverter}}"
+                    IsEnabled="{Binding State.CanLogOut}"
                     Margin="0,10,10,10" />
                 <Label Content="{Binding LoginMessage}" Margin="0,10,0,10" />
             </StackPanel>
+
             <StackPanel Height="50" Orientation="Horizontal">
                 <TextBox
                     AcceptsReturn="False"
@@ -73,10 +75,10 @@
                 Content="Please enter a valid Discord App ID."
                 Foreground="Yellow"
                 HorizontalAlignment="Center"
-                IsVisible="{Binding !SaveEnabled}" />
+                IsVisible="{Binding !AppIDError}" />
             <ProgressBar
                 IsIndeterminate="True"
-                IsVisible="{Binding IsInProgress}"
+                IsVisible="{Binding State.IsLoginInProgress}"
                 Width="40" />
         </StackPanel>
     </Grid>

@@ -16,6 +16,7 @@
         <Button
             Command="{Binding StartPresence}"
             Content="Start Presence"
+            IsEnabled="{Binding State.IsLoggedIn}"
             Margin="0,10,10,10" />
     </StackPanel>
 </UserControl>

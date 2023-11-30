@@ -36,6 +36,11 @@ public class SaveCfgIOService : AbstractIOService
         }
     }
 
+    public void SaveConfigData()
+    {
+        SaveConfigData(SaveCfg);
+    }
+
     public void SaveConfigData(SaveCfg configData)
     {
         try

@@ -43,7 +43,7 @@ public class DiscordClient : IDisposable, IDiscordClient
             return;
         }
 
-        _client = new DiscordRpcClient(_saveCfgService.SaveCfg.AppID);
+        _client = new DiscordRpcClient(_saveCfgService.SaveCfg.UserRPCCfg.AppID);
         _client.Initialize();
         _client.Logger = _loggingService;
 
