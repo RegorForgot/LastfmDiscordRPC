@@ -24,11 +24,11 @@ public record TrackResponse : ILastfmAPIResponse
 
 public record Track
 {
-    private const string DefaultSingleCover
-        = @"https://lastfm.freetls.fastly.net/i/u/300x300/4128a6eb29f94943c9d206c08e625904.png";
+    public const string DefaultSingleCover
+        = "https://lastfm.freetls.fastly.net/i/u/300x300/4128a6eb29f94943c9d206c08e625904.png";
 
-    public const string DefaultAlbumCover
-        = @"https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png";
+    private const string DefaultAlbumCover
+        = "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png";
 
     [JsonProperty("name")] public string Name { get; init; } = Empty;
     [JsonProperty("artist")] public TrackArtist Artist { get; init; } = new TrackArtist();
@@ -49,7 +49,7 @@ public record Track
 
     public record AlbumImage
     {
-        private string _url = DefaultSingleCover;
+        private string _url = DefaultAlbumCover;
         [JsonProperty("#text")]
         public string URL
         {

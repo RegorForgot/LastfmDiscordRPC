@@ -90,6 +90,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         string smallImage;
         string smallText;
         string albumName = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
+        string image = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL;
 
         if (track.NowPlaying.State == "true")
         {
@@ -122,14 +123,14 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
                 }
             )
             .ToArray();
-
+        
         RichPresence presence = new RichPresence
         {
             Details = GetUTF8String(track.Name),
             State = GetUTF8String($"By {track.Artist.Name}{albumName}"),
             Assets = new DiscordRPC.Assets
             {
-                LargeImageKey = track.Images[3].URL,
+                LargeImageKey = image,
                 LargeImageText = $"{(IsNullOrEmpty(track.Album.Name) ? null : track.Album.Name)}",
                 SmallImageKey = smallImage,
                 SmallImageText = smallText

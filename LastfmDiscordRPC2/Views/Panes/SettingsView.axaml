@@ -68,6 +68,7 @@
                     AcceptsReturn="True"
                     DataContext="{Binding LoggingControlViewModel}"
                     Focusable="False"
+                    FontFamily="Consolas"
                     Height="200"
                     IsReadOnly="True"
                     Text="{Binding ConsoleText, Mode=TwoWay}"
