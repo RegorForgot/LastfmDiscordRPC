@@ -5,7 +5,7 @@ using Avalonia.Data.Converters;
 
 namespace LastfmDiscordRPC2.Converters;
 
-public class LoginTextConverter : IValueConverter
+public sealed class LoginTextConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

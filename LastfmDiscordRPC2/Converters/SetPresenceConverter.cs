@@ -5,7 +5,7 @@ using Avalonia.Data.Converters;
 
 namespace LastfmDiscordRPC2.Converters;
 
-public class SetPresenceConverter : IValueConverter
+public sealed class SetPresenceConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

@@ -1,25 +1,39 @@
 using System.Reactive;
-using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.Models.RPC;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class HomeViewModel : AbstractPaneViewModel
+public sealed class HomeViewModel : AbstractPaneViewModel, IUpdatableViewModel
 {
     private readonly IPresenceService _presenceService;
     public override string Name => "Home";
-    public ReactiveCommand<Unit, Unit> StartPresence { get; }
+    public ReactiveCommand<bool, Unit> SetPresence { get; }
     
-    public HomeViewModel(IPresenceService presenceService, CurrentState state) : base(state)
+    public HomeViewModel(
+        IPresenceService presenceService, 
+        UIContext uiContext) : base(uiContext)
     {
         _presenceService = presenceService;
-        StartPresence = ReactiveCommand.Create(StartPresenceCommand);
+        SetPresence = ReactiveCommand.Create<bool>(StartPresenceCommand);
     }
 
-    private void StartPresenceCommand()
+    private void StartPresenceCommand(bool activated)
     {
-        _presenceService.SetPresence();
-        State.IsRichPresenceActivated = true;
+        if (activated)
+        {
+            _presenceService.ClearPresence();
+        }
+        else
+        {
+            _presenceService.SetPresence();
+        }
+        
+        UIContext.IsRichPresenceActivated = !activated;
+    }
+    
+    public void UpdateProperties()
+    {
+        throw new System.NotImplementedException();
     }
 }

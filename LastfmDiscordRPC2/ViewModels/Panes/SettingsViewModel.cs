@@ -5,34 +5,38 @@ using System.Threading.Tasks;
 using LastfmDiscordRPC2.Enums;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
-using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Utilities;
 using LastfmDiscordRPC2.ViewModels.Controls;
 using ReactiveUI;
 using static System.Text.RegularExpressions.Regex;
+using static LastfmDiscordRPC2.Utilities.Utilities;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class SettingsViewModel : AbstractPaneViewModel
+public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewModel
 {
     private const string AppIDRegExp = @"^\d{17,21}$";
     private const string NotLoggedIn = "Not logged in";
 
     private bool _startUpChecked;
     private string _loginMessage;
-    private string _appID;
-    private bool _appIDError;
+    private string? _appID;
 
     [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
-    public string AppID
+    public string? AppID
     {
         get => _appID;
         set
         {
+            if (value is null)
+            {
+                return;
+            }
+            
             this.RaiseAndSetIfChanged(ref _appID, value);
-            AppIDError = IsMatch(value, AppIDRegExp);
+            UIContext.IsAppIDError = IsMatch(value, AppIDRegExp);
         }
     }
     
@@ -47,20 +51,11 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
         get => _loginMessage;
         set => this.RaiseAndSetIfChanged(ref _loginMessage, value);
     }
-    
-    public bool AppIDError
-    {
-        get => _appIDError;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _appIDError, value);
-            this.RaisePropertyChanged(nameof(SaveEnabled));
-        }
-    }
 
-    public ReactiveCommand<bool, Unit> LaunchOnStartup { get; }
-    public ReactiveCommand<bool, Unit> LastfmLogin { get; }
-    public ReactiveCommand<Unit, Unit> SaveAppID { get; }
+    public ReactiveCommand<bool, Unit> LaunchOnStartupCmd { get; }
+    public ReactiveCommand<bool, Unit> LastfmLoginCmd { get; }
+    public ReactiveCommand<Unit, Unit> SaveAppIDCmd { get; }
+    public ReactiveCommand<Unit, Unit> ResetAppIDCmd { get; }
     
     public bool StartUpVisible { get; set; }
     public LoggingControlViewModel LoggingControlViewModel { get; }
@@ -71,23 +66,23 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
 
     public override string Name => "Settings";
     private string LoggedIn => $"Logged in as {_saveCfgService.SaveCfg.UserAccount.Username}";
-    public bool SaveEnabled => AppIDError && !State.IsRichPresenceActivated;
 
     public SettingsViewModel(
         LastfmAPIService lastfmService,
         LoggingControlViewModel loggingControlViewModel,
         SaveCfgIOService saveCfgService,
         LoggingService loggingService,
-        CurrentState state) : base (state)
+        UIContext uiContext) : base (uiContext)
     {
         _lastfmService = lastfmService;
         _saveCfgService = saveCfgService;
         _loggingService = loggingService;
         LoggingControlViewModel = loggingControlViewModel;
 
-        LaunchOnStartup = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
-        LastfmLogin = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
-        SaveAppID = ReactiveCommand.Create(SaveDiscordAppID);
+        LaunchOnStartupCmd = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
+        LastfmLoginCmd = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
+        SaveAppIDCmd = ReactiveCommand.Create(SaveDiscordAppID);
+        ResetAppIDCmd = ReactiveCommand.Create(ResetDiscordAppID);
 
         if (OperatingSystem.CurrentOS == OSEnum.Windows)
         {
@@ -96,13 +91,19 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
         }
 
         AppID = _saveCfgService.SaveCfg.UserRPCCfg.AppID;
-        LoginMessage = State.IsLoggedIn ? LoggedIn : NotLoggedIn;
+        LoginMessage = UIContext.IsLoggedIn ? LoggedIn : NotLoggedIn;
     }
 
     private void SaveDiscordAppID()
     {
         _saveCfgService.SaveCfg.UserRPCCfg.AppID = AppID;
         _saveCfgService.SaveConfigData();
+    }
+    
+    private void ResetDiscordAppID()
+    {
+        AppID = SaveCfg.DefaultAppID;
+        SaveDiscordAppID();
     }
 
     private static void SetLaunchOnStartup(bool startUpValue)
@@ -112,7 +113,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
 
     private async Task SetLastfmLogin(bool logIn)
     {
-        State.IsLoginInProgress = true;
+        UIContext.IsLoginInProgress = true;
 
         if (logIn)
         {
@@ -123,7 +124,8 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
             LogUserOut();
         }
 
-        State.IsLoginInProgress = false;
+        UIContext.IsLoginInProgress = false;
+        UIContext.ViewModelUpdater.Value.UpdateAllViewModels();
     }
 
     private void LogUserOut()
@@ -139,8 +141,8 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
         try
         {
             TokenResponse token = await _lastfmService.GetToken();
-            Utilities.Utilities.OpenWebpage($"https://www.last.fm/api/auth/?api_key={Utilities.Utilities.LastfmAPIKey}&token={token.Token}");
-            SessionResponse? sessionResponse = await _lastfmService.GetSession(token.Token);
+            OpenWebpage($"https://www.last.fm/api/auth/?api_key={LastfmAPIKey}&token={token.Token}");
+            SessionResponse sessionResponse = await _lastfmService.GetSession(token.Token);
 
             _saveCfgService.SaveCfg.UserAccount = new SaveCfg.Account
             {
@@ -157,5 +159,10 @@ public sealed class SettingsViewModel : AbstractPaneViewModel
             LoginMessage = NotLoggedIn;
             _loggingService.Error(e.Message);
         }
+    }
+    
+    public void UpdateProperties()
+    {
+        throw new NotImplementedException();
     }
 }

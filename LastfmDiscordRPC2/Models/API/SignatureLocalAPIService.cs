@@ -5,9 +5,9 @@ using RestSharp;
 
 namespace LastfmDiscordRPC2.Models.API;
 
-public class SignatureLocalAPIService : ISignatureAPIService
+public sealed class SignatureLocalAPIService : ISignatureAPIService
 {
-    public RestClient APIRestClient { get; }
+    public RestClient APIRestClient { get; init; }
     private readonly ISecretKey _secretKey;
 
     public SignatureLocalAPIService(ISecretKey secretKey)

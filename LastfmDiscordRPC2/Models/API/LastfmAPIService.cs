@@ -10,10 +10,10 @@ using RestSharp;
 
 namespace LastfmDiscordRPC2.Models.API;
 
-public class LastfmAPIService : IAPIService
+public sealed class LastfmAPIService : IAPIService
 {
     public long LastScrobbleTime { get; set; }
-    public RestClient APIRestClient { get; }
+    public RestClient APIRestClient { get; init; }
     private readonly ISignatureAPIService _signatureAPIService;
 
     public LastfmAPIService(ISignatureAPIService signatureAPIService)

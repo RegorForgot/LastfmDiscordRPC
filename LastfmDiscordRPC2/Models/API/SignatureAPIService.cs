@@ -5,10 +5,10 @@ using RestSharp;
 
 namespace LastfmDiscordRPC2.Models.API;
 
-public class SignatureAPIService : ISignatureAPIService
+public sealed class SignatureAPIService : ISignatureAPIService
 {
-    public RestClient APIRestClient { get; }
-    
+    public RestClient APIRestClient { get; init; }
+
     public SignatureAPIService()
     {
         APIRestClient = new RestClient(@"https://crygup.com/regor/");

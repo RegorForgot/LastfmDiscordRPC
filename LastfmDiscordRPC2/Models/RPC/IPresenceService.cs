@@ -1,11 +1,10 @@
 ﻿using System;
-using LastfmDiscordRPC2.Models.Responses;
+using System.Threading.Tasks;
 
 namespace LastfmDiscordRPC2.Models.RPC;
 
 public interface IPresenceService : IDisposable
 {
-    public void SetPresence();
-    protected void UpdatePresence(TrackResponse trackResponse);
+    public Task SetPresence();
     public void ClearPresence();
 }

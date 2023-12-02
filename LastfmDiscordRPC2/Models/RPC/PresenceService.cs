@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using LastfmDiscordRPC2.Enums;
 using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.IO;
@@ -10,17 +11,18 @@ using LastfmDiscordRPC2.Models.Responses;
 
 namespace LastfmDiscordRPC2.Models.RPC;
 
-public class PresenceService : IPresenceService
+public sealed class PresenceService : IPresenceService
 {
     private readonly LoggingService _loggingService;
     private readonly LastfmAPIService _lastfmService;
     private readonly IDiscordClient _discordClient;
     private readonly SaveCfgIOService _saveCfgService;
 
-    private static readonly SemaphoreSlim PresenceLock = new SemaphoreSlim(1, 1);
     private PeriodicTimer? _timer;
     private bool _firstSuccess;
     private int _exceptionCount;
+    bool _turnOffPresence;
+
 
     public PresenceService(
         LoggingService loggingService,
@@ -34,11 +36,10 @@ public class PresenceService : IPresenceService
         _saveCfgService = saveCfgService;
     }
 
-    public async void SetPresence()
+    public async Task SetPresence()
     {
         long timeOfStart = DateTimeOffset.Now.ToUnixTimeSeconds();
-        bool turnOffPresence = false;
-        await PresenceLock.WaitAsync();
+        _turnOffPresence = false;
 
         try
         {
@@ -47,7 +48,7 @@ public class PresenceService : IPresenceService
 
             using (_timer = new PeriodicTimer(TimeSpan.FromSeconds(2)))
             {
-                while (await _timer.WaitForNextTickAsync() && !turnOffPresence)
+                while (await _timer.WaitForNextTickAsync() && !_turnOffPresence)
                 {
                     try
                     {
@@ -56,7 +57,7 @@ public class PresenceService : IPresenceService
                     }
                     catch (Exception e)
                     {
-                        HandleError(e);
+                        await HandleError(e);
                     }
                     
                     long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
@@ -65,25 +66,23 @@ public class PresenceService : IPresenceService
                     long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
                     
                     int sleepTime = _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
-                    turnOffPresence = timeSinceStart > sleepTime && timeSinceLastScrobble > sleepTime;
+                    _turnOffPresence = timeSinceStart > sleepTime && timeSinceLastScrobble > sleepTime;
                 }
             }
 
-            if (turnOffPresence)
+            if (_turnOffPresence)
             {
                 _loggingService.Info("Turned off presence due to inactivity");
                 Dispose();
             }
-
-            PresenceLock.Release();
         }
         catch
         {
-            PresenceLock.Release();
+            // ignored
         }
     }
 
-    public void UpdatePresence(TrackResponse response)
+    private void UpdatePresence(TrackResponse response)
     {
         if (response.RecentTracks.Tracks.Count == 0)
         {
@@ -130,9 +129,11 @@ public class PresenceService : IPresenceService
     {
         _timer?.Dispose();
         _discordClient.ClearPresence();
+        _discordClient.Deinitialize();
+        _turnOffPresence = true;
     }
 
-    private void HandleError(Exception e)
+    private async Task HandleError(Exception e)
     {
         switch (e)
         {
@@ -142,7 +143,7 @@ public class PresenceService : IPresenceService
 
                 if (exception.ErrorCode is LastfmErrorCode.Temporary or LastfmErrorCode.OperationFail && IsRetry())
                 {
-                    TryReconnect();
+                    await TryReconnect();
                 }
                 else
                 {
@@ -156,7 +157,7 @@ public class PresenceService : IPresenceService
 
                 if (IsRetry())
                 {
-                    TryReconnect();
+                    await TryReconnect();
                 }
                 else
                 {
@@ -171,10 +172,10 @@ public class PresenceService : IPresenceService
         }
     }
 
-    private void TryReconnect()
+    private async Task TryReconnect()
     {
         ClearPresence();
-        SetPresence();
+        await SetPresence();
         _loggingService.Info($"Attempting to reconnect... Try {_exceptionCount}");
     }
 

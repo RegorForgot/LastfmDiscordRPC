@@ -1,13 +1,11 @@
-﻿using LastfmDiscordRPC2.Models;
-
-namespace LastfmDiscordRPC2.ViewModels.Panes;
+﻿namespace LastfmDiscordRPC2.ViewModels.Panes;
 
 public abstract class AbstractPaneViewModel : AbstractViewModel
 {
-    public CurrentState State { get; }
+    public UIContext UIContext { get; }
 
-    protected AbstractPaneViewModel(CurrentState state)
+    protected AbstractPaneViewModel(UIContext uiContext)
     {
-        State = state;
+        UIContext = uiContext;
     }
 }

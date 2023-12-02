@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.IO;
 
-public class SaveCfgIOService : AbstractIOService
+public sealed class SaveCfgIOService : AbstractIOService
 {
     private readonly LoggingService _loggingService;
     public SaveCfg SaveCfg { get; private set; }

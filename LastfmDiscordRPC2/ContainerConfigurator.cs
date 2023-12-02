@@ -4,11 +4,9 @@ using DiscordRPC.Logging;
 using LastfmDiscordRPC2.Assets;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
-using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
-using LastfmDiscordRPC2.ViewModels.Controls;
 using LastfmDiscordRPC2.ViewModels.Panes;
 
 namespace LastfmDiscordRPC2;
@@ -23,7 +21,8 @@ public static class ContainerConfigurator
         
         builder.RegisterAssemblyTypes(Assembly.Load(nameof(LastfmDiscordRPC2)))
             .Where(t => t.Namespace.Contains("ViewModels.Panes"))
-            .As(typeof(AbstractPaneViewModel))
+            .As<AbstractPaneViewModel>()
+            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
         builder.RegisterAssemblyTypes(Assembly.Load(nameof(LastfmDiscordRPC2)))
@@ -31,7 +30,7 @@ public static class ContainerConfigurator
             .AsSelf()
             .InstancePerLifetimeScope();
 
-        builder.RegisterType<CurrentState>().AsSelf().SingleInstance();
+        builder.RegisterType<UIContext>().AsSelf().SingleInstance();
         
         builder.RegisterType<LoggingService>().AsSelf().SingleInstance();
         
@@ -40,12 +39,14 @@ public static class ContainerConfigurator
 
         builder.RegisterType<LastfmAPIService>().AsSelf().SingleInstance();
         
-        builder.RegisterType<SecretKey>().As<ISecretKey>().InstancePerLifetimeScope();
+        builder.RegisterType<SecretKey>().As<ISecretKey>().SingleInstance();
         builder.RegisterType<SignatureLocalAPIService>().As<ISignatureAPIService>().SingleInstance();
         builder.RegisterType<SignatureAPIService>().As<ISignatureAPIService>().SingleInstance().PreserveExistingDefaults();
 
         builder.RegisterType<DiscordClient>().As<IDiscordClient>().SingleInstance();
         builder.RegisterType<PresenceService>().As<IPresenceService>().SingleInstance();
+
+        builder.RegisterType<ViewModelUpdater>().As<IViewModelUpdater>().SingleInstance();
 
         builder.RegisterType<LogIOService>().AsSelf().SingleInstance();
         builder.RegisterType<SaveCfgIOService>().AsSelf().SingleInstance();

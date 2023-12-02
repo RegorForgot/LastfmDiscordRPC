@@ -4,19 +4,26 @@
     mc:Ignorable="d"
     x:Class="LastfmDiscordRPC2.Views.Panes.HomeView"
     xmlns="https://github.com/avaloniaui"
+    xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <converters:SetPresenceConverter x:Key="SetPresenceConverter" />
+    </UserControl.Resources>
+
     <Design.DataContext>
         <panes:HomeViewModel />
     </Design.DataContext>
 
     <StackPanel>
         <Button
-            Command="{Binding StartPresence}"
-            Content="Start Presence"
-            IsEnabled="{Binding State.IsLoggedIn}"
+            Command="{Binding SetPresence}"
+            CommandParameter="{Binding UIContext.IsRichPresenceActivated}"
+            Content="{Binding UIContext.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
+            IsEnabled="{Binding UIContext.IsLoggedIn}"
             Margin="0,10,10,10" />
     </StackPanel>
 </UserControl>

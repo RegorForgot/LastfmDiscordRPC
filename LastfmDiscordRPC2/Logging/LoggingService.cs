@@ -4,14 +4,14 @@ using DiscordRPC.Logging;
 
 namespace LastfmDiscordRPC2.Logging;
 
-public class LoggingService : ILogger
+public sealed class LoggingService : ILogger
 {
-    private readonly List<IRPCLogger> _loggers;
+    private readonly IEnumerable<IRPCLogger> _loggers;
     public LogLevel Level { get; set; } = LogLevel.None;
 
     public LoggingService(IEnumerable<IRPCLogger> loggers)
     {
-        _loggers = new List<IRPCLogger>(loggers);
+        _loggers = loggers;
     }
 
     public void Trace(string message, params object[] args)

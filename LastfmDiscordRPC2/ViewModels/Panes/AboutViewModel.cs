@@ -1,21 +1,21 @@
 ﻿using System.Reactive;
-using LastfmDiscordRPC2.Models;
 using ReactiveUI;
+using static LastfmDiscordRPC2.Utilities.Utilities;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
 public sealed class AboutViewModel : AbstractPaneViewModel
 {
-    public ReactiveCommand<Unit, Unit> GithubPage { get; }
+    public ReactiveCommand<Unit, Unit> OpenGithubCmd { get; }
     public override string Name => "About";
 
-    public AboutViewModel(CurrentState state) : base(state)
+    public AboutViewModel(UIContext uiContext) : base(uiContext)
     {
-        GithubPage = ReactiveCommand.Create(OpenGithubPage);
+        OpenGithubCmd = ReactiveCommand.Create(OpenGithub);
     }
 
-    private void OpenGithubPage()
+    private static void OpenGithub()
     {
-        Utilities.Utilities.OpenWebpage("https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
+        OpenWebpage("https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
     }
 }

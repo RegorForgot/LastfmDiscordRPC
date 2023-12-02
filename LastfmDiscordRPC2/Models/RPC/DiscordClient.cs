@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -12,7 +11,7 @@ using LastfmDiscordRPC2.Models.Responses;
 
 namespace LastfmDiscordRPC2.Models.RPC;
  
-public class DiscordClient : IDisposable, IDiscordClient
+public sealed class DiscordClient : IDisposable, IDiscordClient
 {
     private DiscordRpcClient? _client;
     private readonly SaveCfgIOService _saveCfgService;
@@ -22,12 +21,12 @@ public class DiscordClient : IDisposable, IDiscordClient
     private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
 
-    private bool IsInitialised
-    {
-        get => _client?.IsInitialized == true;
-    }
+    private bool IsInitialised => _client?.IsInitialized == true;
 
-    public DiscordClient(SaveCfgIOService saveCfgService, LastfmAPIService lastfmService, LoggingService loggingService)
+    public DiscordClient(
+        SaveCfgIOService saveCfgService, 
+        LastfmAPIService lastfmService, 
+        LoggingService loggingService)
     {
         _saveCfgService = saveCfgService;
         _lastfmService = lastfmService;
@@ -43,9 +42,12 @@ public class DiscordClient : IDisposable, IDiscordClient
             return;
         }
 
+        IsReady = false;
+
         _client = new DiscordRpcClient(_saveCfgService.SaveCfg.UserRPCCfg.AppID);
-        _client.Initialize();
         _client.Logger = _loggingService;
+        _client.Initialize();
+
 
         SetEventHandlers();
     }

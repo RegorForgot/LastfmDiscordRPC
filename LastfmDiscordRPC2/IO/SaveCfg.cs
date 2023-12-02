@@ -4,7 +4,7 @@ namespace LastfmDiscordRPC2.IO;
 
 public record SaveCfg
 {
-    private const string DefaultAppID = "997756398664421446";
+    internal const string? DefaultAppID = "997756398664421446";
     
     public SaveCfg() { }
     
@@ -27,7 +27,7 @@ public record SaveCfg
 
     public record RPCCfg
     {
-        [JsonProperty] public string AppID { get; set; } = DefaultAppID;
+        [JsonProperty] public string? AppID { get; set; } = DefaultAppID;
         [JsonProperty] public int SleepTime { get; set; } = 3600;
         [JsonProperty] public string Description { get; set; } = Empty;
         [JsonProperty] public string State { get; set; } = Empty;
