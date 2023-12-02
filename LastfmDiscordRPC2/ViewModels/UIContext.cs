@@ -8,7 +8,7 @@ namespace LastfmDiscordRPC2.ViewModels;
 public class UIContext : ReactiveObject
 {
     private readonly SaveCfgIOService _saveCfg;
-    private Lazy<IViewModelUpdater> _viewModelUpdater; 
+    private readonly Lazy<IViewModelUpdater> _viewModelUpdater; 
 
     public UIContext(SaveCfgIOService saveCfg, Lazy<IViewModelUpdater> viewModelUpdater)
     {
@@ -17,6 +17,7 @@ public class UIContext : ReactiveObject
     }
 
     private bool _isRichPresenceActivated;
+    private bool _hasRichPresenceActivated;
 
     public bool IsRichPresenceActivated
     {
@@ -24,11 +25,25 @@ public class UIContext : ReactiveObject
         set
         {
             this.RaiseAndSetIfChanged(ref _isRichPresenceActivated, value);
+            if (_isRichPresenceActivated)
+            {
+                HasRichPresenceActivated = true;
+            }
             _viewModelUpdater.Value.UpdateAllViewModels();
         }
     }
 
+    public bool HasRichPresenceActivated
+    {
+        get => _hasRichPresenceActivated;
+        set => this.RaiseAndSetIfChanged(ref _hasRichPresenceActivated, value);
+    }
+
     public bool IsLoggedIn => _saveCfg.SaveCfg.UserAccount.IsValid();
     
-    public void UpdateProperties() => this.RaisePropertyChanged(nameof(IsLoggedIn));
+    public void UpdateProperties()
+    {
+        this.RaisePropertyChanged(nameof(IsLoggedIn));
+        _viewModelUpdater.Value.UpdateAllViewModels();
+    }
 }

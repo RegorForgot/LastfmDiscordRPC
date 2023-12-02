@@ -8,6 +8,7 @@ using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
+using LastfmDiscordRPC2.ViewModels;
 
 namespace LastfmDiscordRPC2.Models.RPC;
 
@@ -17,171 +18,165 @@ public sealed class PresenceService : IPresenceService
     private readonly LastfmAPIService _lastfmService;
     private readonly IDiscordClient _discordClient;
     private readonly SaveCfgIOService _saveCfgService;
+    private readonly UIContext _context;
 
     private PeriodicTimer? _timer;
-    private bool _firstSuccess;
+    private bool _isFirstSuccess;
+    private bool _isPresenceExpired;
+    private bool _isPresenceTurnedOff;
+    
     private int _exceptionCount;
-    bool _turnOffPresence;
-
+    private long _presenceStartedTime;
+    
+    private bool IsRetry => _exceptionCount <= 3;
 
     public PresenceService(
         LoggingService loggingService,
         LastfmAPIService lastfmService,
         IDiscordClient discordClient,
-        SaveCfgIOService saveCfgService)
+        SaveCfgIOService saveCfgService,
+        UIContext context)
     {
         _loggingService = loggingService;
         _lastfmService = lastfmService;
         _discordClient = discordClient;
         _saveCfgService = saveCfgService;
+        _context = context;
     }
 
     public async Task SetPresence()
     {
-        long timeOfStart = DateTimeOffset.Now.ToUnixTimeSeconds();
-        _turnOffPresence = false;
+        _presenceStartedTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        _isPresenceExpired = false;
+        _isPresenceTurnedOff = false;
+        _exceptionCount = 0;
 
         try
         {
             _discordClient.Initialize();
-            _firstSuccess = false;
+            _isFirstSuccess = true;
 
             using (_timer = new PeriodicTimer(TimeSpan.FromSeconds(2)))
             {
-                while (await _timer.WaitForNextTickAsync() && !_turnOffPresence)
+                while (await _timer.WaitForNextTickAsync() && !_isPresenceExpired && !_isPresenceTurnedOff)
                 {
                     try
                     {
                         TrackResponse response = await _lastfmService.GetRecentTracks(_saveCfgService.SaveCfg.UserAccount.Username);
-                        UpdatePresence(response);
+                        _isPresenceTurnedOff = !UpdatePresence(response);
                     }
                     catch (Exception e)
                     {
-                        await HandleError(e);
+                        bool retry = HandleError(e);
+                        if (retry)
+                        {
+                            _loggingService.Info($"Attempting to reconnect... Try {_exceptionCount}");
+                        }
+                        else
+                        {
+                            _isPresenceTurnedOff = true;
+                        }
                     }
-                    
-                    long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
-                    long timeSinceStart = currentTime - timeOfStart;
 
-                    long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
-                    
-                    int sleepTime = _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
-                    _turnOffPresence = timeSinceStart > sleepTime && timeSinceLastScrobble > sleepTime;
+                    _isPresenceExpired = IsPresenceExpired();
                 }
             }
 
-            if (_turnOffPresence)
-            {
-                _loggingService.Info("Turned off presence due to inactivity");
-                Dispose();
-            }
         }
         catch
         {
             // ignored
         }
+
+        if (_isPresenceExpired)
+        {
+            _loggingService.Info("Presence disconnected due to inactivity.");
+        }
+        
+        if (_isPresenceTurnedOff)
+        {
+            _loggingService.Info("Presence disabled.");
+        }
+        
+        ClearPresence();
     }
 
-    private void UpdatePresence(TrackResponse response)
+    private bool UpdatePresence(TrackResponse response)
     {
         if (response.RecentTracks.Tracks.Count == 0)
         {
             _loggingService.Info("No tracks found for user.");
-            ClearPresence();
+            return false;
         }
-        else
+        
+        if (_isFirstSuccess)
         {
-            // Track track = response.Track;
-            // string albumString = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
-            //
-            // I need to make a previewer as well
-            // _mainViewModel.PreviewViewModel.Description = track.Name;
-            // _mainViewModel.PreviewViewModel.State = $"By {track.Artist.Name}{albumString}";
-            // _mainViewModel.PreviewViewModel.Tooltip = $"{response.Playcount} scrobbles";
-            // _mainViewModel.PreviewViewModel.ImageURL = track.Images[3].URL;
-
-            if (!_firstSuccess)
-            {
-                _loggingService.Info("Track successfully received! Attempting to connect to presence...");
-            }
-
-            if (_discordClient.IsReady)
-            {
-                _exceptionCount = 0;
-                _discordClient.SetPresence(response);
-
-                if (!_firstSuccess)
-                {
-                    _loggingService.Info("Presence has been set!");
-                }
-
-                _firstSuccess = true;
-            }
-            else
-            {
-                _loggingService.Warning("Discord client not initialised. Please restart and use a valid ID.");
-                Dispose();
-            }
+            _loggingService.Info("Track successfully received! Attempting to connect to presence...");
         }
+
+        if (_discordClient.IsReady)
+        {
+            _exceptionCount = 0;
+            _discordClient.SetPresence(response);
+
+            if (_isFirstSuccess)
+            {
+                _loggingService.Info("Presence has been set!");
+            }
+
+            _isFirstSuccess = false;
+            return true;
+        }
+        
+        _loggingService.Warning("Discord client not initialised. Please restart and use a valid ID.");
+        return false;
     }
+
+    public void UnsetPresence()
+    {
+        _isPresenceTurnedOff = true;
+    }
+    
 
     public void ClearPresence()
     {
         _timer?.Dispose();
         _discordClient.ClearPresence();
-        _discordClient.Deinitialize();
-        _turnOffPresence = true;
+        
+        _context.IsRichPresenceActivated = false;
     }
 
-    private async Task HandleError(Exception e)
+    private bool HandleError(Exception e)
     {
         switch (e)
         {
             case LastfmException exception:
             {
                 _loggingService.Error("Last.fm {0}", exception.Message);
-
-                if (exception.ErrorCode is LastfmErrorCode.Temporary or LastfmErrorCode.OperationFail && IsRetry())
-                {
-                    await TryReconnect();
-                }
-                else
-                {
-                    ClearPresence();
-                }
-                break;
+                _exceptionCount++;
+                return exception.ErrorCode is LastfmErrorCode.Temporary or LastfmErrorCode.OperationFail && IsRetry;
             }
             case HttpRequestException requestException:
             {
                 _loggingService.Error("HTTP {0}: {1}", requestException.StatusCode ?? 0, requestException.Message);
-
-                if (IsRetry())
-                {
-                    await TryReconnect();
-                }
-                else
-                {
-                    ClearPresence();
-                }
-                break;
+                _exceptionCount++;
+                return IsRetry;
             }
             default:
                 _loggingService.Error("Unhandled exception! Please report to developers {0}", e.Message);
-                ClearPresence();
-                break;
+                return false;
         }
     }
-
-    private async Task TryReconnect()
+        
+    private bool IsPresenceExpired()
     {
-        ClearPresence();
-        await SetPresence();
-        _loggingService.Info($"Attempting to reconnect... Try {_exceptionCount}");
-    }
+        long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
 
-    private bool IsRetry()
-    {
-        return _exceptionCount++ < 3;
+        long timeSincePresenceStarted = currentTime - _presenceStartedTime;
+        long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
+
+        return timeSincePresenceStarted > _saveCfgService.SaveCfg.UserRPCCfg.SleepTime &&
+                             timeSinceLastScrobble > _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
     }
 
     public void Dispose() => ClearPresence();

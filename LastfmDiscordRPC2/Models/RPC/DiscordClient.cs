@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
+using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
@@ -21,8 +22,6 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
 
-    private bool IsInitialised => _client?.IsInitialized == true;
-
     public DiscordClient(
         SaveCfgIOService saveCfgService, 
         LastfmAPIService lastfmService, 
@@ -33,11 +32,11 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         _loggingService = loggingService;
     }
 
-    public bool IsReady { get; set; }
+    public bool IsReady { get; private set; }
 
     public void Initialize()
     {
-        if (IsInitialised)
+        if (_client is not null && _client.IsInitialized)
         {
             return;
         }
@@ -175,24 +174,32 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
     public void ClearPresence()
     {
-        _client?.ClearPresence();
+        if (_client is null)
+        {
+            return;
+        }
+        
+        try
+        {
+            _client.ClearPresence();
+        }
+        catch (Exception ex) when (ex is ObjectDisposedException or UninitializedException) { }
     }
-
-    public void Deinitialize()
+    
+    public void Dispose()
     {
-        if ((bool)_client?.IsDisposed || IsInitialised)
+        if (_client is null)
         {
             return;
         }
 
         try
         {
-            ClearPresence();
+            _client.ClearPresence();
             _client.Deinitialize();
             _client.Dispose();
+            IsReady = false;
         }
         catch (Exception ex) when (ex is ObjectDisposedException or UninitializedException) { }
     }
-    
-    public void Dispose() => Deinitialize();
 }

@@ -1,15 +1,10 @@
 <Window
-    ExtendClientAreaChromeHints="PreferSystemChrome"
-    ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/icon.ico"
+    MinHeight="450"
+    MinWidth="800"
     Title="LastfmDiscordRPC2"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d"
     x:Class="LastfmDiscordRPC2.Views.MainWindow"
     xmlns="https://github.com/avaloniaui"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:panes="clr-namespace:LastfmDiscordRPC2.Views.Panes"
     xmlns:vm="using:LastfmDiscordRPC2.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -52,7 +47,7 @@
         </Style>
     </Window.Styles>
 
-    <Grid Margin="0,35,0,12">
+    <Grid Margin="0,15,0,12">
         <TabControl Margin="0" TabStripPlacement="Left">
             <TabItem>
                 <TabItem.Header>

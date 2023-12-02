@@ -60,7 +60,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         set
         {
             this.RaiseAndSetIfChanged(ref _isLoginInProgress, value);
-            this.RaisePropertyChanged(nameof(CanLogOut));
             Context.UpdateProperties();
         }
     }
@@ -68,14 +67,12 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     public bool IsAppIDError
     {
         get => _isAppIDError;
-        set
+        private set
         {
             this.RaiseAndSetIfChanged(ref _isAppIDError, value);
             this.RaisePropertyChanged(nameof(CanSave));
         }
     }
-
-
 
     public ReactiveCommand<bool, Unit> LaunchOnStartupCmd { get; }
     public ReactiveCommand<bool, Unit> LastfmLoginCmd { get; }
@@ -93,7 +90,8 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     private string LoggedIn => $"Logged in as {_saveCfgService.SaveCfg.UserAccount.Username}";
     
     public bool CanLogOut => !Context.IsRichPresenceActivated && !IsLoginInProgress;
-    public bool CanSave => !Context.IsRichPresenceActivated && IsAppIDError;
+    public bool CanSave => IsAppIDError && !Context.HasRichPresenceActivated;
+    public bool CanReset => !Context.HasRichPresenceActivated;
     
     public SettingsViewModel(
         LastfmAPIService lastfmService,
@@ -192,5 +190,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     {
         this.RaisePropertyChanged(nameof(CanLogOut));
         this.RaisePropertyChanged(nameof(CanSave));
+        this.RaisePropertyChanged(nameof(CanReset));
     }
 }

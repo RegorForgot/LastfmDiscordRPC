@@ -7,6 +7,5 @@ public interface IDiscordClient
     public void Initialize();
     public void SetPresence(TrackResponse response);
     public void ClearPresence();
-    public void Deinitialize();
     public bool IsReady { get; }
 }
