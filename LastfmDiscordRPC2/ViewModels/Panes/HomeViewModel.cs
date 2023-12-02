@@ -4,7 +4,7 @@ using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class HomeViewModel : AbstractPaneViewModel, IUpdatableViewModel
+public sealed class HomeViewModel : AbstractPaneViewModel
 {
     private readonly IPresenceService _presenceService;
     public override string Name => "Home";
@@ -12,7 +12,7 @@ public sealed class HomeViewModel : AbstractPaneViewModel, IUpdatableViewModel
     
     public HomeViewModel(
         IPresenceService presenceService, 
-        UIContext uiContext) : base(uiContext)
+        UIContext context) : base(context)
     {
         _presenceService = presenceService;
         SetPresence = ReactiveCommand.Create<bool>(StartPresenceCommand);
@@ -29,11 +29,6 @@ public sealed class HomeViewModel : AbstractPaneViewModel, IUpdatableViewModel
             _presenceService.SetPresence();
         }
         
-        UIContext.IsRichPresenceActivated = !activated;
-    }
-    
-    public void UpdateProperties()
-    {
-        throw new System.NotImplementedException();
+        Context.IsRichPresenceActivated = !activated;
     }
 }

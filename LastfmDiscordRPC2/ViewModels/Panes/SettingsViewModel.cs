@@ -20,10 +20,12 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     private const string AppIDRegExp = @"^\d{17,21}$";
     private const string NotLoggedIn = "Not logged in";
 
-    private bool _startUpChecked;
+    private bool _isStartUpChecked;
+    private bool _isLoginInProgress;
+    private bool _isAppIDError;
     private string _loginMessage;
     private string? _appID;
-
+    
     [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
     public string? AppID
     {
@@ -36,14 +38,14 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
             }
             
             this.RaiseAndSetIfChanged(ref _appID, value);
-            UIContext.IsAppIDError = IsMatch(value, AppIDRegExp);
+            IsAppIDError = IsMatch(value, AppIDRegExp);
         }
     }
     
-    public bool StartUpChecked
+    public bool IsStartUpChecked
     {
-        get => _startUpChecked;
-        set => this.RaiseAndSetIfChanged(ref _startUpChecked, value);
+        get => _isStartUpChecked;
+        set => this.RaiseAndSetIfChanged(ref _isStartUpChecked, value);
     }
 
     public string LoginMessage
@@ -51,6 +53,29 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         get => _loginMessage;
         set => this.RaiseAndSetIfChanged(ref _loginMessage, value);
     }
+    
+    public bool IsLoginInProgress
+    {
+        get => _isLoginInProgress;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _isLoginInProgress, value);
+            this.RaisePropertyChanged(nameof(CanLogOut));
+            Context.UpdateProperties();
+        }
+    }
+    
+    public bool IsAppIDError
+    {
+        get => _isAppIDError;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _isAppIDError, value);
+            this.RaisePropertyChanged(nameof(CanSave));
+        }
+    }
+
+
 
     public ReactiveCommand<bool, Unit> LaunchOnStartupCmd { get; }
     public ReactiveCommand<bool, Unit> LastfmLoginCmd { get; }
@@ -66,13 +91,16 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
 
     public override string Name => "Settings";
     private string LoggedIn => $"Logged in as {_saveCfgService.SaveCfg.UserAccount.Username}";
-
+    
+    public bool CanLogOut => !Context.IsRichPresenceActivated && !IsLoginInProgress;
+    public bool CanSave => !Context.IsRichPresenceActivated && IsAppIDError;
+    
     public SettingsViewModel(
         LastfmAPIService lastfmService,
         LoggingControlViewModel loggingControlViewModel,
         SaveCfgIOService saveCfgService,
         LoggingService loggingService,
-        UIContext uiContext) : base (uiContext)
+        UIContext context) : base (context)
     {
         _lastfmService = lastfmService;
         _saveCfgService = saveCfgService;
@@ -87,11 +115,11 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         if (OperatingSystem.CurrentOS == OSEnum.Windows)
         {
             StartUpVisible = true;
-            StartUpChecked = WinRegistry.CheckRegistryExists();
+            IsStartUpChecked = WinRegistry.CheckRegistryExists();
         }
 
         AppID = _saveCfgService.SaveCfg.UserRPCCfg.AppID;
-        LoginMessage = UIContext.IsLoggedIn ? LoggedIn : NotLoggedIn;
+        LoginMessage = Context.IsLoggedIn ? LoggedIn : NotLoggedIn;
     }
 
     private void SaveDiscordAppID()
@@ -113,7 +141,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
 
     private async Task SetLastfmLogin(bool logIn)
     {
-        UIContext.IsLoginInProgress = true;
+        IsLoginInProgress = true;
 
         if (logIn)
         {
@@ -124,8 +152,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
             LogUserOut();
         }
 
-        UIContext.IsLoginInProgress = false;
-        UIContext.ViewModelUpdater.Value.UpdateAllViewModels();
+        IsLoginInProgress = false;
     }
 
     private void LogUserOut()
@@ -163,6 +190,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     
     public void UpdateProperties()
     {
-        throw new NotImplementedException();
+        this.RaisePropertyChanged(nameof(CanLogOut));
+        this.RaisePropertyChanged(nameof(CanSave));
     }
 }

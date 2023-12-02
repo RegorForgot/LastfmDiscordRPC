@@ -9,7 +9,7 @@ public sealed class AboutViewModel : AbstractPaneViewModel
     public ReactiveCommand<Unit, Unit> OpenGithubCmd { get; }
     public override string Name => "About";
 
-    public AboutViewModel(UIContext uiContext) : base(uiContext)
+    public AboutViewModel(UIContext context) : base(context)
     {
         OpenGithubCmd = ReactiveCommand.Create(OpenGithub);
     }

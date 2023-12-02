@@ -2,10 +2,10 @@
 
 public abstract class AbstractPaneViewModel : AbstractViewModel
 {
-    public UIContext UIContext { get; }
+    public UIContext Context { get; }
 
-    protected AbstractPaneViewModel(UIContext uiContext)
+    protected AbstractPaneViewModel(UIContext context)
     {
-        UIContext = uiContext;
+        Context = context;
     }
 }

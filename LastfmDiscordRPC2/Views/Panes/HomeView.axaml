@@ -21,9 +21,9 @@
     <StackPanel>
         <Button
             Command="{Binding SetPresence}"
-            CommandParameter="{Binding UIContext.IsRichPresenceActivated}"
-            Content="{Binding UIContext.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
-            IsEnabled="{Binding UIContext.IsLoggedIn}"
+            CommandParameter="{Binding Context.IsRichPresenceActivated}"
+            Content="{Binding Context.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
+            IsEnabled="{Binding Context.IsLoggedIn}"
             Margin="0,10,10,10" />
     </StackPanel>
 </UserControl>
