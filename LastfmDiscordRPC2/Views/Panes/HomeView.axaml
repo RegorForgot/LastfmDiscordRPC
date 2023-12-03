@@ -4,6 +4,7 @@
     mc:Ignorable="d"
     x:Class="LastfmDiscordRPC2.Views.Panes.HomeView"
     xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:LastfmDiscordRPC2.Views.Controls"
     xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -20,7 +21,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
@@ -30,8 +32,11 @@
                 Content="{Binding Context.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
                 IsEnabled="{Binding CanSetPresence}" />
         </StackPanel>
+        <StackPanel Grid.Row="1" IsVisible="{Binding Context.IsRichPresenceActivated}">
+            <controls:PreviewControlView DataContext="{Binding PreviewControlViewModel}" />
+        </StackPanel>
         <StackPanel
-            Grid.Row="1"
+            Grid.Row="2"
             HorizontalAlignment="Center"
             Orientation="Vertical">
             <Label

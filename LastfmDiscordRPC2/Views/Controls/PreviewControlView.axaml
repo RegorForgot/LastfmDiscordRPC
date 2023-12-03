@@ -1,0 +1,71 @@
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="LastfmDiscordRPC2.Views.Controls.PreviewControlView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:controls="clr-namespace:LastfmDiscordRPC2.ViewModels.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.DataContext>
+        <controls:PreviewControlViewModel />
+    </Design.DataContext>
+
+    <Border
+        Background="#263238"
+        BorderBrush="#32424a"
+        BorderThickness="1"
+        ClipToBounds="True"
+        CornerRadius="30"
+        Height="200"
+        Width="600">
+        <Grid Height="200" Width="600">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Border
+                Background="#263238"
+                ClipToBounds="True"
+                CornerRadius="20"
+                Margin="10"
+                Padding="0">
+                <Image
+                    HorizontalAlignment="Center"
+                    Margin="0"
+                    Stretch="UniformToFill"
+                    UseLayoutRounding="True"
+                    VerticalAlignment="Top"
+                    asyncImageLoader:ImageLoader.Source="{Binding LargeImage.URL}" />
+                <ToolTip.Tip>
+                    <Label Content="{Binding LargeImage.Text}" />
+                </ToolTip.Tip>
+            </Border>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+
+                <Label FontSize="24" FontWeight="Bold">
+                    <TextBlock Text="Last.fm" TextTrimming="CharacterEllipsis" />
+                </Label>
+
+                <Label>
+                    <TextBlock Text="{Binding Details}" TextTrimming="CharacterEllipsis" />
+                    <ToolTip.Tip>
+                        <Label Content="{Binding Details}" />
+                    </ToolTip.Tip>
+                </Label>
+
+                <Label>
+                    <TextBlock Text="{Binding State}" TextTrimming="CharacterEllipsis" />
+                    <ToolTip.Tip>
+                        <Label Content="{Binding State}" />
+                    </ToolTip.Tip>
+                </Label>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

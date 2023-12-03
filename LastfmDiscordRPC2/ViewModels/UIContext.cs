@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using LastfmDiscordRPC2.IO;
 using ReactiveUI;
 

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
-using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
+using LastfmDiscordRPC2.ViewModels.Controls;
 
 namespace LastfmDiscordRPC2.Models.RPC;
  
@@ -17,6 +17,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     private DiscordRpcClient? _client;
     private readonly SaveCfgIOService _saveCfgService;
     private readonly LoggingService _loggingService;
+    private readonly PreviewControlViewModel _previewControlViewModel;
     private readonly LastfmAPIService _lastfmService;
 
     private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
@@ -25,11 +26,13 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     public DiscordClient(
         SaveCfgIOService saveCfgService, 
         LastfmAPIService lastfmService, 
-        LoggingService loggingService)
+        LoggingService loggingService,
+        PreviewControlViewModel previewControlViewModel)
     {
         _saveCfgService = saveCfgService;
         _lastfmService = lastfmService;
         _loggingService = loggingService;
+        _previewControlViewModel = previewControlViewModel;
     }
 
     public bool IsReady { get; private set; }
@@ -138,6 +141,14 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             Buttons = buttons
         };
 
+        _previewControlViewModel.State = presence.State;
+        _previewControlViewModel.Details = presence.Details;
+        _previewControlViewModel.LargeImage.Text = presence.Assets.LargeImageText;
+        _previewControlViewModel.LargeImage.URL = presence.Assets.LargeImageKey;
+        _previewControlViewModel.SmallImage.Text = presence.Assets.SmallImageText;
+        _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
+        
+        
         _client?.SetPresence(presence);
         
         return;
@@ -175,6 +186,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
     public void ClearPresence()
     {
+        _previewControlViewModel.ClearAll();
         if (_client is null)
         {
             return;

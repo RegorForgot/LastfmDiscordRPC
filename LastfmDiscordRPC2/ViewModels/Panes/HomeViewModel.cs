@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using LastfmDiscordRPC2.Models.RPC;
+using LastfmDiscordRPC2.ViewModels.Controls;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
@@ -23,14 +24,17 @@ public sealed class HomeViewModel : AbstractPaneViewModel, IUpdatableViewModel
     private readonly IPresenceService _presenceService;
 
     public ReactiveCommand<bool, Unit> SetPresence { get; }
+    public PreviewControlViewModel PreviewControlViewModel { get; }
     public bool CanSetPresence => Context.IsLoggedIn && !IsCoolDown;
 
     public override string Name => "Home";
 
     public HomeViewModel(
         IPresenceService presenceService,
+        PreviewControlViewModel previewControlViewModel,
         UIContext context) : base(context)
     {
+        PreviewControlViewModel = previewControlViewModel;
         _presenceService = presenceService;
         SetPresence = ReactiveCommand.Create<bool>(StartPresenceCommand);
     }
