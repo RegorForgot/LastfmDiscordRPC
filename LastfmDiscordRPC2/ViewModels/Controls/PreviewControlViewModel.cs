@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using System.Reactive;
 using ReactiveUI;
+using static LastfmDiscordRPC2.Utilities.Utilities;
 
 namespace LastfmDiscordRPC2.ViewModels.Controls;
 
@@ -91,5 +93,9 @@ public class PreviewControlViewModel : AbstractControlViewModel
             set => this.RaiseAndSetIfChanged(ref _url, value);
         }
     }
-    public sealed class PreviewButton : PreviewObject {}
+
+    public sealed class PreviewButton : PreviewObject
+    {
+        public ReactiveCommand<string, Unit> OpenWebpageCmd { get; set; } = ReactiveCommand.Create<string>(OpenWebpage);
+    }
 }

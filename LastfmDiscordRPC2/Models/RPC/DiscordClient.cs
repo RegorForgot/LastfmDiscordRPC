@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,21 +13,23 @@ using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.ViewModels.Controls;
 
 namespace LastfmDiscordRPC2.Models.RPC;
- 
+
 public sealed class DiscordClient : IDisposable, IDiscordClient
 {
+    private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
+    private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
+
     private DiscordRpcClient? _client;
     private readonly SaveCfgIOService _saveCfgService;
     private readonly LoggingService _loggingService;
     private readonly PreviewControlViewModel _previewControlViewModel;
     private readonly LastfmAPIService _lastfmService;
 
-    private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
-    private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
+    public bool IsReady { get; private set; }
 
     public DiscordClient(
-        SaveCfgIOService saveCfgService, 
-        LastfmAPIService lastfmService, 
+        SaveCfgIOService saveCfgService,
+        LastfmAPIService lastfmService,
         LoggingService loggingService,
         PreviewControlViewModel previewControlViewModel)
     {
@@ -34,8 +38,6 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         _loggingService = loggingService;
         _previewControlViewModel = previewControlViewModel;
     }
-
-    public bool IsReady { get; private set; }
 
     public void Initialize()
     {
@@ -86,7 +88,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             IsReady = true;
         };
     }
-    
+
     public void SetPresence(TrackResponse response)
     {
         Track track = response.RecentTracks.Tracks[0];
@@ -117,7 +119,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             }
         }
 
-        Button[] buttons = _saveCfgService.SaveCfg.UserRPCCfg.UserButtons
+        List<Button> buttons = _saveCfgService.SaveCfg.UserRPCCfg.UserButtons
             .Select(
                 button => new Button
                 {
@@ -125,8 +127,8 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
                     Url = button.Link
                 }
             )
-            .ToArray();
-        
+            .ToList();
+
         RichPresence presence = new RichPresence
         {
             Details = GetUTF8String(track.Name),
@@ -138,7 +140,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
                 SmallImageKey = smallImage,
                 SmallImageText = smallText
             },
-            Buttons = buttons
+            Buttons = buttons.ToArray()
         };
 
         _previewControlViewModel.State = presence.State;
@@ -147,10 +149,18 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         _previewControlViewModel.LargeImage.URL = presence.Assets.LargeImageKey;
         _previewControlViewModel.SmallImage.Text = presence.Assets.SmallImageText;
         _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
-        
-        
+        _previewControlViewModel.Buttons = new ObservableCollection<PreviewControlViewModel.PreviewButton>(
+            buttons.Select(
+                    button => new PreviewControlViewModel.PreviewButton
+                    {
+                        Text = button.Label,
+                        URL = button.Url
+                    })
+                .ToList());
+
+
         _client?.SetPresence(presence);
-        
+
         return;
 
         string GetTimeString(TimeSpan timeSince)
@@ -191,14 +201,14 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         {
             return;
         }
-        
+
         try
         {
             _client.ClearPresence();
         }
         catch (Exception ex) when (ex is ObjectDisposedException or UninitializedException) { }
     }
-    
+
     public void Dispose()
     {
         if (_client is null)
