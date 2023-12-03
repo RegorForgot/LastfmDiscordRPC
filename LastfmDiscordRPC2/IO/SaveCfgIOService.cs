@@ -57,4 +57,9 @@ public sealed class SaveCfgIOService : AbstractIOService
             _loggingService.Error("Fatal IO Exception!");
         }
     }
+
+    public SaveCfg GetSaveSnapshot()
+    {
+        return new SaveCfg(SaveCfg);
+    }
 }

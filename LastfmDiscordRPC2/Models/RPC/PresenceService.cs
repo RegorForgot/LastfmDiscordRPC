@@ -20,14 +20,14 @@ public sealed class PresenceService : IPresenceService
     private readonly SaveCfgIOService _saveCfgService;
     private readonly UIContext _context;
 
-    private PeriodicTimer? _timer;
+    private PeriodicTimer _timer;
     private bool _isFirstSuccess;
     private bool _isPresenceExpired;
     private bool _isPresenceTurnedOff;
-    
+
     private int _exceptionCount;
     private long _presenceStartedTime;
-    
+
     private bool IsRetry => _exceptionCount <= 3;
 
     public PresenceService(
@@ -42,6 +42,7 @@ public sealed class PresenceService : IPresenceService
         _discordClient = discordClient;
         _saveCfgService = saveCfgService;
         _context = context;
+        _timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
     }
 
     public async Task SetPresence()
@@ -50,11 +51,12 @@ public sealed class PresenceService : IPresenceService
         _isPresenceExpired = false;
         _isPresenceTurnedOff = false;
         _exceptionCount = 0;
+        SaveCfg saveSnapshot = _saveCfgService.GetSaveSnapshot();
 
         try
         {
-            _discordClient.Initialize();
             _isFirstSuccess = true;
+            _discordClient.Initialize(saveSnapshot);
 
             using (_timer = new PeriodicTimer(TimeSpan.FromSeconds(2)))
             {
@@ -62,7 +64,7 @@ public sealed class PresenceService : IPresenceService
                 {
                     try
                     {
-                        TrackResponse response = await _lastfmService.GetRecentTracks(_saveCfgService.SaveCfg.UserAccount.Username);
+                        TrackResponse response = await _lastfmService.GetRecentTracks(saveSnapshot.UserAccount.Username);
                         _isPresenceTurnedOff = !UpdatePresence(response);
                     }
                     catch (Exception e)
@@ -78,7 +80,7 @@ public sealed class PresenceService : IPresenceService
                         }
                     }
 
-                    _isPresenceExpired = IsPresenceExpired();
+                    _isPresenceExpired = IsPresenceExpired(saveSnapshot.UserRPCCfg.SleepTime);
                 }
             }
 
@@ -92,12 +94,12 @@ public sealed class PresenceService : IPresenceService
         {
             _loggingService.Info("Presence disconnected due to inactivity.");
         }
-        
+
         if (_isPresenceTurnedOff)
         {
             _loggingService.Info("Presence disabled.");
         }
-        
+
         ClearPresence();
     }
 
@@ -108,7 +110,7 @@ public sealed class PresenceService : IPresenceService
             _loggingService.Info("No tracks found for user.");
             return false;
         }
-        
+
         if (_isFirstSuccess)
         {
             _loggingService.Info("Track successfully received! Attempting to connect to presence...");
@@ -127,7 +129,7 @@ public sealed class PresenceService : IPresenceService
             _isFirstSuccess = false;
             return true;
         }
-        
+
         _loggingService.Warning("Discord client not initialised. Please restart and use a valid ID.");
         return false;
     }
@@ -136,13 +138,12 @@ public sealed class PresenceService : IPresenceService
     {
         _isPresenceTurnedOff = true;
     }
-    
 
-    public void ClearPresence()
+
+    private void ClearPresence()
     {
-        _timer?.Dispose();
         _discordClient.ClearPresence();
-        
+
         _context.IsRichPresenceActivated = false;
     }
 
@@ -167,17 +168,20 @@ public sealed class PresenceService : IPresenceService
                 return false;
         }
     }
-        
-    private bool IsPresenceExpired()
+
+    private bool IsPresenceExpired(long sleepTime)
     {
         long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
 
         long timeSincePresenceStarted = currentTime - _presenceStartedTime;
         long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
 
-        return timeSincePresenceStarted > _saveCfgService.SaveCfg.UserRPCCfg.SleepTime &&
-                             timeSinceLastScrobble > _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
+        return timeSincePresenceStarted > sleepTime && timeSinceLastScrobble > sleepTime;
     }
 
-    public void Dispose() => ClearPresence();
+    public void Dispose()
+    {
+        ClearPresence();
+        _timer.Dispose();
+    }
 }

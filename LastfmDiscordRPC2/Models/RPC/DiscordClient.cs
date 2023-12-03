@@ -20,27 +20,36 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
 
     private DiscordRpcClient? _client;
-    private readonly SaveCfgIOService _saveCfgService;
     private readonly LoggingService _loggingService;
     private readonly PreviewControlViewModel _previewControlViewModel;
     private readonly LastfmAPIService _lastfmService;
 
+    private SaveCfg _saveSnapshot;
+    private Button[] _buttons;
+
     public bool IsReady { get; private set; }
 
     public DiscordClient(
-        SaveCfgIOService saveCfgService,
         LastfmAPIService lastfmService,
         LoggingService loggingService,
         PreviewControlViewModel previewControlViewModel)
     {
-        _saveCfgService = saveCfgService;
         _lastfmService = lastfmService;
         _loggingService = loggingService;
         _previewControlViewModel = previewControlViewModel;
     }
 
-    public void Initialize()
+    public void Initialize(SaveCfg saveCfg)
     {
+        _saveSnapshot = saveCfg;
+        _buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
+            button => new Button
+            {
+                Label = button.Label,
+                Url = button.Link
+            }
+        ).ToArray();
+        
         if (_client is not null && _client.IsInitialized)
         {
             return;
@@ -48,7 +57,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
         IsReady = false;
 
-        _client = new DiscordRpcClient(_saveCfgService.SaveCfg.UserRPCCfg.AppID);
+        _client = new DiscordRpcClient(_saveSnapshot.UserRPCCfg.AppID);
         _client.Logger = _loggingService;
         _client.Initialize();
 
@@ -89,27 +98,27 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         };
     }
 
-    public void SetPresence(TrackResponse response)
+    private RichPresence GetRichPresence(TrackResponse response)
     {
         Track track = response.RecentTracks.Tracks[0];
-        string smallImage;
+
+        string smallImage = track.NowPlaying.State == "true" ? PlayIconURL : PauseIconURL;
         string smallText;
-        string albumName = IsNullOrEmpty(track.Album.Name) ? "" : $" | On {track.Album.Name}";
-        string image = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL;
+
+        string? albumString = IsNullOrEmpty(track.Album.Name) ? null : $" | On {track.Album.Name}";
+        string largeImage = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL;
 
         if (track.NowPlaying.State == "true")
         {
-            smallImage = PlayIconURL;
             smallText = "Now playing";
             _lastfmService.LastScrobbleTime = DateTimeOffset.Now.ToUnixTimeSeconds();
         }
         else
         {
-            smallImage = PauseIconURL;
-
-            if (long.TryParse(track.Date.Timestamp, NumberStyles.Number, null, out long lastScrobbleTime))
+            bool success = long.TryParse(track.Date.Timestamp, NumberStyles.Number, null, out long unixLastScrobbleTime);
+            if (success)
             {
-                _lastfmService.LastScrobbleTime = lastScrobbleTime;
+                _lastfmService.LastScrobbleTime = unixLastScrobbleTime;
                 TimeSpan timeSince = TimeSpan.FromSeconds(DateTimeOffset.Now.ToUnixTimeSeconds() - _lastfmService.LastScrobbleTime);
                 smallText = $"Last played {GetTimeString(timeSince)}";
             }
@@ -119,49 +128,19 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             }
         }
 
-        List<Button> buttons = _saveCfgService.SaveCfg.UserRPCCfg.UserButtons
-            .Select(
-                button => new Button
-                {
-                    Label = button.Label,
-                    Url = button.Link
-                }
-            )
-            .ToList();
-
-        RichPresence presence = new RichPresence
+        return new RichPresence
         {
             Details = GetUTF8String(track.Name),
-            State = GetUTF8String($"By {track.Artist.Name}{albumName}"),
+            State = GetUTF8String($"By {track.Artist.Name}{albumString ?? ""}"),
             Assets = new DiscordRPC.Assets
             {
-                LargeImageKey = image,
+                LargeImageKey = largeImage,
                 LargeImageText = $"{(IsNullOrEmpty(track.Album.Name) ? null : track.Album.Name)}",
                 SmallImageKey = smallImage,
                 SmallImageText = smallText
             },
-            Buttons = buttons.ToArray()
+            Buttons = _buttons
         };
-
-        _previewControlViewModel.State = presence.State;
-        _previewControlViewModel.Details = presence.Details;
-        _previewControlViewModel.LargeImage.Text = presence.Assets.LargeImageText;
-        _previewControlViewModel.LargeImage.URL = presence.Assets.LargeImageKey;
-        _previewControlViewModel.SmallImage.Text = presence.Assets.SmallImageText;
-        _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
-        _previewControlViewModel.Buttons = new ObservableCollection<PreviewControlViewModel.PreviewButton>(
-            buttons.Select(
-                    button => new PreviewControlViewModel.PreviewButton
-                    {
-                        Text = button.Label,
-                        URL = button.Url
-                    })
-                .ToList());
-
-
-        _client?.SetPresence(presence);
-
-        return;
 
         string GetTimeString(TimeSpan timeSince)
         {
@@ -192,6 +171,34 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
             return Encoding.UTF8.GetString(buffer, 0, bytesUsed);
         }
+    }
+
+    private void SetPreview(RichPresence presence)
+    {
+        _previewControlViewModel.State = presence.State;
+        _previewControlViewModel.Details = presence.Details;
+        _previewControlViewModel.LargeImage.Text = presence.Assets.LargeImageText;
+        _previewControlViewModel.LargeImage.URL = presence.Assets.LargeImageKey;
+        _previewControlViewModel.SmallImage.Text = presence.Assets.SmallImageText;
+        _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
+
+        var buttons =
+            _buttons.ToList().Select(
+                button => new PreviewControlViewModel.PreviewButton
+                {
+                    URL = button.Url,
+                    Text = button.Label
+                }
+            ).ToList();
+
+        _previewControlViewModel.Buttons = new ObservableCollection<PreviewControlViewModel.PreviewButton>(buttons);
+    }
+
+    public void SetPresence(TrackResponse response)
+    {
+        RichPresence presence = GetRichPresence(response);
+        SetPreview(presence);
+        _client?.SetPresence(presence);
     }
 
     public void ClearPresence()
