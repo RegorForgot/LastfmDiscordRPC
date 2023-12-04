@@ -51,15 +51,12 @@ public sealed class PresenceService : IPresenceService
         _presenceStartedTime = DateTimeOffset.Now.ToUnixTimeSeconds();
         _exceptionCount = 0;
         SaveCfg saveSnapshot = _saveCfgService.GetSaveSnapshot();
-        
+
         _isFirstSuccess = true;
         _discordClient.Initialize(saveSnapshot);
         await WaitUntilConnected();
         await PresenceLoop(saveSnapshot);
-        
-        _loggingService.Info("Presence has been expired");
 
-        ClearPresence();
         return;
 
         Task WaitUntilConnected()
@@ -98,7 +95,8 @@ public sealed class PresenceService : IPresenceService
         }
         catch (OperationCanceledException)
         {
-            // Disposed
+            _loggingService.Info("Presence has been expired.");
+            ClearPresence();
         }
     }
 
@@ -162,7 +160,7 @@ public sealed class PresenceService : IPresenceService
                 return IsRetry;
             }
             default:
-                    _loggingService.Error("Unhandled exception! Please report to developers\n{0}\n{1}", e.Message, e.StackTrace ?? Empty);
+                _loggingService.Error("Unhandled exception! Please report to developers\n{0}\n{1}", e.Message, e.StackTrace ?? Empty);
                 return false;
         }
     }
