@@ -4,8 +4,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
+using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Models.RPC;
+using static LastfmDiscordRPC2.DataTypes.ParsingStringStruct;
 
 namespace LastfmDiscordRPC2.Utilities;
 
@@ -13,7 +16,18 @@ public static class DiscordClientExtensions
 {
     private const string ParserRegex = "{[^{}]+}";
 
-    public static string GetParsedString(this DiscordClient client, TrackResponse response, string? stringToParse)
+    public static string GetParsedLink(this DiscordClient client, TrackResponse response, string? stringToParse, BytesEnum bytesToClip)
+    {
+        string parsedString = new string(stringToParse);
+        
+        IEnumerable<string> parsingItems = GetItemsToParse(stringToParse ?? Empty);
+
+        parsedString = 
+            parsingItems.Aggregate(parsedString, (current, item) => current.Replace(item, HttpUtility.UrlEncode(GetParsedItem(response, item))));
+        return GetUTF8String(parsedString, bytesToClip);
+    }
+    
+    public static string GetParsedString(this DiscordClient client, TrackResponse response, string? stringToParse, BytesEnum bytesToClip)
     {
         string parsedString = new string(stringToParse);
         
@@ -21,7 +35,7 @@ public static class DiscordClientExtensions
         
         parsedString = 
             parsingItems.Aggregate(parsedString, (current, parsingItem) => current.Replace(parsingItem, GetParsedItem(response, parsingItem)));
-        return GetUTF8String(parsedString);
+        return GetUTF8String(parsedString, bytesToClip);
     }
 
     private static IEnumerable<string> GetItemsToParse(string stringToParse) =>
@@ -32,17 +46,17 @@ public static class DiscordClientExtensions
         Track firstTrack = response.RecentTracks.Tracks[0];
         switch (itemToBeParsed)
         {
-            case ParsingStrings.PlayCount:
-                return response.RecentTracks.Footer.PlayCount;
-            case ParsingStrings.TrackName:
+            case PlayCount:
+                return long.Parse(response.RecentTracks.Footer.PlayCount).ToString("N0");
+            case TrackName:
                 return firstTrack.Name;
-            case ParsingStrings.ArtistName:
+            case ArtistName:
                 return firstTrack.Artist.Name;
-            case ParsingStrings.AlbumName:
+            case AlbumName:
                 return firstTrack.Album.Name;
-            case ParsingStrings.CurrentState:
+            case CurrentState:
                 return firstTrack.NowPlaying.State == Empty ? Empty : "Now playing";
-            case ParsingStrings.Timestamp:
+            case Timestamp:
                 bool success =
                     long.TryParse(firstTrack.Date.Timestamp, NumberStyles.Number, null, out long unixLastScrobbleTime);
                 if (!success)
@@ -56,7 +70,7 @@ public static class DiscordClientExtensions
         }
     }
 
-    private static string GetUTF8String(string input)
+    private static string GetUTF8String(string input, BytesEnum bytesToClip)
     {
         if (IsNullOrEmpty(input))
         {
@@ -68,12 +82,12 @@ public static class DiscordClientExtensions
             input += "\u180E";
         }
 
-        if (Encoding.UTF8.GetByteCount(input) <= 128)
+        if (Encoding.UTF8.GetByteCount(input) <= (int)bytesToClip)
         {
             return input;
         }
 
-        byte[] buffer = new byte[128];
+        byte[] buffer = new byte[(int)bytesToClip];
         char[] inputChars = input.ToCharArray();
         Encoding.UTF8.GetEncoder().Convert(inputChars, 0, inputChars.Length, buffer, 0, buffer.Length,
             false, out _, out int bytesUsed, out _);
@@ -89,15 +103,5 @@ public static class DiscordClientExtensions
         string seconds = timeSince.Seconds == 0 ? "" : $"{timeSince.Seconds % 60}s";
 
         return $"Last played {days}{hours}{minutes}{seconds} ago";
-    }
-
-    public struct ParsingStrings
-    {
-        internal const string PlayCount = "{PlayCount}";
-        internal const string TrackName = "{TrackName}";
-        internal const string ArtistName = "{ArtistName}";
-        internal const string AlbumName = "{AlbumName}";
-        internal const string CurrentState = "{Playing}";
-        internal const string Timestamp = "{TimeSincePlayed}";
     }
 }

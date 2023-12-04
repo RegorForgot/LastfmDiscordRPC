@@ -1,4 +1,4 @@
-﻿namespace LastfmDiscordRPC2.Enums;
+﻿namespace LastfmDiscordRPC2.DataTypes;
 
 public enum OSEnum
 {

@@ -2,13 +2,12 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reactive;
 using System.Threading.Tasks;
-using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Utilities;
-using LastfmDiscordRPC2.ViewModels.Controls;
 using ReactiveUI;
 using static System.Text.RegularExpressions.Regex;
 using static LastfmDiscordRPC2.Utilities.Utilities;
@@ -80,7 +79,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     public ReactiveCommand<Unit, Unit> ResetAppIDCmd { get; }
     
     public bool StartUpVisible { get; set; }
-    public LoggingControlViewModel LoggingControlViewModel { get; }
             
     private readonly LastfmAPIService _lastfmService;
     private readonly SaveCfgIOService _saveCfgService;
@@ -95,7 +93,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     
     public SettingsViewModel(
         LastfmAPIService lastfmService,
-        LoggingControlViewModel loggingControlViewModel,
         SaveCfgIOService saveCfgService,
         LoggingService loggingService,
         UIContext context) : base (context)
@@ -103,7 +100,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         _lastfmService = lastfmService;
         _saveCfgService = saveCfgService;
         _loggingService = loggingService;
-        LoggingControlViewModel = loggingControlViewModel;
 
         LaunchOnStartupCmd = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLoginCmd = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);

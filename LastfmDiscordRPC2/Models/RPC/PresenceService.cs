@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
@@ -153,7 +153,7 @@ public sealed class PresenceService : IPresenceService
             {
                 _loggingService.Error("Last.fm {0}", exception.Message);
                 _exceptionCount++;
-                return exception.ErrorCode is LastfmErrorCode.Temporary or LastfmErrorCode.OperationFail && IsRetry;
+                return exception.ErrorCodeEnum is LastfmErrorCodeEnum.Temporary or LastfmErrorCodeEnum.OperationFail && IsRetry;
             }
             case HttpRequestException requestException:
             {
@@ -162,7 +162,7 @@ public sealed class PresenceService : IPresenceService
                 return IsRetry;
             }
             default:
-                _loggingService.Error("Unhandled exception! Please report to developers\n{0}", e.StackTrace ?? e.Message);
+                    _loggingService.Error("Unhandled exception! Please report to developers\n{0}\n{1}", e.Message, e.StackTrace ?? Empty);
                 return false;
         }
     }

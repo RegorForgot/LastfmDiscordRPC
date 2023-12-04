@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.DataTypes;
 
 namespace LastfmDiscordRPC2;
 

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
+using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
@@ -105,25 +106,28 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
                 _lastfmService.LastScrobbleTime = unixLastScrobbleTime;
             }
         }
+
+        string label = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.UserButtons[0].Label, BytesEnum.ButtonLabel);
+        string Url = this.GetParsedLink(response, _saveSnapshot.UserRPCCfg.UserButtons[0].Link, BytesEnum.ButtonLink);
         
         Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
             button => new Button
             {
-                Label = this.GetParsedString(response, button.Label),
-                Url = this.GetParsedString(response, button.Link)
+                Label = this.GetParsedString(response, button.Label, BytesEnum.ButtonLabel),
+                Url = this.GetParsedLink(response, button.Link, BytesEnum.ButtonLink)
             }
         ).ToArray();
 
         return new RichPresence
         {
-            Details = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.Details),
-            State = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.State),
+            Details = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.Details, BytesEnum.Default),
+            State = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.State, BytesEnum.Default),
             Assets = new DiscordRPC.Assets
             {
                 LargeImageKey = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL,
-                LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageText),
+                LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageText, BytesEnum.Default),
                 SmallImageKey = track.NowPlaying.State == "true" ? PlayIconURL : PauseIconURL,
-                SmallImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.SmallImageText)
+                SmallImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.SmallImageText, BytesEnum.Default)
             },
             Buttons = buttons
         };

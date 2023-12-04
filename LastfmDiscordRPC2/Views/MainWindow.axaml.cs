@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Media;
-using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Panes;
 

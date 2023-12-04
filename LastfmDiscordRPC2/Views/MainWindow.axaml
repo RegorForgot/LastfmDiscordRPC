@@ -1,7 +1,7 @@
 <Window
-    Height="450"
+    Height="500"
     Icon="/Assets/icon.ico"
-    MinHeight="450"
+    MinHeight="500"
     MinWidth="800"
     Title="LastfmDiscordRPC2"
     Width="800"

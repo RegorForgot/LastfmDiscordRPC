@@ -47,7 +47,7 @@ public sealed class SaveCfgIOService : AbstractIOService
         {
             lock (FileLock)
             {
-                string serializedData = JsonConvert.SerializeObject(configData);
+                string serializedData = JsonConvert.SerializeObject(configData, Formatting.Indented);
                 WriteToFile(serializedData);
                 SaveCfg = configData;
             }

@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.Models.Responses;
 using Newtonsoft.Json;
@@ -63,7 +63,7 @@ public sealed class LastfmAPIService : IAPIService
 
                 timer.Dispose();
             }
-            catch (LastfmException e) when (e.ErrorCode is LastfmErrorCode.UnauthorizedToken) { }
+            catch (LastfmException e) when (e.ErrorCodeEnum is LastfmErrorCodeEnum.UnauthorizedToken) { }
         } while (true);
     }
 
@@ -91,7 +91,7 @@ public sealed class LastfmAPIService : IAPIService
         }
         
         LastfmErrorResponse e = JsonConvert.DeserializeObject<LastfmErrorResponse>(response.Content)!;
-        if (e.Error != LastfmErrorCode.OK)
+        if (e.Error != LastfmErrorCodeEnum.OK)
         {   
             throw new LastfmException(e.Message, e.Error);
         }

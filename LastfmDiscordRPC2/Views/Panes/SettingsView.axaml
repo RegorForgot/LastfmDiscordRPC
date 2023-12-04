@@ -1,12 +1,7 @@
 <UserControl
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d"
     x:Class="LastfmDiscordRPC2.Views.Panes.SettingsView"
     xmlns="https://github.com/avaloniaui"
     xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -62,18 +57,6 @@
                     Content="Reset"
                     IsEnabled="{Binding CanReset}"
                     Margin="0,10,10,10" />
-            </StackPanel>
-            <StackPanel>
-                <TextBox
-                    AcceptsReturn="True"
-                    DataContext="{Binding LoggingControlViewModel}"
-                    Focusable="False"
-                    FontFamily="Consolas"
-                    Height="200"
-                    IsReadOnly="True"
-                    Text="{Binding ConsoleText, Mode=TwoWay}"
-                    TextChanged="RPCConsoleOnTextChanged"
-                    TextWrapping="WrapWithOverflow" />
             </StackPanel>
         </StackPanel>
         <StackPanel

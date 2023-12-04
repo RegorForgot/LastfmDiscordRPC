@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.DataTypes;
+using static LastfmDiscordRPC2.Utilities.Utilities;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace LastfmDiscordRPC2.IO;
@@ -57,5 +58,10 @@ public abstract class AbstractIOService
         {
             Directory.CreateDirectory(SaveFolder);
         }
+    }
+
+    public static void OpenFolder()
+    {
+        OpenWebpage(SaveFolder);
     }
 }

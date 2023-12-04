@@ -1,22 +1,22 @@
 ﻿using System;
-using LastfmDiscordRPC2.Enums;
+using LastfmDiscordRPC2.DataTypes;
 
 namespace LastfmDiscordRPC2.Exceptions;
 
 public sealed class LastfmException : Exception
 {
     public override string Message { get; }
-    public LastfmErrorCode ErrorCode { get; }
+    public LastfmErrorCodeEnum ErrorCodeEnum { get; }
 
     public LastfmException() : base()
     {
-        ErrorCode = LastfmErrorCode.Unknown;
-        Message = $"{ErrorCode.ToString()}";
+        ErrorCodeEnum = LastfmErrorCodeEnum.Unknown;
+        Message = $"{ErrorCodeEnum.ToString()}";
     }
     
-    public LastfmException(string message, LastfmErrorCode code)
+    public LastfmException(string message, LastfmErrorCodeEnum codeEnum)
     {
-        Message = $"{code.ToString()}: {message}";
-        ErrorCode = code;
+        Message = $"{codeEnum.ToString()}: {message}";
+        ErrorCodeEnum = codeEnum;
     }
 }

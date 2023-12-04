@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using static LastfmDiscordRPC2.Utilities.DiscordClientExtensions.ParsingStrings;
+using static LastfmDiscordRPC2.DataTypes.ParsingStringStruct;
 
 namespace LastfmDiscordRPC2.IO;
 
