@@ -20,11 +20,10 @@ public sealed class PresenceService : IPresenceService
     private readonly SaveCfgIOService _saveCfgService;
     private readonly UIContext _context;
 
-    private PeriodicTimer _timer;
-    private bool _isFirstSuccess;
-    private bool _isPresenceExpired;
-    private bool _isPresenceTurnedOff;
+    private readonly PeriodicTimer _timer;
+    private CancellationTokenSource _timerCancellationTokenSource;
 
+    private bool _isFirstSuccess;
     private int _exceptionCount;
     private long _presenceStartedTime;
 
@@ -43,13 +42,13 @@ public sealed class PresenceService : IPresenceService
         _saveCfgService = saveCfgService;
         _context = context;
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+        _timerCancellationTokenSource = new CancellationTokenSource();
     }
 
     public async Task SetPresence()
     {
+        _timerCancellationTokenSource = new CancellationTokenSource();
         _presenceStartedTime = DateTimeOffset.Now.ToUnixTimeSeconds();
-        _isPresenceExpired = false;
-        _isPresenceTurnedOff = false;
         _exceptionCount = 0;
         SaveCfg saveSnapshot = _saveCfgService.GetSaveSnapshot();
 
@@ -57,58 +56,65 @@ public sealed class PresenceService : IPresenceService
         {
             _isFirstSuccess = true;
             _discordClient.Initialize(saveSnapshot);
-
-            using (_timer = new PeriodicTimer(TimeSpan.FromSeconds(2)))
-            {
-                while (await _timer.WaitForNextTickAsync() && !_isPresenceExpired && !_isPresenceTurnedOff)
-                {
-                    try
-                    {
-                        TrackResponse response = await _lastfmService.GetRecentTracks(saveSnapshot.UserAccount.Username);
-                        _isPresenceTurnedOff = !UpdatePresence(response);
-                    }
-                    catch (Exception e)
-                    {
-                        bool retry = HandleError(e);
-                        if (retry)
-                        {
-                            _loggingService.Info($"Attempting to reconnect... Try {_exceptionCount}");
-                        }
-                        else
-                        {
-                            _isPresenceTurnedOff = true;
-                        }
-                    }
-
-                    _isPresenceExpired = IsPresenceExpired(saveSnapshot.UserRPCCfg.SleepTime);
-                }
-            }
-
+            await WaitUntilConnected();
+            await PresenceLoop(saveSnapshot);
         }
-        catch
+        catch (Exception e)
         {
-            // ignored
+            _loggingService.Error(e.Message);
         }
 
-        if (_isPresenceExpired)
-        {
-            _loggingService.Info("Presence disconnected due to inactivity.");
-        }
-
-        if (_isPresenceTurnedOff)
-        {
-            _loggingService.Info("Presence disabled.");
-        }
+        _loggingService.Info("Presence has been expired");
 
         ClearPresence();
+        return;
+
+        Task WaitUntilConnected()
+        {
+            while (!_discordClient.IsReady) { }
+            return Task.CompletedTask;
+        }
+    }
+    
+    private async Task PresenceLoop(SaveCfg saveSnapshot)
+    {
+        try
+        {
+            while (await _timer.WaitForNextTickAsync(_timerCancellationTokenSource.Token).ConfigureAwait(false))
+            {
+                try
+                {
+                    TrackResponse response = await _lastfmService.GetRecentTracks(saveSnapshot.UserAccount.Username);
+                    UpdatePresence(response);
+                }
+                catch (Exception e)
+                {
+                    bool retry = HandleError(e);
+                    if (retry)
+                    {
+                        _loggingService.Info($"Attempting to reconnect... Try {_exceptionCount}");
+                    }
+                    else
+                    {
+                        _timerCancellationTokenSource.Cancel();
+                    }
+                }
+
+                PresenceExpiry(saveSnapshot.UserRPCCfg.SleepTime);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Disposed
+        }
     }
 
-    private bool UpdatePresence(TrackResponse response)
+    private void UpdatePresence(TrackResponse response)
     {
         if (response.RecentTracks.Tracks.Count == 0)
         {
             _loggingService.Info("No tracks found for user.");
-            return false;
+            UnsetPresence();
         }
 
         if (_isFirstSuccess)
@@ -127,23 +133,22 @@ public sealed class PresenceService : IPresenceService
             }
 
             _isFirstSuccess = false;
-            return true;
+            return;
         }
 
         _loggingService.Warning("Discord client not initialised. Please restart and use a valid ID.");
-        return false;
+        UnsetPresence();
     }
 
     public void UnsetPresence()
     {
-        _isPresenceTurnedOff = true;
+        _timerCancellationTokenSource.Cancel();
     }
 
 
     private void ClearPresence()
     {
         _discordClient.ClearPresence();
-
         _context.IsRichPresenceActivated = false;
     }
 
@@ -169,19 +174,24 @@ public sealed class PresenceService : IPresenceService
         }
     }
 
-    private bool IsPresenceExpired(long sleepTime)
+    private void PresenceExpiry(long sleepTime)
     {
         long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
 
         long timeSincePresenceStarted = currentTime - _presenceStartedTime;
         long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
 
-        return timeSincePresenceStarted > sleepTime && timeSinceLastScrobble > sleepTime;
+        bool expired = timeSincePresenceStarted > sleepTime && timeSinceLastScrobble > sleepTime;
+        if (expired)
+        {
+            _timerCancellationTokenSource.Cancel();
+        }
     }
 
     public void Dispose()
     {
         ClearPresence();
         _timer.Dispose();
+        _timerCancellationTokenSource.Dispose();
     }
 }
