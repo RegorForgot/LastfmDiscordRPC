@@ -24,7 +24,6 @@
             <Setter Property="Width" Value="60" />
             <Setter Property="Height" Value="60" />
             <Setter Property="CornerRadius" Value="15" />
-            <Setter Property="Margin" Value="5 0 0 5" />
             <Setter Property="Padding" Value="0" />
         </Style>
         <Style Selector="Border.PageButton Image">
@@ -38,6 +37,10 @@
         <Style Selector="Border.PageButton StackPanel">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style Selector="TabItem:pointerover Border.PageButton">
+            <Setter Property="Background" Value="#10D0D0D0" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
         <Style Selector="TabItem:selected Border.PageButton">
             <Setter Property="Background" Value="#60D0D0D0" />
         </Style>
@@ -45,7 +48,7 @@
             <Setter Property="Background" Value="#40A0A0A0" />
             <Setter Property="CornerRadius" Value="15" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="10" />
+            <Setter Property="Padding" Value="0" />
         </Style>
     </Window.Styles>
 

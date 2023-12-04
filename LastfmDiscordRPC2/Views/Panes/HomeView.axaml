@@ -6,6 +6,17 @@
     xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <UserControl.Styles>
+        <Style Selector="Button.Presence">
+            <Setter Property="Height" Value="50" />
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+    </UserControl.Styles>
+
     <UserControl.Resources>
         <converters:SetPresenceConverter x:Key="SetPresenceConverter" />
     </UserControl.Resources>
@@ -22,13 +33,14 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <Button
+                Classes="Presence"
                 Command="{Binding SetPresence}"
                 CommandParameter="{Binding Context.IsRichPresenceActivated}"
                 Content="{Binding Context.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
                 IsEnabled="{Binding CanSetPresence}" />
         </StackPanel>
         <StackPanel Grid.Row="1" IsVisible="{Binding Context.IsRichPresenceActivated}">
-            <controls:PreviewControlView DataContext="{Binding PreviewControlViewModel}" />
+            <controls:PreviewControlView DataContext="{Binding PreviewControlViewModel}" Margin="0" />
         </StackPanel>
         <StackPanel
             Grid.Row="2"

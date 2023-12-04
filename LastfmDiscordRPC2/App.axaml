@@ -3,6 +3,10 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Application.Resources>
+        <FontFamily x:Key="Source Sans Pro">avares://LastfmDiscordRPC2/Assets/Fonts#Source Sans Pro</FontFamily>
+    </Application.Resources>
+
     <Application.Styles>
         <FluentTheme />
         <Style Selector="DataValidationErrors">
@@ -22,6 +26,12 @@
                 </ControlTemplate>
             </Setter>
         </Style>
+        <Style Selector="Label">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+        </Style>
         <Style Selector="Button">
             <Setter Property="Margin" Value="10,10,10,10" />
         </Style>
@@ -29,4 +39,5 @@
             <Setter Property="Foreground" Value="Yellow" />
         </Style>
     </Application.Styles>
+
 </Application>

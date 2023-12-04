@@ -56,6 +56,10 @@
         <DependentUpon>HomeView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\Controls\PreviewSettingControlView.axaml.cs">
+        <DependentUpon>PreviewSettingControlView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
