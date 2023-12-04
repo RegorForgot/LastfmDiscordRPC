@@ -106,9 +106,6 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
                 _lastfmService.LastScrobbleTime = unixLastScrobbleTime;
             }
         }
-
-        string label = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.UserButtons[0].Label, BytesEnum.ButtonLabel);
-        string Url = this.GetParsedLink(response, _saveSnapshot.UserRPCCfg.UserButtons[0].Link, BytesEnum.ButtonLink);
         
         Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
             button => new Button
