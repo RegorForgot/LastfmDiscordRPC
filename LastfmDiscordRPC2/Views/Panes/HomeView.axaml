@@ -37,6 +37,7 @@
                 Command="{Binding SetPresence}"
                 CommandParameter="{Binding Context.IsRichPresenceActivated}"
                 Content="{Binding Context.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
+                Cursor="Hand"
                 IsEnabled="{Binding CanSetPresence}" />
         </StackPanel>
         <StackPanel Grid.Row="1" IsVisible="{Binding Context.IsRichPresenceActivated}">

@@ -23,6 +23,6 @@ public sealed class AboutViewModel : AbstractPaneViewModel
 
     private static void OpenGithub()
     {
-        OpenWebpage("https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
+        OpenURI("https://www.github.com/RegorForgotTheirPassword/LastfmDiscordRPC");
     }
 }

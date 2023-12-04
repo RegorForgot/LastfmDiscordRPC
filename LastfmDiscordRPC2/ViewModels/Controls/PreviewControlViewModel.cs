@@ -1,8 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
-using Avalonia;
 using ReactiveUI;
-using static LastfmDiscordRPC2.Utilities.Utilities;
 
 namespace LastfmDiscordRPC2.ViewModels.Controls;
 
@@ -13,7 +11,6 @@ public class PreviewControlViewModel : AbstractControlViewModel
     private ObservableCollection<PreviewButton> _buttons = new ObservableCollection<PreviewButton>();
     private string _details = Empty;
     private string _state = Empty;
-    private bool _sharpCorners;
     private PreviewImage _largeImage = new PreviewImage();
     private PreviewImage _smallImage = new PreviewImage();
 
@@ -41,7 +38,7 @@ public class PreviewControlViewModel : AbstractControlViewModel
         private set
         {
             this.RaiseAndSetIfChanged(ref _largeImage, value);
-            _largeImage.URL = value.URL;
+            _largeImage.URL = value.URL.Replace(@"/300x300", "");
             _largeImage.Text = value.Text;
         }
     }
@@ -56,28 +53,20 @@ public class PreviewControlViewModel : AbstractControlViewModel
             _smallImage.Text = value.Text;
         }
     }
-    
-    public bool SharpCorners
-    {
-        get => _sharpCorners;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _sharpCorners, value);
-            this.RaisePropertyChanged(nameof(ImageRadius));
-        }
-    }
 
-    public CornerRadius ImageRadius => SharpCorners ? new CornerRadius(0) : new CornerRadius(30);
-    public ReactiveCommand<Unit, Unit> ToggleCorners { get; }
-
-    public void ToggleCorner()
-    {
-        SharpCorners = !SharpCorners;
-    }
+    public ReactiveCommand<string, Unit> OpenAlbumArt { get; }
 
     public PreviewControlViewModel()
     {
-        ToggleCorners = ReactiveCommand.Create(ToggleCorner);
+        OpenAlbumArt = ReactiveCommand.Create<string>(OpenURI);
+    }
+
+    private static void OpenURI(string uri)
+    {
+        if (uri != PreviewImage.TransparentImage)
+        {
+            Utilities.Utilities.OpenURI(uri);
+        }
     }
     
     public void ClearAll()
@@ -109,18 +98,18 @@ public class PreviewControlViewModel : AbstractControlViewModel
 
     public sealed class PreviewImage : PreviewObject
     {
-        private const string TransparentImage = "https://i.imgur.com/qFmcbT0.png";
+        internal const string TransparentImage = "https://i.imgur.com/qFmcbT0.png";
         
         private string _url = TransparentImage;
         public new string URL
         {
             get => _url;
-            set => this.RaiseAndSetIfChanged(ref _url, value);
+            set => this.RaiseAndSetIfChanged(ref _url, value.Replace(@"/300x300", ""));
         }
     }
 
     public sealed class PreviewButton : PreviewObject
     {
-        public ReactiveCommand<string, Unit> OpenWebpageCmd { get; set; } = ReactiveCommand.Create<string>(OpenWebpage);
+        public ReactiveCommand<string, Unit> OpenWebpageCmd { get; set; } = ReactiveCommand.Create<string>(OpenURI);
     }
 }

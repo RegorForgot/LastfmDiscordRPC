@@ -48,7 +48,7 @@
             <Setter Property="Background" Value="#40A0A0A0" />
             <Setter Property="CornerRadius" Value="15" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="Padding" Value="0" />
+            <Setter Property="Padding" Value="5" />
         </Style>
     </Window.Styles>
 

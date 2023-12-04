@@ -162,7 +162,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         try
         {
             TokenResponse token = await _lastfmService.GetToken();
-            OpenWebpage($"https://www.last.fm/api/auth/?api_key={LastfmAPIKey}&token={token.Token}");
+            OpenURI($"https://www.last.fm/api/auth/?api_key={LastfmAPIKey}&token={token.Token}");
             SessionResponse sessionResponse = await _lastfmService.GetSession(token.Token);
 
             _saveCfgService.SaveCfg.UserAccount = new SaveCfg.Account

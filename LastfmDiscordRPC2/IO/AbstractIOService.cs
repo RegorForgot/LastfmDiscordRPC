@@ -62,6 +62,6 @@ public abstract class AbstractIOService
 
     public static void OpenFolder()
     {
-        OpenWebpage(SaveFolder);
+        OpenURI(SaveFolder);
     }
 }
