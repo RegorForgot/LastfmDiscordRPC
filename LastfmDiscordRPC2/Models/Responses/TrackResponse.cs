@@ -18,7 +18,7 @@ public record TrackResponse : ILastfmAPIResponse
 
     public record ResponseFooter
     {
-        [JsonProperty("total")] public string Playcount { get; init; }
+        [JsonProperty("total")] public string PlayCount { get; init; }
     }
 }
 

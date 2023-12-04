@@ -7,7 +7,6 @@ using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
-using LastfmDiscordRPC2.ViewModels.Controls;
 using LastfmDiscordRPC2.ViewModels.Panes;
 
 namespace LastfmDiscordRPC2;

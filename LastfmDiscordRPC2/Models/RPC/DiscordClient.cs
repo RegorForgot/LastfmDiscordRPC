@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
+using LastfmDiscordRPC2.Utilities;
 using LastfmDiscordRPC2.ViewModels.Controls;
 
 namespace LastfmDiscordRPC2.Models.RPC;
@@ -20,12 +19,12 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
 
     private DiscordRpcClient? _client;
+    
     private readonly LoggingService _loggingService;
     private readonly PreviewControlViewModel _previewControlViewModel;
     private readonly LastfmAPIService _lastfmService;
 
     private SaveCfg _saveSnapshot;
-    private Button[] _buttons;
 
     public bool IsReady { get; private set; }
 
@@ -42,13 +41,6 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     public void Initialize(SaveCfg saveCfg)
     {
         _saveSnapshot = saveCfg;
-        _buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
-            button => new Button
-            {
-                Label = button.Label,
-                Url = button.Link
-            }
-        ).ToArray();
         
         if (_client is not null && _client.IsInitialized)
         {
@@ -60,8 +52,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         _client = new DiscordRpcClient(_saveSnapshot.UserRPCCfg.AppID);
         _client.Logger = _loggingService;
         _client.Initialize();
-
-
+        
         SetEventHandlers();
     }
 
@@ -101,16 +92,9 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     private RichPresence GetRichPresence(TrackResponse response)
     {
         Track track = response.RecentTracks.Tracks[0];
-
-        string smallImage = track.NowPlaying.State == "true" ? PlayIconURL : PauseIconURL;
-        string smallText;
-
-        string? albumString = IsNullOrEmpty(track.Album.Name) ? null : $" | On {track.Album.Name}";
-        string largeImage = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL;
-
+        
         if (track.NowPlaying.State == "true")
         {
-            smallText = "Now playing";
             _lastfmService.LastScrobbleTime = DateTimeOffset.Now.ToUnixTimeSeconds();
         }
         else
@@ -119,58 +103,30 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             if (success)
             {
                 _lastfmService.LastScrobbleTime = unixLastScrobbleTime;
-                TimeSpan timeSince = TimeSpan.FromSeconds(DateTimeOffset.Now.ToUnixTimeSeconds() - _lastfmService.LastScrobbleTime);
-                smallText = $"Last played {GetTimeString(timeSince)}";
-            }
-            else
-            {
-                smallText = "Stopped.";
             }
         }
+        
+        Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
+            button => new Button
+            {
+                Label = this.GetParsedString(response, button.Label),
+                Url = this.GetParsedString(response, button.Link)
+            }
+        ).ToArray();
 
         return new RichPresence
         {
-            Details = GetUTF8String(track.Name),
-            State = GetUTF8String($"By {track.Artist.Name}{albumString ?? ""}"),
+            Details = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.Details),
+            State = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.State),
             Assets = new DiscordRPC.Assets
             {
-                LargeImageKey = largeImage,
-                LargeImageText = $"{(IsNullOrEmpty(track.Album.Name) ? null : track.Album.Name)}",
-                SmallImageKey = smallImage,
-                SmallImageText = smallText
+                LargeImageKey = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL,
+                LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageText),
+                SmallImageKey = track.NowPlaying.State == "true" ? PlayIconURL : PauseIconURL,
+                SmallImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.SmallImageText)
             },
-            Buttons = _buttons
+            Buttons = buttons
         };
-
-        string GetTimeString(TimeSpan timeSince)
-        {
-            string days = timeSince.Days == 0 ? "" : $"{timeSince.Days}d ";
-            string hours = timeSince.Hours == 0 ? "" : $"{timeSince.Hours % 24}h ";
-            string minutes = timeSince.Minutes == 0 ? "" : $"{timeSince.Minutes % 60}m ";
-            string seconds = timeSince.Seconds == 0 ? "" : $"{timeSince.Seconds % 60}s";
-
-            return $"{days}{hours}{minutes}{seconds}";
-        }
-
-        string GetUTF8String(string input)
-        {
-            if (input.Length < 2)
-            {
-                input += "\u180E";
-            }
-
-            if (Encoding.UTF8.GetByteCount(input) <= 128)
-            {
-                return input;
-            }
-
-            byte[] buffer = new byte[128];
-            char[] inputChars = input.ToCharArray();
-            Encoding.UTF8.GetEncoder().Convert(inputChars, 0, inputChars.Length, buffer, 0, buffer.Length,
-                false, out _, out int bytesUsed, out _);
-
-            return Encoding.UTF8.GetString(buffer, 0, bytesUsed);
-        }
     }
 
     private void SetPreview(RichPresence presence)
@@ -183,7 +139,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
 
         var buttons =
-            _buttons.ToList().Select(
+            presence.Buttons.ToList().Select(
                 button => new PreviewControlViewModel.PreviewButton
                 {
                     URL = button.Url,
@@ -191,7 +147,8 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
                 }
             ).ToList();
 
-        _previewControlViewModel.Buttons = new ObservableCollection<PreviewControlViewModel.PreviewButton>(buttons);
+        _previewControlViewModel.Buttons = 
+            new ObservableCollection<PreviewControlViewModel.PreviewButton>(buttons);
     }
 
     public void SetPresence(TrackResponse response)
