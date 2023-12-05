@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using static LastfmDiscordRPC2.DataTypes.ParsingStringStruct;
 
@@ -29,7 +30,7 @@ public record SaveCfg
     public record RPCCfg
     {
         [JsonProperty] public string? AppID { get; set; } = DefaultAppID;
-        [JsonProperty] public int SleepTime { get; set; } = 3600;
+        [JsonProperty] public TimeSpan SleepTime { get; set; } = TimeSpan.FromHours(1);
         [JsonProperty] public string? Details { get; set; } = $"🎵 {TrackName}";
         [JsonProperty] public string? State { get; set; } = $"{ArtistName} | 💿 {AlbumName}";
         [JsonProperty] public string? LargeImageText { get; set; } = AlbumName;

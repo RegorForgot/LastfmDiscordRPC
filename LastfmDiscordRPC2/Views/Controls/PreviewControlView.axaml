@@ -78,7 +78,7 @@
                         <Image
                             HorizontalAlignment="Center"
                             Margin="0"
-                            Stretch="Uniform"
+                            Stretch="UniformToFill"
                             UseLayoutRounding="True"
                             VerticalAlignment="Top"
                             asyncImageLoader:ImageLoader.Source="{Binding LargeImage.URL}" />

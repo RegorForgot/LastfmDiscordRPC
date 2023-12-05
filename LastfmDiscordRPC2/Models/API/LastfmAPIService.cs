@@ -12,7 +12,7 @@ namespace LastfmDiscordRPC2.Models.API;
 
 public sealed class LastfmAPIService : IAPIService
 {
-    public long LastScrobbleTime { get; set; }
+    public DateTimeOffset LastScrobbleTime { get; set; }
     public RestClient APIRestClient { get; init; }
     private readonly ISignatureAPIService _signatureAPIService;
 

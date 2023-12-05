@@ -58,6 +58,18 @@
                     IsEnabled="{Binding CanReset}"
                     Margin="0,10,10,10" />
             </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TimePicker
+                    ClockIdentifier="24HourClock"
+                    IsEnabled="{Binding !Context.IsRichPresenceActivated}"
+                    SelectedTime="{Binding PresenceExpiryTime, Mode=TwoWay}" />
+                <Button
+                    Command="{Binding SaveExpiryTimeCmd}"
+                    Content="Save"
+                    IsEnabled="{Binding !Context.IsRichPresenceActivated}"
+                    Margin="0,10,10,10" />
+            </StackPanel>
         </StackPanel>
         <StackPanel
             Grid.Row="1"

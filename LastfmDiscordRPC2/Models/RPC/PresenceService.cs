@@ -25,7 +25,7 @@ public sealed class PresenceService : IPresenceService
 
     private bool _isFirstSuccess;
     private int _exceptionCount;
-    private long _presenceStartedTime;
+    private DateTimeOffset _presenceStartedTime;
 
     private bool IsRetry => _exceptionCount <= 3;
 
@@ -48,7 +48,7 @@ public sealed class PresenceService : IPresenceService
     public async Task SetPresence()
     {
         _timerCancellationTokenSource = new CancellationTokenSource();
-        _presenceStartedTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        _presenceStartedTime = DateTimeOffset.Now;
         _exceptionCount = 0;
         SaveCfg saveSnapshot = _saveCfgService.GetSaveSnapshot();
 
@@ -165,12 +165,12 @@ public sealed class PresenceService : IPresenceService
         }
     }
 
-    private void PresenceExpiry(long sleepTime)
+    private void PresenceExpiry(TimeSpan sleepTime)
     {
-        long currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        DateTimeOffset currentTime = DateTimeOffset.Now;
 
-        long timeSincePresenceStarted = currentTime - _presenceStartedTime;
-        long timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
+        TimeSpan timeSincePresenceStarted = currentTime - _presenceStartedTime;
+        TimeSpan timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
 
         bool expired = timeSincePresenceStarted > sleepTime && timeSinceLastScrobble > sleepTime;
         if (expired)

@@ -96,14 +96,14 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         
         if (track.NowPlaying.State == "true")
         {
-            _lastfmService.LastScrobbleTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            _lastfmService.LastScrobbleTime = DateTimeOffset.Now;
         }
         else
         {
             bool success = long.TryParse(track.Date.Timestamp, NumberStyles.Number, null, out long unixLastScrobbleTime);
             if (success)
             {
-                _lastfmService.LastScrobbleTime = unixLastScrobbleTime;
+                _lastfmService.LastScrobbleTime = DateTimeOffset.FromUnixTimeSeconds(unixLastScrobbleTime);
             }
         }
         
