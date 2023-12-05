@@ -16,7 +16,7 @@ public static class DiscordClientExtensions
 {
     private const string ParserRegex = "{[^{}]+}";
 
-    public static string GetParsedLink(this DiscordClient client, TrackResponse response, string? stringToParse, BytesEnum bytesToClip)
+    public static string GetParsedLink(this DiscordClient client, TrackResponse response, string stringToParse, BytesEnum bytesToClip)
     {
         string parsedString = new string(stringToParse);
         
@@ -27,7 +27,7 @@ public static class DiscordClientExtensions
         return GetUTF8String(parsedString, bytesToClip);
     }
     
-    public static string GetParsedString(this DiscordClient client, TrackResponse response, string? stringToParse, BytesEnum bytesToClip)
+    public static string GetParsedString(this DiscordClient client, TrackResponse response, string stringToParse, BytesEnum bytesToClip)
     {
         string parsedString = new string(stringToParse);
         

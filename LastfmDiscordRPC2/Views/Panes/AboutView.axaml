@@ -27,6 +27,7 @@
         <Label Content="©️ 2023 RegorForgot" />
         <Button
             Command="{Binding OpenGithubCmd}"
+            CommandParameter="{Binding GithubPage}"
             Content="Github repository link"
             Margin="0,10,10,10" />
         <TextBox

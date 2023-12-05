@@ -11,7 +11,7 @@ public sealed class SignatureAPIService : ISignatureAPIService
 
     public SignatureAPIService()
     {
-        APIRestClient = new RestClient(@"https://crygup.com/regor/");
+        APIRestClient = new RestClient(@"https://lastfmdiscordrpc2.000webhostapp.com/");
         APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
     }
     

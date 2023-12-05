@@ -6,7 +6,7 @@ namespace LastfmDiscordRPC2.IO;
 
 public record SaveCfg
 {
-    internal const string? DefaultAppID = "997756398664421446";
+    internal const string DefaultAppID = "997756398664421446";
 
     public SaveCfg() { }
 
@@ -29,18 +29,18 @@ public record SaveCfg
 
     public record RPCCfg
     {
-        [JsonProperty] public string? AppID { get; set; } = DefaultAppID;
+        [JsonProperty] public string AppID { get; set; } = DefaultAppID;
         [JsonProperty] public TimeSpan SleepTime { get; set; } = TimeSpan.FromHours(1);
-        [JsonProperty] public string? Details { get; set; } = $"🎵 {TrackName}";
-        [JsonProperty] public string? State { get; set; } = $"{ArtistName} | 💿 {AlbumName}";
-        [JsonProperty] public string? LargeImageText { get; set; } = AlbumName;
-        [JsonProperty] public string? SmallImageText { get; set; } = $"{Timestamp}{CurrentState}";
+        [JsonProperty] public string Details { get; set; } = $"🎵 {TrackName}";
+        [JsonProperty] public string State { get; set; } = $"{ArtistName} | 💿 {AlbumName}";
+        [JsonProperty] public string LargeImageLabel { get; set; } = AlbumName;
+        [JsonProperty] public string SmallImageLabel { get; set; } = $"{Timestamp}{CurrentState}";
         [JsonProperty] public RPCButton[] UserButtons { get; set; } = { new RPCButton() };
     }
 
     public record RPCButton
     {
-        [JsonProperty] public string? Link { get; set; } = $"https://www.last.fm/music/{ArtistName}/_/{TrackName}";
-        [JsonProperty] public string? Label { get; set; } = $"{PlayCount} plays";
+        [JsonProperty] public string URL { get; set; } = $"https://www.last.fm/music/{ArtistName}/_/{TrackName}";
+        [JsonProperty] public string Label { get; set; } = $"{PlayCount} plays";
     }
 }

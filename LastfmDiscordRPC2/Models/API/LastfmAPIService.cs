@@ -7,6 +7,7 @@ using LastfmDiscordRPC2.Exceptions;
 using LastfmDiscordRPC2.Models.Responses;
 using Newtonsoft.Json;
 using RestSharp;
+using static LastfmDiscordRPC2.Utilities.URIOpen;
 
 namespace LastfmDiscordRPC2.Models.API;
 
@@ -14,13 +15,14 @@ public sealed class LastfmAPIService : IAPIService
 {
     public DateTimeOffset LastScrobbleTime { get; set; }
     public RestClient APIRestClient { get; init; }
+    public const string LastfmAPIKey = "79d35013754ac3b3225b73bba566afca";
     private readonly ISignatureAPIService _signatureAPIService;
 
     public LastfmAPIService(ISignatureAPIService signatureAPIService)
     {
         APIRestClient = new RestClient(@"https://ws.audioscrobbler.com/2.0/");
         APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
-        
+
         _signatureAPIService = signatureAPIService;
     }
 
@@ -30,41 +32,45 @@ public sealed class LastfmAPIService : IAPIService
 
         request.AddParameter("format", "json");
         request.AddParameter("method", "auth.gettoken");
-        request.AddParameter("api_key", Utilities.Utilities.LastfmAPIKey);
+        request.AddParameter("api_key", LastfmAPIKey);
         request.Timeout = 20000;
 
-        RestResponse response = await APIRestClient.ExecuteAsync(request);
+        RestResponse response = await APIRestClient.ExecuteAsync(request).ConfigureAwait(false);
         return GetResponse<TokenResponse>(response);
     }
 
     public async Task<SessionResponse> GetSession(string token)
     {
-        string signature = await _signatureAPIService.GetSignature($"api_key{Utilities.Utilities.LastfmAPIKey}methodauth.getsessiontoken{token}");
+        OpenURI($"https://www.last.fm/api/auth/?api_key={LastfmAPIKey}&token={token}");
+
+        string signature = await _signatureAPIService.GetSignature($"api_key{LastfmAPIKey}methodauth.getsessiontoken{token}");
 
         RestRequest request = new RestRequest();
         request.AddParameter("format", "json");
         request.AddParameter("method", "auth.getsession");
         request.AddParameter("token", token);
-        request.AddParameter("api_key", Utilities.Utilities.LastfmAPIKey);
+        request.AddParameter("api_key", LastfmAPIKey);
         request.AddParameter("api_sig", signature);
         request.Timeout = 10000;
 
-        PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
-        
-        do
+        using (PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5)))
         {
-            try
+            CancellationTokenSource source = new CancellationTokenSource();
+            do
             {
-                while (await timer.WaitForNextTickAsync())
+                try
                 {
-                    RestResponse response = await APIRestClient.ExecuteAsync(request);
-                    return GetResponse<SessionResponse>(response);
-                }
+                    while (await timer.WaitForNextTickAsync(source.Token))
+                    {
+                        RestResponse response = await APIRestClient.ExecuteAsync(request).ConfigureAwait(false);
+                        return GetResponse<SessionResponse>(response);
+                    }
 
-                timer.Dispose();
-            }
-            catch (LastfmException e) when (e.ErrorCodeEnum is LastfmErrorCodeEnum.UnauthorizedToken) { }
-        } while (true);
+                    source.Cancel();
+                }
+                catch (LastfmException e) when (e.ErrorCodeEnum is LastfmErrorCodeEnum.UnauthorizedToken) { }
+            } while (true);
+        }
     }
 
     public async Task<TrackResponse> GetRecentTracks(string username)
@@ -75,10 +81,10 @@ public sealed class LastfmAPIService : IAPIService
         request.AddParameter("method", "user.getrecenttracks");
         request.AddParameter("limit", "1");
         request.AddParameter("user", username);
-        request.AddParameter("api_key", Utilities.Utilities.LastfmAPIKey);
+        request.AddParameter("api_key", LastfmAPIKey);
         request.Timeout = 20000;
 
-        RestResponse response = await APIRestClient.ExecuteAsync(request);
+        RestResponse response = await APIRestClient.ExecuteAsync(request).ConfigureAwait(false);
 
         return GetResponse<TrackResponse>(response);
     }
@@ -89,16 +95,16 @@ public sealed class LastfmAPIService : IAPIService
         {
             throw new HttpRequestException(Enum.GetName(response.StatusCode), null, response.StatusCode);
         }
-        
+
         LastfmErrorResponse e = JsonConvert.DeserializeObject<LastfmErrorResponse>(response.Content)!;
         if (e.Error != LastfmErrorCodeEnum.OK)
-        {   
+        {
             throw new LastfmException(e.Message, e.Error);
         }
 
         return JsonConvert.DeserializeObject<T>(response.Content)!;
     }
-    
+
     public void Dispose()
     {
         APIRestClient.Dispose();

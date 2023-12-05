@@ -1,10 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Reactive;
+using ReactiveUI;
 
 namespace LastfmDiscordRPC2.Utilities;
 
-public static class Utilities
+public static class URIOpen
 {
-    public const string LastfmAPIKey = "79d35013754ac3b3225b73bba566afca";
+    public static ReactiveCommand<string, Unit> OpenURICmd { get; } = ReactiveCommand.Create<string>(OpenURI);
 
     public static void OpenURI(string url)
     {

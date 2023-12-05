@@ -2,6 +2,7 @@
     x:Class="LastfmDiscordRPC2.Views.Controls.PreviewControlView"
     xmlns="https://github.com/avaloniaui"
     xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+    xmlns:command="clr-namespace:LastfmDiscordRPC2.Utilities"
     xmlns:controls="clr-namespace:LastfmDiscordRPC2.ViewModels.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -38,30 +39,17 @@
         IsVisible="{Binding IsReady}"
         Margin="10"
         Padding="0">
-        <Grid HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="200" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <Grid
+            ColumnDefinitions="200,*"
+            HorizontalAlignment="Stretch"
+            RowDefinitions="200,Auto">
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="40" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="40" />
-                </Grid.ColumnDefinitions>
+            <Grid ColumnDefinitions="*,40" RowDefinitions="*,40">
 
                 <Button
                     Background="Transparent"
                     ClipToBounds="True"
-                    Command="{Binding OpenAlbumArt}"
+                    Command="{Binding OpenArtCmd}"
                     CommandParameter="{Binding LargeImage.URL}"
                     CornerRadius="5"
                     Cursor="Hand"
@@ -84,7 +72,7 @@
                             VerticalAlignment="Top"
                             asyncImageLoader:ImageLoader.Source="{Binding LargeImage.URL}" />
                         <ToolTip.Tip>
-                            <Label Content="{Binding LargeImage.Text}" />
+                            <Label Content="{Binding LargeImage.Label}" />
                         </ToolTip.Tip>
                     </Border>
                 </Button>
@@ -105,7 +93,7 @@
                         VerticalAlignment="Top"
                         asyncImageLoader:ImageLoader.Source="{Binding SmallImage.URL}" />
                     <ToolTip.Tip>
-                        <Label Content="{Binding SmallImage.Text}" />
+                        <Label Content="{Binding SmallImage.Label}" />
                     </ToolTip.Tip>
                 </Border>
             </Grid>
@@ -144,9 +132,9 @@
                         <DataTemplate>
                             <Button
                                 Classes="RPCButton"
-                                Command="{Binding OpenWebpageCmd}"
+                                Command="{Binding Source={x:Static command:URIOpen.OpenURICmd}}"
                                 CommandParameter="{Binding URL}"
-                                Content="{Binding Text}"
+                                Content="{Binding Label}"
                                 Cursor="Hand" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

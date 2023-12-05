@@ -8,9 +8,10 @@ using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Utilities;
+using LastfmDiscordRPC2.ViewModels.Controls;
 using ReactiveUI;
 using static System.Text.RegularExpressions.Regex;
-using static LastfmDiscordRPC2.Utilities.Utilities;
+using static LastfmDiscordRPC2.Utilities.URIOpen;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
@@ -24,11 +25,11 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     private bool _isAppIDError;
     private bool _isExpiryTimeError;
     private string _loginMessage;
-    private string? _appID;
+    private string _appID;
     private TimeSpan _presenceExpiryTime;
 
     [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
-    public string? AppID
+    public string AppID
     {
         get => _appID;
         set
@@ -100,7 +101,8 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     public ReactiveCommand<Unit, Unit> SaveAppIDCmd { get; }
     public ReactiveCommand<Unit, Unit> ResetAppIDCmd { get; }
     public ReactiveCommand<Unit, Unit> SaveExpiryTimeCmd { get; }
-
+    public PreviewSettingControlViewModel PreviewSettingControlViewModel { get; }
+    
     public bool StartUpVisible { get; set; }
 
     private readonly LastfmAPIService _lastfmService;
@@ -118,10 +120,12 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
 
     public SettingsViewModel(
         LastfmAPIService lastfmService,
+        PreviewSettingControlViewModel previewSettingControlViewModel,
         SaveCfgIOService saveCfgService,
         LoggingService loggingService,
         UIContext context) : base(context)
     {
+        PreviewSettingControlViewModel = previewSettingControlViewModel;
         _lastfmService = lastfmService;
         _saveCfgService = saveCfgService;
         _loggingService = loggingService;
@@ -138,8 +142,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
             IsStartUpChecked = WinRegistry.CheckRegistryExists();
         }
 
-        AppID = _saveCfgService.SaveCfg.UserRPCCfg.AppID;
-        PresenceExpiryTime = _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
+        SetProperties();
         LoginMessage = Context.IsLoggedIn ? LoggedIn : NotLoggedIn;
     }
     
@@ -194,8 +197,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     {
         try
         {
-            TokenResponse token = await _lastfmService.GetToken();
-            OpenURI($"https://www.last.fm/api/auth/?api_key={LastfmAPIKey}&token={token.Token}");
+            TokenResponse token = await _lastfmService.GetToken(); ;
             SessionResponse sessionResponse = await _lastfmService.GetSession(token.Token);
 
             _saveCfgService.SaveCfg.UserAccount = new SaveCfg.Account
@@ -217,14 +219,15 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
 
     public void UpdateProperties()
     {
-        ResetPropertiesToSaved();
+        SetProperties();
+        PreviewSettingControlViewModel.SetProperties();
         this.RaisePropertyChanged(nameof(CanLogOut));
         this.RaisePropertyChanged(nameof(CanSaveAppID));
         this.RaisePropertyChanged(nameof(CanReset));
         this.RaisePropertyChanged(nameof(CanSaveExpiryTime));
     }
 
-    private void ResetPropertiesToSaved()
+    private void SetProperties()
     {
         AppID = _saveCfgService.SaveCfg.UserRPCCfg.AppID;
         PresenceExpiryTime = _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;

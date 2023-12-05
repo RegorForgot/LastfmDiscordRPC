@@ -40,7 +40,7 @@ public class PreviewControlViewModel : AbstractControlViewModel
         {
             this.RaiseAndSetIfChanged(ref _largeImage, value);
             _largeImage.URL = value.URL.Replace(@"/300x300", "");
-            _largeImage.Text = value.Text;
+            _largeImage.Label = value.Label;
         }
     }
 
@@ -51,7 +51,7 @@ public class PreviewControlViewModel : AbstractControlViewModel
         {
             this.RaiseAndSetIfChanged(ref _smallImage, value);
             _smallImage.URL = value.URL;
-            _smallImage.Text = value.Text;
+            _smallImage.Label = value.Label;
         }
     }
 
@@ -60,22 +60,17 @@ public class PreviewControlViewModel : AbstractControlViewModel
         get => _isReady;
         set => this.RaiseAndSetIfChanged(ref _isReady, value);
     }
-    
-    public ReactiveCommand<string, Unit> OpenAlbumArt { get; }
 
-    public PreviewControlViewModel()
-    {
-        OpenAlbumArt = ReactiveCommand.Create<string>(OpenURI);
-    }
+    public ReactiveCommand<string, Unit> OpenArtCmd { get; } = ReactiveCommand.Create<string>(OpenArt);
 
-    private static void OpenURI(string uri)
+    private static void OpenArt(string uri)
     {
         if (uri != PreviewImage.TransparentImage)
         {
-            Utilities.Utilities.OpenURI(uri);
+            Utilities.URIOpen.OpenURI(uri);
         }
     }
-    
+
     public void ClearAll()
     {
         Buttons = new ObservableCollection<PreviewButton>();
@@ -83,40 +78,5 @@ public class PreviewControlViewModel : AbstractControlViewModel
         State = Empty;
         LargeImage = new PreviewImage();
         SmallImage = new PreviewImage();
-    }
-
-    public class PreviewObject : ReactiveObject
-    {
-        private string _url = Empty;
-        private string _text = Empty;
-
-        public string URL
-        {
-            get => _url;
-            set => this.RaiseAndSetIfChanged(ref _url, value);
-        }
-
-        public string Text
-        {
-            get => _text;
-            set => this.RaiseAndSetIfChanged(ref _text, value);
-        }
-    }
-
-    public sealed class PreviewImage : PreviewObject
-    {
-        internal const string TransparentImage = "https://i.imgur.com/qFmcbT0.png";
-        
-        private string _url = TransparentImage;
-        public new string URL
-        {
-            get => _url;
-            set => this.RaiseAndSetIfChanged(ref _url, value.Replace(@"/300x300", ""));
-        }
-    }
-
-    public sealed class PreviewButton : PreviewObject
-    {
-        public ReactiveCommand<string, Unit> OpenWebpageCmd { get; set; } = ReactiveCommand.Create<string>(OpenURI);
     }
 }

@@ -10,6 +10,7 @@ using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Utilities;
+using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Controls;
 
 namespace LastfmDiscordRPC2.Models.RPC;
@@ -112,7 +113,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             button => new Button
             {
                 Label = this.GetParsedString(response, button.Label, BytesEnum.ButtonLabel),
-                Url = this.GetParsedLink(response, button.Link, BytesEnum.ButtonLink)
+                Url = this.GetParsedLink(response, button.URL, BytesEnum.ButtonLink)
             }
         ).ToArray();
 
@@ -123,9 +124,9 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             Assets = new DiscordRPC.Assets
             {
                 LargeImageKey = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL,
-                LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageText, BytesEnum.Default),
+                LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageLabel, BytesEnum.Default),
                 SmallImageKey = track.NowPlaying.State == "true" ? PlayIconURL : PauseIconURL,
-                SmallImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.SmallImageText, BytesEnum.Default)
+                SmallImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.SmallImageLabel, BytesEnum.Default)
             },
             Buttons = buttons
         };
@@ -135,22 +136,22 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     {
         _previewControlViewModel.State = presence.State;
         _previewControlViewModel.Details = presence.Details;
-        _previewControlViewModel.LargeImage.Text = presence.Assets.LargeImageText;
+        _previewControlViewModel.LargeImage.Label = presence.Assets.LargeImageText;
         _previewControlViewModel.LargeImage.URL = presence.Assets.LargeImageKey;
-        _previewControlViewModel.SmallImage.Text = presence.Assets.SmallImageText;
+        _previewControlViewModel.SmallImage.Label = presence.Assets.SmallImageText;
         _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
 
         var buttons =
             presence.Buttons.ToList().Select(
-                button => new PreviewControlViewModel.PreviewButton
+                button => new PreviewButton
                 {
                     URL = button.Url,
-                    Text = button.Label
+                    Label = button.Label
                 }
             ).ToList();
 
         _previewControlViewModel.Buttons = 
-            new ObservableCollection<PreviewControlViewModel.PreviewButton>(buttons);
+            new ObservableCollection<PreviewButton>(buttons);
     }
 
     public void SetPresence(TrackResponse response)
