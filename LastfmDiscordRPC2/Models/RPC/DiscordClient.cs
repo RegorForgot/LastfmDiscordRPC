@@ -92,6 +92,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
     private RichPresence GetRichPresence(TrackResponse response)
     {
+        _previewControlViewModel.IsReady = true;
         Track track = response.RecentTracks.Tracks[0];
         
         if (track.NowPlaying.State == "true")
@@ -161,6 +162,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
     public void ClearPresence()
     {
+        _previewControlViewModel.IsReady = false;
         _previewControlViewModel.ClearAll();
         if (_client is null)
         {

@@ -35,6 +35,7 @@
         ClipToBounds="True"
         CornerRadius="5"
         HorizontalAlignment="Stretch"
+        IsVisible="{Binding IsReady}"
         Margin="10"
         Padding="0">
         <Grid HorizontalAlignment="Stretch">

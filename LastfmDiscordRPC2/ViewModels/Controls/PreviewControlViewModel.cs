@@ -8,6 +8,7 @@ public class PreviewControlViewModel : AbstractControlViewModel
 {
     public override string Name => "PreviewControl";
 
+    private bool _isReady;
     private ObservableCollection<PreviewButton> _buttons = new ObservableCollection<PreviewButton>();
     private string _details = Empty;
     private string _state = Empty;
@@ -54,6 +55,12 @@ public class PreviewControlViewModel : AbstractControlViewModel
         }
     }
 
+    public bool IsReady
+    {
+        get => _isReady;
+        set => this.RaiseAndSetIfChanged(ref _isReady, value);
+    }
+    
     public ReactiveCommand<string, Unit> OpenAlbumArt { get; }
 
     public PreviewControlViewModel()

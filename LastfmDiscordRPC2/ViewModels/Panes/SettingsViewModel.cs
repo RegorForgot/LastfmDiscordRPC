@@ -22,6 +22,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     private bool _isStartUpChecked;
     private bool _isLoginInProgress;
     private bool _isAppIDError;
+    private bool _isExpiryTimeError;
     private string _loginMessage;
     private string? _appID;
     private TimeSpan _presenceExpiryTime;
@@ -63,11 +64,25 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
             Context.UpdateProperties();
         }
     }
-
+    
     public TimeSpan PresenceExpiryTime
     {
         get => _presenceExpiryTime;
-        set => this.RaiseAndSetIfChanged(ref _presenceExpiryTime, value);
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _presenceExpiryTime, value);
+            IsExpiryTimeError = value != TimeSpan.Zero;
+        }
+    }
+    
+    public bool IsExpiryTimeError
+    {
+        get => _isExpiryTimeError;
+        private set
+        {
+            this.RaiseAndSetIfChanged(ref _isExpiryTimeError, value);
+            this.RaisePropertyChanged(nameof(CanSaveExpiryTime));
+        }
     }
 
     public bool IsAppIDError
@@ -76,7 +91,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         private set
         {
             this.RaiseAndSetIfChanged(ref _isAppIDError, value);
-            this.RaisePropertyChanged(nameof(CanSave));
+            this.RaisePropertyChanged(nameof(CanSaveAppID));
         }
     }
 
@@ -96,7 +111,8 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     private string LoggedIn => $"Logged in as {_saveCfgService.SaveCfg.UserAccount.Username}";
 
     public bool CanLogOut => !Context.IsRichPresenceActivated && !IsLoginInProgress;
-    public bool CanSave => IsAppIDError && !Context.HasRichPresenceActivated;
+    public bool CanSaveAppID => IsAppIDError && !Context.HasRichPresenceActivated;
+    public bool CanSaveExpiryTime => IsExpiryTimeError && !Context.IsRichPresenceActivated;
     public bool CanReset => !Context.HasRichPresenceActivated;
 
 
@@ -201,8 +217,16 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
 
     public void UpdateProperties()
     {
+        ResetPropertiesToSaved();
         this.RaisePropertyChanged(nameof(CanLogOut));
-        this.RaisePropertyChanged(nameof(CanSave));
+        this.RaisePropertyChanged(nameof(CanSaveAppID));
         this.RaisePropertyChanged(nameof(CanReset));
+        this.RaisePropertyChanged(nameof(CanSaveExpiryTime));
+    }
+
+    private void ResetPropertiesToSaved()
+    {
+        AppID = _saveCfgService.SaveCfg.UserRPCCfg.AppID;
+        PresenceExpiryTime = _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
     }
 }

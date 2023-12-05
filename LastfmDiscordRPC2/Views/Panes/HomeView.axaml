@@ -40,7 +40,7 @@
                 Cursor="Hand"
                 IsEnabled="{Binding CanSetPresence}" />
         </StackPanel>
-        <StackPanel Grid.Row="1" IsVisible="{Binding Context.IsRichPresenceActivated}">
+        <StackPanel Grid.Row="1">
             <controls:PreviewControlView DataContext="{Binding PreviewControlViewModel}" Margin="0" />
         </StackPanel>
         <StackPanel
