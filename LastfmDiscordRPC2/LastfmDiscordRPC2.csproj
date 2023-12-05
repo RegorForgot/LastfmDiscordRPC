@@ -11,6 +11,8 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
+        <Compile Remove="Assets\SecretKey.cs" />
+        <None Include="Assets\SecretKey.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,7 +28,7 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.5" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.5" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
-        <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
+        <PackageReference Include="DiscordRichPresence" Version="1.1.3.18" />
         <PackageReference Include="HyperText.Avalonia" Version="2.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16" />

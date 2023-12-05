@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reactive;
+﻿using System.Reactive;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.ViewModels.Controls;
 using ReactiveUI;

@@ -54,16 +54,10 @@ public sealed class PresenceService : IPresenceService
 
         _isFirstSuccess = true;
         _discordClient.Initialize(saveSnapshot);
-        await WaitUntilConnected();
+        Thread.Sleep(1000);
         await PresenceLoop(saveSnapshot);
 
         return;
-
-        Task WaitUntilConnected()
-        {
-            while (!_discordClient.IsReady) { }
-            return Task.CompletedTask;
-        }
     }
 
     private async Task PresenceLoop(SaveCfg saveSnapshot)

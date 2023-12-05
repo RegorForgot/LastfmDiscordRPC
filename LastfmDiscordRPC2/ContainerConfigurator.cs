@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
 using DiscordRPC.Logging;
-using LastfmDiscordRPC2.Assets;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;

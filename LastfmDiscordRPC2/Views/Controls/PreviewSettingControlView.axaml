@@ -104,7 +104,8 @@
                 <Button
                     Classes="RPCButton"
                     Command="{Binding SavePreviewCmd}"
-                    Content="Save" />
+                    Content="Save"
+                    IsEnabled="{Binding CanSave}" />
             </StackPanel>
         </Grid>
     </Border>

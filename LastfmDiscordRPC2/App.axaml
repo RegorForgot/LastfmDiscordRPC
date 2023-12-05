@@ -40,4 +40,23 @@
         </Style>
     </Application.Styles>
 
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon
+                Clicked="TrayIcon_OnClicked"
+                Icon="Assets/icon.ico"
+                ToolTipText="LastfmDiscordRPC2">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem
+                            Click="MainItem_OnClick"
+                            Header="LastfmDiscordRPC2"
+                            Icon="Assets/icon.ico" />
+                        <NativeMenuItem Click="ExitItem_OnClick" Header="Exit" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+
 </Application>

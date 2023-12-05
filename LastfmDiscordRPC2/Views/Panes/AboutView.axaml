@@ -39,7 +39,7 @@
             IsReadOnly="True"
             Text="{Binding ConsoleText, Mode=TwoWay}"
             TextChanged="RPCConsoleOnTextChanged"
-            TextWrapping="WrapWithOverflow" />
+            TextWrapping="Wrap" />
         <Button
             Command="{Binding OpenFolderCmd}"
             Content="Open data folder"

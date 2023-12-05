@@ -15,12 +15,24 @@ namespace LastfmDiscordRPC2.Utilities;
 public static class DiscordClientExtensions
 {
     private const string ParserRegex = "{[^{}]+}";
-
-    public static string GetParsedLink(this DiscordClient client, TrackResponse response, string stringToParse, BytesEnum bytesToClip)
+    
+    public static bool ValidatePlaceholderLink(string linkToParse)
     {
-        string parsedString = new string(stringToParse);
+        string parsedString = new string(linkToParse);
         
-        IEnumerable<string> parsingItems = GetItemsToParse(stringToParse ?? Empty);
+        IEnumerable<string> parsingItems = GetItemsToParse(linkToParse ?? Empty);
+        parsedString = 
+            parsingItems.Aggregate(parsedString, (current, item) => current.Replace(item, "test"));
+
+        bool success = Uri.TryCreate(parsedString, UriKind.Absolute, out Uri? result);
+        return success && (result?.Scheme == Uri.UriSchemeHttps || result?.Scheme == Uri.UriSchemeHttp);
+    }
+    
+    public static string GetParsedLink(this DiscordClient client, TrackResponse response, string linkToParse, BytesEnum bytesToClip)
+    {
+        string parsedString = new string(linkToParse);
+        
+        IEnumerable<string> parsingItems = GetItemsToParse(linkToParse ?? Empty);
 
         parsedString = 
             parsingItems.Aggregate(parsedString, (current, item) => current.Replace(item, HttpUtility.UrlEncode(GetParsedItem(response, item))));

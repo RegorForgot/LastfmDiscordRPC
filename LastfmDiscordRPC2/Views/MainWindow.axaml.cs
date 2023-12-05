@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using LastfmDiscordRPC2.DataTypes;
@@ -8,15 +9,15 @@ namespace LastfmDiscordRPC2.Views;
 
 public partial class MainWindow : Window
 {
-    public MainWindow(MainViewModel dataContext)
+    public MainWindow(MainViewModel? dataContext)
     {
         InitializeComponent();
-        
+
         DataContext = dataContext;
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
 
         Background = OperatingSystem.CurrentOS == OSEnum.Windows ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Black);
-        
+
         foreach (AbstractPaneViewModel viewModel in dataContext.Children)
         {
             UserControl? control = this.FindControl<UserControl>(viewModel.Name);
@@ -25,5 +26,21 @@ public partial class MainWindow : Window
                 control.DataContext = viewModel;
             }
         }
+
+        WindowStateProperty.Changed.AddClassHandler<Window>((window, args) =>
+        {
+            if (window.PlatformImpl != null && (WindowState)(args.NewValue ?? WindowState.Maximized) == WindowState.Minimized)
+            {
+                Hide();
+            }
+        });
+
+        IsVisibleProperty.Changed.AddClassHandler<Window>((window, args) =>
+        {
+            if (window.PlatformImpl != null && (bool)args.NewValue)
+            {
+                WindowState = WindowState.Normal;
+            }
+        });
     }
 }

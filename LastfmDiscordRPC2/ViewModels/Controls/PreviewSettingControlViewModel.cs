@@ -75,6 +75,8 @@ public class PreviewSettingControlViewModel : AbstractControlViewModel
         set => this.RaiseAndSetIfChanged(ref _buttons, value);
     }
 
+    public bool CanSave => Buttons.All(button => !button.IsInvalidUrl);
+    
     public UIContext Context { get; }
     public ReactiveCommand<Unit, Unit> SavePreviewCmd { get; }
 
@@ -84,6 +86,11 @@ public class PreviewSettingControlViewModel : AbstractControlViewModel
         Context = context;
         SetProperties();
         SavePreviewCmd = ReactiveCommand.Create(SavePreview);
+    }
+
+    public void UpdateCanSave()
+    {
+        this.RaisePropertyChanged(nameof(Buttons));
     }
     
     private void SavePreview()
@@ -103,7 +110,7 @@ public class PreviewSettingControlViewModel : AbstractControlViewModel
         SmallImageLabel = _saveCfgIOService.SaveCfg.UserRPCCfg.SmallImageLabel;
         Buttons = new ObservableCollection<PreviewButton>(
             _saveCfgIOService.SaveCfg.UserRPCCfg.UserButtons.Select(button =>
-                new PreviewButton
+                new PreviewButton(UpdateCanSave)
                 {
                     URL = button.URL,
                     Label = button.Label

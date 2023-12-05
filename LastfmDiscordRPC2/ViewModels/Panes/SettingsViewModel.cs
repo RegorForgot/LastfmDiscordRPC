@@ -11,7 +11,6 @@ using LastfmDiscordRPC2.Utilities;
 using LastfmDiscordRPC2.ViewModels.Controls;
 using ReactiveUI;
 using static System.Text.RegularExpressions.Regex;
-using static LastfmDiscordRPC2.Utilities.URIOpen;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
