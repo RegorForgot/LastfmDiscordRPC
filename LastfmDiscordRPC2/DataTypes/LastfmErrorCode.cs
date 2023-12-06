@@ -1,6 +1,6 @@
 ﻿namespace LastfmDiscordRPC2.DataTypes;
 
-public enum LastfmErrorCodeEnum
+public enum LastfmErrorCode
 {
     OK = 0,
     InvalidService = 2,

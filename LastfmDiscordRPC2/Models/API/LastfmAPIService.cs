@@ -68,7 +68,7 @@ public sealed class LastfmAPIService : IAPIService
 
                     source.Cancel();
                 }
-                catch (LastfmException e) when (e.ErrorCodeEnum is LastfmErrorCodeEnum.UnauthorizedToken) { }
+                catch (LastfmException e) when (e.ErrorCode is LastfmErrorCode.UnauthorizedToken) { }
             } while (true);
         }
     }
@@ -97,7 +97,7 @@ public sealed class LastfmAPIService : IAPIService
         }
 
         LastfmErrorResponse e = JsonConvert.DeserializeObject<LastfmErrorResponse>(response.Content)!;
-        if (e.Error != LastfmErrorCodeEnum.OK)
+        if (e.Error != LastfmErrorCode.OK)
         {
             throw new LastfmException(e.Message, e.Error);
         }

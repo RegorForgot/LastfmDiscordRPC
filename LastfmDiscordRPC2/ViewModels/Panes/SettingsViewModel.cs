@@ -2,19 +2,19 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reactive;
 using System.Threading.Tasks;
-using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Utilities;
-using LastfmDiscordRPC2.ViewModels.Controls;
+using LastfmDiscordRPC2.ViewModels.Update;
 using ReactiveUI;
 using static System.Text.RegularExpressions.Regex;
+using static LastfmDiscordRPC2.DataTypes.SaveVars;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewModel
+public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewModel
 {
     private const string AppIDRegExp = @"^\d{17,21}$";
     private const string NotLoggedIn = "Not logged in";
@@ -33,13 +33,8 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         get => _appID;
         set
         {
-            if (value is null)
-            {
-                return;
-            }
-
             this.RaiseAndSetIfChanged(ref _appID, value);
-            IsAppIDError = IsMatch(value, AppIDRegExp);
+            IsAppIDError = IsMatch(value ?? Empty, AppIDRegExp);
         }
     }
 
@@ -61,7 +56,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         set
         {
             this.RaiseAndSetIfChanged(ref _isLoginInProgress, value);
-            Context.UpdateProperties();
+            Context.UpdateLogin();
         }
     }
     
@@ -78,21 +73,13 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     public bool IsExpiryTimeError
     {
         get => _isExpiryTimeError;
-        private set
-        {
-            this.RaiseAndSetIfChanged(ref _isExpiryTimeError, value);
-            this.RaisePropertyChanged(nameof(CanSaveExpiryTime));
-        }
+        private set => this.RaiseAndSetIfChanged(ref _isExpiryTimeError, value);
     }
 
     public bool IsAppIDError
     {
         get => _isAppIDError;
-        private set
-        {
-            this.RaiseAndSetIfChanged(ref _isAppIDError, value);
-            this.RaisePropertyChanged(nameof(CanSaveAppID));
-        }
+        private set => this.RaiseAndSetIfChanged(ref _isAppIDError, value);
     }
 
     public ReactiveCommand<bool, Unit> LaunchOnStartupCmd { get; }
@@ -100,7 +87,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     public ReactiveCommand<Unit, Unit> SaveAppIDCmd { get; }
     public ReactiveCommand<Unit, Unit> ResetAppIDCmd { get; }
     public ReactiveCommand<Unit, Unit> SaveExpiryTimeCmd { get; }
-    public PreviewSettingControlViewModel PreviewSettingControlViewModel { get; }
     
     public bool StartUpVisible { get; set; }
 
@@ -110,21 +96,13 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
 
     public override string Name => "Settings";
     private string LoggedIn => $"Logged in as {_saveCfgService.SaveCfg.UserAccount.Username}";
-
-    public bool CanLogOut => !Context.IsRichPresenceActivated && !IsLoginInProgress;
-    public bool CanSaveAppID => IsAppIDError && !Context.HasRichPresenceActivated;
-    public bool CanSaveExpiryTime => IsExpiryTimeError && !Context.IsRichPresenceActivated;
-    public bool CanReset => !Context.HasRichPresenceActivated;
-
-
+    
     public SettingsViewModel(
         LastfmAPIService lastfmService,
-        PreviewSettingControlViewModel previewSettingControlViewModel,
         SaveCfgIOService saveCfgService,
         LoggingService loggingService,
         UIContext context) : base(context)
     {
-        PreviewSettingControlViewModel = previewSettingControlViewModel;
         _lastfmService = lastfmService;
         _saveCfgService = saveCfgService;
         _loggingService = loggingService;
@@ -135,7 +113,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         ResetAppIDCmd = ReactiveCommand.Create(ResetDiscordAppID);
         SaveExpiryTimeCmd = ReactiveCommand.Create(SaveExpiryTime);
 
-        if (OperatingSystem.CurrentOS == OSEnum.Windows)
+        if (OperatingSystem.CurrentOS == DataTypes.OperatingSystem.Windows)
         {
             StartUpVisible = true;
             IsStartUpChecked = WinRegistry.CheckRegistryExists();
@@ -147,7 +125,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
     
     private void SaveExpiryTime()
     {
-        _saveCfgService.SaveCfg.UserRPCCfg.SleepTime = PresenceExpiryTime;
+        _saveCfgService.SaveCfg.UserRPCCfg.ExpiryTime = PresenceExpiryTime;
         _saveCfgService.SaveConfigData();
     }
 
@@ -159,7 +137,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
 
     private void ResetDiscordAppID()
     {
-        AppID = SaveCfg.DefaultAppID;
+        AppID = DefaultAppID;
         SaveDiscordAppID();
     }
 
@@ -216,19 +194,9 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, IUpdatableViewMod
         }
     }
 
-    public void UpdateProperties()
-    {
-        SetProperties();
-        PreviewSettingControlViewModel.SetProperties();
-        this.RaisePropertyChanged(nameof(CanLogOut));
-        this.RaisePropertyChanged(nameof(CanSaveAppID));
-        this.RaisePropertyChanged(nameof(CanReset));
-        this.RaisePropertyChanged(nameof(CanSaveExpiryTime));
-    }
-
-    private void SetProperties()
+    public void SetProperties()
     {
         AppID = _saveCfgService.SaveCfg.UserRPCCfg.AppID;
-        PresenceExpiryTime = _saveCfgService.SaveCfg.UserRPCCfg.SleepTime;
+        PresenceExpiryTime = _saveCfgService.SaveCfg.UserRPCCfg.ExpiryTime;
     }
 }

@@ -6,17 +6,17 @@ namespace LastfmDiscordRPC2.Exceptions;
 public sealed class LastfmException : Exception
 {
     public override string Message { get; }
-    public LastfmErrorCodeEnum ErrorCodeEnum { get; }
+    public LastfmErrorCode ErrorCode { get; }
 
     public LastfmException() : base()
     {
-        ErrorCodeEnum = LastfmErrorCodeEnum.Unknown;
-        Message = $"{ErrorCodeEnum.ToString()}";
+        ErrorCode = LastfmErrorCode.Unknown;
+        Message = $"{ErrorCode.ToString()}";
     }
     
-    public LastfmException(string message, LastfmErrorCodeEnum codeEnum)
+    public LastfmException(string message, LastfmErrorCode code)
     {
-        Message = $"{codeEnum.ToString()}: {message}";
-        ErrorCodeEnum = codeEnum;
+        Message = $"{code.ToString()}: {message}";
+        ErrorCode = code;
     }
 }

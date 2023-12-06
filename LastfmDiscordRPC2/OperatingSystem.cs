@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using LastfmDiscordRPC2.DataTypes;
 
 namespace LastfmDiscordRPC2;
 
 public static class OperatingSystem
 {
-    public static OSEnum CurrentOS { get; }
+    public static DataTypes.OperatingSystem CurrentOS { get; }
 
     static OperatingSystem()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            CurrentOS = OSEnum.OSX;
+            CurrentOS = DataTypes.OperatingSystem.OSX;
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            CurrentOS = OSEnum.Linux;
+            CurrentOS = DataTypes.OperatingSystem.Linux;
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            CurrentOS = OSEnum.Windows;
+            CurrentOS = DataTypes.OperatingSystem.Windows;
         }
         else
         {

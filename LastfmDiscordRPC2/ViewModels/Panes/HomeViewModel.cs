@@ -8,24 +8,19 @@ using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
-public sealed class HomeViewModel : AbstractPaneViewModel, IUpdatableViewModel
+public sealed class HomeViewModel : AbstractPaneViewModel
 {
     private bool _isCoolDown;
     private bool IsCoolDown
     {
         get => _isCoolDown;
-        set
-        {
-            this.RaiseAndSetIfChanged(ref _isCoolDown, value);
-            this.RaisePropertyChanged(nameof(CanSetPresence));
-        }
+        set => this.RaiseAndSetIfChanged(ref _isCoolDown, value);
     }
 
     private readonly IPresenceService _presenceService;
 
     public ReactiveCommand<bool, Unit> SetPresence { get; }
     public PreviewControlViewModel PreviewControlViewModel { get; }
-    public bool CanSetPresence => Context.IsLoggedIn && !IsCoolDown;
 
     public override string Name => "Home";
 
@@ -71,10 +66,5 @@ public sealed class HomeViewModel : AbstractPaneViewModel, IUpdatableViewModel
         {
             // ignored
         }
-    }
-    
-    public void UpdateProperties()
-    {
-        this.RaisePropertyChanged(nameof(CanSetPresence));
     }
 }

@@ -1,6 +1,6 @@
 namespace LastfmDiscordRPC2.DataTypes;
 
-public enum BytesEnum
+public enum ByteCount
 {
     Default = 128,
     ButtonLink = 512,

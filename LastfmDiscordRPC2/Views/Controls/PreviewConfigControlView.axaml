@@ -1,5 +1,5 @@
 <UserControl
-    x:Class="LastfmDiscordRPC2.Views.Controls.PreviewSettingControlView"
+    x:Class="LastfmDiscordRPC2.Views.Controls.PreviewConfigControlView"
     xmlns="https://github.com/avaloniaui"
     xmlns:controls="clr-namespace:LastfmDiscordRPC2.ViewModels.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -26,7 +26,7 @@
     </UserControl.Styles>
 
     <Design.DataContext>
-        <controls:PreviewSettingControlViewModel />
+        <controls:PreviewConfigControlViewModel />
     </Design.DataContext>
 
     <Border
@@ -34,7 +34,6 @@
         ClipToBounds="True"
         CornerRadius="5"
         HorizontalAlignment="Stretch"
-        IsEnabled="{Binding !Context.IsRichPresenceActivated}"
         Margin="10"
         Padding="0">
         <Grid

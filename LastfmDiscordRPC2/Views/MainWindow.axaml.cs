@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Panes;
 
@@ -16,7 +15,7 @@ public partial class MainWindow : Window
         DataContext = dataContext;
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
 
-        Background = OperatingSystem.CurrentOS == OSEnum.Windows ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Black);
+        Background = OperatingSystem.CurrentOS == DataTypes.OperatingSystem.Windows ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Black);
 
         foreach (AbstractPaneViewModel viewModel in dataContext.Children)
         {

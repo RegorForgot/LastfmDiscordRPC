@@ -2,14 +2,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using LastfmDiscordRPC2.IO;
+using LastfmDiscordRPC2.ViewModels.Update;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Controls;
 
-public class PreviewSettingControlViewModel : AbstractControlViewModel
+public class PreviewConfigControlViewModel : AbstractControlViewModel, ISettableViewModel
 {
     private readonly SaveCfgIOService _saveCfgIOService;
-    public override string Name => "PreviewSettingControl";
+    public override string Name => "PreviewConfigControl";
 
     private string _details = Empty;
     private string _state = Empty;
@@ -20,53 +21,25 @@ public class PreviewSettingControlViewModel : AbstractControlViewModel
     public string Details
     {
         get => _details;
-        set
-        {
-            if (value is null)
-            {
-                return;
-            }
-            this.RaiseAndSetIfChanged(ref _details, value);
-        }
+        set => this.RaiseAndSetIfChanged(ref _details, value);
     }
 
     public string State
     {
         get => _state;
-        set
-        {
-            if (value is null)
-            {
-                return;
-            }
-            this.RaiseAndSetIfChanged(ref _state, value);
-        }
+        set => this.RaiseAndSetIfChanged(ref _state, value);
     }
 
     public string LargeImageLabel
     {
         get => _largeImageLabel;
-        set
-        {
-            if (value is null)
-            {
-                return;
-            }
-            this.RaiseAndSetIfChanged(ref _largeImageLabel, value);
-        }
+        set => this.RaiseAndSetIfChanged(ref _largeImageLabel, value);
     }
 
     public string SmallImageLabel
     {
         get => _smallImageLabel;
-        set
-        {
-            if (value is null)
-            {
-                return;
-            }
-            this.RaiseAndSetIfChanged(ref _smallImageLabel, value);
-        }
+        set => this.RaiseAndSetIfChanged(ref _smallImageLabel, value);
     }
 
     public ObservableCollection<PreviewButton> Buttons
@@ -80,17 +53,13 @@ public class PreviewSettingControlViewModel : AbstractControlViewModel
     public UIContext Context { get; }
     public ReactiveCommand<Unit, Unit> SavePreviewCmd { get; }
 
-    public PreviewSettingControlViewModel(UIContext context, SaveCfgIOService saveCfgIOService)
+    public PreviewConfigControlViewModel(UIContext context, SaveCfgIOService saveCfgIOService)
     {
         _saveCfgIOService = saveCfgIOService;
         Context = context;
-        SetProperties();
         SavePreviewCmd = ReactiveCommand.Create(SavePreview);
-    }
-
-    public void UpdateCanSave()
-    {
-        this.RaisePropertyChanged(nameof(Buttons));
+        
+        SetProperties();
     }
     
     private void SavePreview()
@@ -110,7 +79,7 @@ public class PreviewSettingControlViewModel : AbstractControlViewModel
         SmallImageLabel = _saveCfgIOService.SaveCfg.UserRPCCfg.SmallImageLabel;
         Buttons = new ObservableCollection<PreviewButton>(
             _saveCfgIOService.SaveCfg.UserRPCCfg.UserButtons.Select(button =>
-                new PreviewButton(UpdateCanSave)
+                new PreviewButton(() => this.RaisePropertyChanged(nameof(Buttons)))
                 {
                     URL = button.URL,
                     Label = button.Label

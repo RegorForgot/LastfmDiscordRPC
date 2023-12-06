@@ -1,6 +1,6 @@
 namespace LastfmDiscordRPC2.DataTypes;
 
-public struct ParsingStringStruct
+public struct PresenceParseString
 {
     internal const string PlayCount = "{PlayCount}";
     internal const string TrackName = "{TrackName}";

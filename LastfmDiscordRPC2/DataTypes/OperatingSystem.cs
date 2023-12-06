@@ -1,6 +1,6 @@
 ﻿namespace LastfmDiscordRPC2.DataTypes;
 
-public enum OSEnum
+public enum OperatingSystem
 {
     Windows,
     Linux,

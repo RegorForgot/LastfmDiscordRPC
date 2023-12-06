@@ -1,0 +1,18 @@
+<UserControl
+    x:Class="LastfmDiscordRPC2.Views.Panes.PresenceConfigView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:LastfmDiscordRPC2.Views.Controls"
+    xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.DataContext>
+        <panes:PresenceConfigViewModel />
+    </Design.DataContext>
+
+    <StackPanel>
+        <controls:PreviewConfigControlView
+            DataContext="{Binding PreviewConfigControlViewModel}"
+            IsEnabled="{Binding !Context.IsRichPresenceActivated}"
+            Margin="0" />
+    </StackPanel>
+</UserControl>

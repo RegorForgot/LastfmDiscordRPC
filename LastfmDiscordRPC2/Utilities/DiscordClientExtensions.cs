@@ -8,7 +8,7 @@ using System.Web;
 using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Models.RPC;
-using static LastfmDiscordRPC2.DataTypes.ParsingStringStruct;
+using static LastfmDiscordRPC2.DataTypes.PresenceParseString;
 
 namespace LastfmDiscordRPC2.Utilities;
 
@@ -28,7 +28,7 @@ public static class DiscordClientExtensions
         return success && (result?.Scheme == Uri.UriSchemeHttps || result?.Scheme == Uri.UriSchemeHttp);
     }
     
-    public static string GetParsedLink(this DiscordClient client, TrackResponse response, string linkToParse, BytesEnum bytesToClip)
+    public static string GetParsedLink(this DiscordClient client, TrackResponse response, string linkToParse, ByteCount bytesToClip)
     {
         string parsedString = new string(linkToParse);
         
@@ -39,7 +39,7 @@ public static class DiscordClientExtensions
         return GetUTF8String(parsedString, bytesToClip);
     }
     
-    public static string GetParsedString(this DiscordClient client, TrackResponse response, string stringToParse, BytesEnum bytesToClip)
+    public static string GetParsedString(this DiscordClient client, TrackResponse response, string stringToParse, ByteCount bytesToClip)
     {
         string parsedString = new string(stringToParse);
         
@@ -82,7 +82,7 @@ public static class DiscordClientExtensions
         }
     }
 
-    private static string GetUTF8String(string input, BytesEnum bytesToClip)
+    private static string GetUTF8String(string input, ByteCount bytesToClip)
     {
         if (IsNullOrEmpty(input))
         {

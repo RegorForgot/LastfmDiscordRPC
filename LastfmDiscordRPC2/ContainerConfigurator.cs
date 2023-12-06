@@ -7,6 +7,7 @@ using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Panes;
+using LastfmDiscordRPC2.ViewModels.Update;
 
 namespace LastfmDiscordRPC2;
 
@@ -27,6 +28,7 @@ public static class ContainerConfigurator
         builder.RegisterAssemblyTypes(Assembly.Load(nameof(LastfmDiscordRPC2)))
             .Where(t => t.Namespace.Contains("ViewModels.Controls"))
             .AsSelf()
+            .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
         builder.RegisterType<UIContext>().AsSelf().SingleInstance();
@@ -45,7 +47,7 @@ public static class ContainerConfigurator
         builder.RegisterType<DiscordClient>().As<IDiscordClient>().SingleInstance();
         builder.RegisterType<PresenceService>().As<IPresenceService>().SingleInstance();
 
-        builder.RegisterType<ViewModelUpdater>().As<IViewModelUpdater>().SingleInstance();
+        builder.RegisterType<ViewModelSetter>().As<IViewModelSetter>().SingleInstance();
 
         builder.RegisterType<LogIOService>().AsSelf().SingleInstance();
         builder.RegisterType<SaveCfgIOService>().AsSelf().SingleInstance();

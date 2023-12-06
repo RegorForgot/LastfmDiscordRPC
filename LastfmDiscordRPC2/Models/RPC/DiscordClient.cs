@@ -10,7 +10,6 @@ using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.Utilities;
-using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Controls;
 
 namespace LastfmDiscordRPC2.Models.RPC;
@@ -112,21 +111,21 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
             button => new Button
             {
-                Label = this.GetParsedString(response, button.Label, BytesEnum.ButtonLabel),
-                Url = this.GetParsedLink(response, button.URL, BytesEnum.ButtonLink)
+                Label = this.GetParsedString(response, button.Label, ByteCount.ButtonLabel),
+                Url = this.GetParsedLink(response, button.URL, ByteCount.ButtonLink)
             }
         ).ToArray();
 
         return new RichPresence
         {
-            Details = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.Details, BytesEnum.Default),
-            State = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.State, BytesEnum.Default),
+            Details = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.Details, ByteCount.Default),
+            State = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.State, ByteCount.Default),
             Assets = new DiscordRPC.Assets
             {
                 LargeImageKey = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL,
-                LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageLabel, BytesEnum.Default),
+                LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageLabel, ByteCount.Default),
                 SmallImageKey = track.NowPlaying.State == "true" ? PlayIconURL : PauseIconURL,
-                SmallImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.SmallImageLabel, BytesEnum.Default)
+                SmallImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.SmallImageLabel, ByteCount.Default)
             },
             Buttons = buttons
         };

@@ -13,6 +13,10 @@
         <None Remove=".gitignore" />
         <Compile Remove="Assets\SecretKey.cs" />
         <None Include="Assets\SecretKey.cs" />
+        <Compile Update="Views\Panes\PresenceConfigView.axaml.cs">
+          <DependentUpon>PresenceConfigView.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -58,7 +62,7 @@
         <DependentUpon>HomeView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="Views\Controls\PreviewSettingControlView.axaml.cs">
+      <Compile Update="Views\Controls\PreviewConfigControlView.axaml.cs">
         <DependentUpon>PreviewSettingControlView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>

@@ -2,7 +2,7 @@ using System;
 using LastfmDiscordRPC2.Utilities;
 using ReactiveUI;
 
-namespace LastfmDiscordRPC2.ViewModels;
+namespace LastfmDiscordRPC2.ViewModels.Controls;
 
 public abstract class PreviewObject : ReactiveObject
 {

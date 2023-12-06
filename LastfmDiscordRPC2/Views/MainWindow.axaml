@@ -19,6 +19,7 @@
         <Style Selector="TabItem">
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="5, 0, 0, 0" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
         </Style>
         <Style Selector="Border.PageButton">
             <Setter Property="Width" Value="60" />
@@ -58,7 +59,7 @@
                 <TabItem.Header>
                     <Border Classes="PageButton">
                         <StackPanel>
-                            <Image Source="../Assets/home.png" />
+                            <Image Source="/Assets/PageIcons/home.png" />
                             <TextBlock Text="Home" />
                         </StackPanel>
                     </Border>
@@ -71,8 +72,21 @@
                 <TabItem.Header>
                     <Border Classes="PageButton">
                         <StackPanel>
-                            <Image Source="../Assets/settings.png" />
-                            <TextBlock Text="Options" />
+                            <Image Source="/Assets/PageIcons/discord.png" />
+                            <TextBlock Text="Presence" />
+                        </StackPanel>
+                    </Border>
+                </TabItem.Header>
+                <Border Classes="PageContent">
+                    <panes:PresenceConfigView Name="PresenceConfig" />
+                </Border>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Border Classes="PageButton">
+                        <StackPanel>
+                            <Image Source="/Assets/PageIcons/settings.png" />
+                            <TextBlock Text="Settings" />
                         </StackPanel>
                     </Border>
                 </TabItem.Header>
@@ -84,7 +98,7 @@
                 <TabItem.Header>
                     <Border Classes="PageButton">
                         <StackPanel>
-                            <Image Source="../Assets/info.png" />
+                            <Image Source="/Assets/PageIcons/info.png" />
                             <TextBlock Text="About" />
                         </StackPanel>
                     </Border>

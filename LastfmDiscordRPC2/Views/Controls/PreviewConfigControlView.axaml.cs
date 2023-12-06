@@ -3,9 +3,9 @@ using Avalonia.Markup.Xaml;
 
 namespace LastfmDiscordRPC2.Views.Controls;
 
-public partial class PreviewSettingControlView : UserControl
+public partial class PreviewConfigControlView : UserControl
 {
-    public PreviewSettingControlView()
+    public PreviewConfigControlView()
     {
         InitalizeComponent();
     }

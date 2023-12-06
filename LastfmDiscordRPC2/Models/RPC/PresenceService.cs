@@ -84,7 +84,7 @@ public sealed class PresenceService : IPresenceService
                     }
                 }
 
-                PresenceExpiry(saveSnapshot.UserRPCCfg.SleepTime);
+                PresenceExpiry(saveSnapshot.UserRPCCfg.ExpiryTime);
             }
         }
         catch (OperationCanceledException)
@@ -145,7 +145,7 @@ public sealed class PresenceService : IPresenceService
             {
                 _loggingService.Error("Last.fm {0}", exception.Message);
                 _exceptionCount++;
-                return exception.ErrorCodeEnum is LastfmErrorCodeEnum.Temporary or LastfmErrorCodeEnum.OperationFail && IsRetry;
+                return exception.ErrorCode is LastfmErrorCode.Temporary or LastfmErrorCode.OperationFail && IsRetry;
             }
             case HttpRequestException requestException:
             {
