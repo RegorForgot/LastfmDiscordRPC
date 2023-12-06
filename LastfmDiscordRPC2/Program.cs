@@ -1,6 +1,8 @@
 ﻿using Avalonia;
 using Avalonia.ReactiveUI;
 using System;
+using System.Diagnostics;
+using System.Runtime;
 
 namespace LastfmDiscordRPC2;
 
@@ -11,8 +13,16 @@ class Program
     // yet and stuff might break.
     [STAThread]
     public static void Main(string[] args)
-        => BuildAvaloniaApp()
+    {
+        var processNames = Process.GetProcessesByName("LastfmDiscordRPC2");
+        if (processNames.Length > 1)
+        {
+            return;
+        }
+        GCSettings.LatencyMode = GCLatencyMode.Batch;
+        BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
+    }
 
 
     // Avalonia configuration, don't remove; also used by visual designer.

@@ -96,16 +96,30 @@
                 </Label>
             </StackPanel>
 
-            <StackPanel
+            <Grid
+                ColumnDefinitions="*, *, *"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="1">
                 <Button
                     Classes="RPCButton"
+                    Command="{Binding ResetPreviewCmd}"
+                    Content="Reset"
+                    HorizontalAlignment="Stretch" />
+                <Button
+                    Classes="RPCButton"
                     Command="{Binding SavePreviewCmd}"
                     Content="Save"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
                     IsEnabled="{Binding CanSave}" />
-            </StackPanel>
+                <Button
+                    Classes="RPCButton"
+                    Command="{Binding VarDialogCmd}"
+                    Content="View variables"
+                    Grid.Column="2"
+                    HorizontalAlignment="Stretch" />
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

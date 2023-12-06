@@ -1,8 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using LastfmDiscordRPC2.DataTypes;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.ViewModels.Update;
+using LastfmDiscordRPC2.Views;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Controls;
@@ -16,6 +18,7 @@ public class PreviewConfigControlViewModel : AbstractControlViewModel, ISettable
     private string _state = Empty;
     private string _largeImageLabel = Empty;
     private string _smallImageLabel = Empty;
+    private readonly DialogWindow _window;
     private ObservableCollection<PreviewButton> _buttons = new ObservableCollection<PreviewButton>();
 
     public string Details
@@ -52,16 +55,27 @@ public class PreviewConfigControlViewModel : AbstractControlViewModel, ISettable
     
     public UIContext Context { get; }
     public ReactiveCommand<Unit, Unit> SavePreviewCmd { get; }
+    public ReactiveCommand<Unit, Unit> ResetPreviewCmd { get; }
+    public ReactiveCommand<Unit, Unit> VarDialogCmd { get; }
 
-    public PreviewConfigControlViewModel(UIContext context, SaveCfgIOService saveCfgIOService)
+    public PreviewConfigControlViewModel(UIContext context, SaveCfgIOService saveCfgIOService, DialogWindow window)
     {
         _saveCfgIOService = saveCfgIOService;
+        _window = window;
         Context = context;
+
         SavePreviewCmd = ReactiveCommand.Create(SavePreview);
+        ResetPreviewCmd = ReactiveCommand.Create(ResetPreview);
+        VarDialogCmd = ReactiveCommand.Create(VarDialog);
         
         SetProperties();
     }
     
+    private void VarDialog()
+    {
+        DialogWindow.Show(null);
+    }
+
     private void SavePreview()
     {
         _saveCfgIOService.SaveCfg.UserRPCCfg.Details = Details;
@@ -69,6 +83,15 @@ public class PreviewConfigControlViewModel : AbstractControlViewModel, ISettable
         _saveCfgIOService.SaveCfg.UserRPCCfg.LargeImageLabel = LargeImageLabel;
         _saveCfgIOService.SaveCfg.UserRPCCfg.SmallImageLabel = SmallImageLabel;
         _saveCfgIOService.SaveConfigData();
+    }
+
+    private void ResetPreview()
+    {
+        Details = SaveVars.DefaultDetails;
+        State = SaveVars.DefaultState;
+        LargeImageLabel = SaveVars.DefaultLargeImageLabel;
+        SmallImageLabel = SaveVars.DefaultSmallImageLabel;
+        SavePreview();
     }
 
     public void SetProperties()

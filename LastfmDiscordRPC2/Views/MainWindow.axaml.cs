@@ -28,7 +28,7 @@ public partial class MainWindow : Window
 
         WindowStateProperty.Changed.AddClassHandler<Window>((window, args) =>
         {
-            if (window.PlatformImpl != null && (WindowState)(args.NewValue ?? WindowState.Maximized) == WindowState.Minimized)
+            if (window == this && window.PlatformImpl != null && (WindowState)(args.NewValue ?? WindowState.Maximized) == WindowState.Minimized)
             {
                 Hide();
             }
@@ -36,7 +36,7 @@ public partial class MainWindow : Window
 
         IsVisibleProperty.Changed.AddClassHandler<Window>((window, args) =>
         {
-            if (window.PlatformImpl != null && (bool)args.NewValue)
+            if (window == this && window.PlatformImpl != null && (bool)args.NewValue)
             {
                 WindowState = WindowState.Normal;
             }

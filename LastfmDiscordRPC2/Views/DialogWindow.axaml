@@ -1,0 +1,22 @@
+<Window
+    CanResize="False"
+    Height="400"
+    Icon="/Assets/icon.ico"
+    IsVisible="False"
+    MinHeight="400"
+    MinWidth="250"
+    Title="PreviewVariables"
+    Width="250"
+    WindowStartupLocation="CenterScreen"
+    x:Class="LastfmDiscordRPC2.Views.DialogWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StackPanel HorizontalAlignment="Center">
+        <TextBlock
+            HorizontalAlignment="Center"
+            Name="Text"
+            Text="Hi" />
+        <Button Content="Ok" Name="Ok" />
+    </StackPanel>
+</Window>

@@ -12,8 +12,7 @@ namespace LastfmDiscordRPC2;
 public class App : Application
 {
     private IClassicDesktopStyleApplicationLifetime? _desktop;
-    private MainViewModel? _mainViewModel;
-    
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -22,12 +21,12 @@ public class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         using ILifetimeScope container = ContainerConfigurator.Configure().BeginLifetimeScope();
-        _mainViewModel = container.Resolve<MainViewModel>();
+        MainViewModel mainViewModel = container.Resolve<MainViewModel>();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             _desktop = desktop;
             _desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            _desktop.MainWindow = new MainWindow(_mainViewModel);
+            _desktop.MainWindow = new MainWindow(mainViewModel);
         }
         
         base.OnFrameworkInitializationCompleted();

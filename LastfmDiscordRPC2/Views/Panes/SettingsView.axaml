@@ -1,7 +1,6 @@
 <UserControl
     x:Class="LastfmDiscordRPC2.Views.Panes.SettingsView"
     xmlns="https://github.com/avaloniaui"
-    xmlns:controls="clr-namespace:LastfmDiscordRPC2.Views.Controls"
     xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
     xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">

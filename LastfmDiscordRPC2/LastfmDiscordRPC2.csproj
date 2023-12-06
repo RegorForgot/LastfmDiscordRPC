@@ -17,6 +17,10 @@
           <DependentUpon>PresenceConfigView.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\DialogWindow.axaml.cs">
+          <DependentUpon>DialogWindow.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

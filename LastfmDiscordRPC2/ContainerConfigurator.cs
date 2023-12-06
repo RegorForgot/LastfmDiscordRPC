@@ -8,6 +8,7 @@ using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Panes;
 using LastfmDiscordRPC2.ViewModels.Update;
+using LastfmDiscordRPC2.Views;
 
 namespace LastfmDiscordRPC2;
 
@@ -32,6 +33,8 @@ public static class ContainerConfigurator
             .InstancePerLifetimeScope();
 
         builder.RegisterType<UIContext>().AsSelf().SingleInstance();
+
+        builder.RegisterType<DialogWindow>().AsSelf().SingleInstance();
         
         builder.RegisterType<LoggingService>().AsSelf().SingleInstance();
 
