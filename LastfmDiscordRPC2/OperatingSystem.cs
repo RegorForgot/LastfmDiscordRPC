@@ -6,6 +6,7 @@ namespace LastfmDiscordRPC2;
 public static class OperatingSystem
 {
     public static DataTypes.OperatingSystem CurrentOS { get; }
+    public static bool IsWindows11 { get; }
 
     static OperatingSystem()
     {
@@ -20,6 +21,7 @@ public static class OperatingSystem
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             CurrentOS = DataTypes.OperatingSystem.Windows;
+            IsWindows11 = Environment.OSVersion.Version.Build >= 22000;
         }
         else
         {

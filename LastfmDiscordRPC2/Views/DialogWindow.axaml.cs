@@ -11,9 +11,13 @@ public partial class DialogWindow : Window
     public DialogWindow()
     {
         InitializeComponent();
-        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
-        Background = OperatingSystem.CurrentOS == DataTypes.OperatingSystem.Windows ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Black);
+        
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
 
+        if (OperatingSystem.IsWindows11)
+        {
+            Background = new SolidColorBrush(Colors.Transparent);
+        }
 
         WindowStateProperty.Changed.AddClassHandler<Window>((window, args) =>
         {

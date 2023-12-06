@@ -1,4 +1,5 @@
 <UserControl
+    IsVisible="{Binding IsReady}"
     x:Class="LastfmDiscordRPC2.Views.Controls.PreviewControlView"
     xmlns="https://github.com/avaloniaui"
     xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
@@ -32,11 +33,10 @@
     </Design.DataContext>
 
     <Border
-        Background="#303030"
+        Background="#50303030"
         ClipToBounds="True"
         CornerRadius="5"
         HorizontalAlignment="Stretch"
-        IsVisible="{Binding IsReady}"
         Margin="10"
         Padding="0">
         <Grid

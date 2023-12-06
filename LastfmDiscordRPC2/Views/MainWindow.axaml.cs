@@ -12,11 +12,16 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
+
+        if (OperatingSystem.IsWindows11)
+        {
+            Background = new SolidColorBrush(Colors.Transparent);
+        }
+
         DataContext = dataContext;
-        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.AcrylicBlur, WindowTransparencyLevel.None };
-
-        Background = OperatingSystem.CurrentOS == DataTypes.OperatingSystem.Windows ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Black);
-
+        
         foreach (AbstractPaneViewModel viewModel in dataContext.Children)
         {
             UserControl? control = this.FindControl<UserControl>(viewModel.Name);

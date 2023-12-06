@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
 using LastfmDiscordRPC2.DataTypes;
@@ -164,16 +166,8 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
     {
         _previewControlViewModel.IsReady = false;
         _previewControlViewModel.ClearAll();
-        if (_client is null)
-        {
-            return;
-        }
-
-        try
-        {
-            _client.ClearPresence();
-        }
-        catch (Exception ex) when (ex is ObjectDisposedException or UninitializedException) { }
+   
+        _client?.ClearPresence();
     }
 
     public void Dispose()

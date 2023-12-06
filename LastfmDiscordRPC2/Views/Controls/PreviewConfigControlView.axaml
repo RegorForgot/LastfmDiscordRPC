@@ -30,7 +30,7 @@
     </Design.DataContext>
 
     <Border
-        Background="#303030"
+        Background="#60606060"
         ClipToBounds="True"
         CornerRadius="5"
         HorizontalAlignment="Stretch"

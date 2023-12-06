@@ -1,4 +1,5 @@
-﻿using LastfmDiscordRPC2.IO;
+﻿using System.Threading.Tasks;
+using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Models.Responses;
 
 namespace LastfmDiscordRPC2.Models.RPC;
