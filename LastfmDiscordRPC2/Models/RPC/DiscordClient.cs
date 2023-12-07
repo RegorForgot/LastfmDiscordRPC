@@ -110,8 +110,8 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             }
         }
         
-        Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
-            button => new Button
+        DiscordRPC.Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
+            button => new DiscordRPC.Button
             {
                 Label = this.GetParsedString(response, button.Label, ByteCount.ButtonLabel),
                 Url = this.GetParsedLink(response, button.URL, ByteCount.ButtonLink)
@@ -122,7 +122,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         {
             Details = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.Details, ByteCount.Default),
             State = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.State, ByteCount.Default),
-            Assets = new DiscordRPC.Assets
+            Assets = new Assets
             {
                 LargeImageKey = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL,
                 LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageLabel, ByteCount.Default),
@@ -141,18 +141,14 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         _previewControlViewModel.LargeImage.URL = presence.Assets.LargeImageKey;
         _previewControlViewModel.SmallImage.Label = presence.Assets.SmallImageText;
         _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
-
-        var buttons =
-            presence.Buttons.ToList().Select(
-                button => new PreviewButton
+        _previewControlViewModel.Buttons = 
+            new ObservableCollection<RPCButton>(presence.Buttons.ToList().Select(
+                button => new RPCButton
                 {
                     URL = button.Url,
                     Label = button.Label
                 }
-            ).ToList();
-
-        _previewControlViewModel.Buttons = 
-            new ObservableCollection<PreviewButton>(buttons);
+            ));
     }
 
     public void SetPresence(TrackResponse response)

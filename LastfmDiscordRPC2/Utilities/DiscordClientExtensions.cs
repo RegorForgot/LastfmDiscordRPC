@@ -84,12 +84,7 @@ public static class DiscordClientExtensions
 
     private static string GetUTF8String(string input, ByteCount bytesToClip)
     {
-        if (IsNullOrEmpty(input))
-        {
-            return input;
-        }
-        
-        if (input.Length < 2)
+        while (input.Length < 2)
         {
             input += "\u180E";
         }

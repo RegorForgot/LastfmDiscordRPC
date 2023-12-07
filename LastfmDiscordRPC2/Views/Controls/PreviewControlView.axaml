@@ -33,7 +33,7 @@
     </Design.DataContext>
 
     <Border
-        Background="#50303030"
+        Background="#60606060"
         ClipToBounds="True"
         CornerRadius="5"
         HorizontalAlignment="Stretch"
@@ -42,7 +42,7 @@
         <Grid
             ColumnDefinitions="200,*"
             HorizontalAlignment="Stretch"
-            RowDefinitions="200,Auto">
+            RowDefinitions="200,Auto,Auto">
 
             <Grid ColumnDefinitions="*,40" RowDefinitions="*,40">
 
@@ -122,10 +122,16 @@
                 </Label>
             </StackPanel>
 
+            <Separator
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="1" />
+
+
             <StackPanel
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Grid.Row="1"
+                Grid.Row="2"
                 Margin="10,0,10,10">
                 <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}">
                     <ItemsControl.ItemTemplate>

@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reactive;
+using LastfmDiscordRPC2.Models;
+using LastfmDiscordRPC2.Models.RPC;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels.Controls;
@@ -9,11 +11,11 @@ public class PreviewControlViewModel : AbstractControlViewModel
     public override string Name => "PreviewControl";
 
     private bool _isReady;
-    private ObservableCollection<PreviewButton> _buttons = new ObservableCollection<PreviewButton>();
+    private ObservableCollection<RPCButton> _buttons = new ObservableCollection<RPCButton>();
     private string _details = Empty;
     private string _state = Empty;
-    private PreviewImage _largeImage = new PreviewImage();
-    private PreviewImage _smallImage = new PreviewImage();
+    private RPCImage _largeImage = new RPCImage();
+    private RPCImage _smallImage = new RPCImage();
 
     public string Details
     {
@@ -27,13 +29,13 @@ public class PreviewControlViewModel : AbstractControlViewModel
         set => this.RaiseAndSetIfChanged(ref _state, value);
     }
 
-    public ObservableCollection<PreviewButton> Buttons
+    public ObservableCollection<RPCButton> Buttons
     {
         get => _buttons;
         set => this.RaiseAndSetIfChanged(ref _buttons, value);
     }
 
-    public PreviewImage LargeImage
+    public RPCImage LargeImage
     {
         get => _largeImage;
         private set
@@ -44,7 +46,7 @@ public class PreviewControlViewModel : AbstractControlViewModel
         }
     }
 
-    public PreviewImage SmallImage
+    public RPCImage SmallImage
     {
         get => _smallImage;
         private set
@@ -65,7 +67,7 @@ public class PreviewControlViewModel : AbstractControlViewModel
 
     private static void OpenArt(string uri)
     {
-        if (uri != PreviewImage.TransparentImage)
+        if (uri != RPCImage.TransparentImage)
         {
             Utilities.URIOpen.OpenURI(uri);
         }
@@ -73,10 +75,10 @@ public class PreviewControlViewModel : AbstractControlViewModel
 
     public void ClearAll()
     {
-        Buttons = new ObservableCollection<PreviewButton>();
+        Buttons = new ObservableCollection<RPCButton>();
         Details = Empty;
         State = Empty;
-        LargeImage = new PreviewImage();
-        SmallImage = new PreviewImage();
+        LargeImage = new RPCImage();
+        SmallImage = new RPCImage();
     }
 }

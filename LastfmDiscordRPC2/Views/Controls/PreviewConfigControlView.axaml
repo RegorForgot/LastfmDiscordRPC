@@ -39,7 +39,7 @@
         <Grid
             ColumnDefinitions="200,*"
             HorizontalAlignment="Stretch"
-            RowDefinitions="200,Auto">
+            RowDefinitions="200,Auto,Auto,Auto,Auto">
 
             <Grid RowDefinitions="*,40">
 
@@ -51,7 +51,8 @@
                         MaxLength="128"
                         MaxLines="1"
                         Padding="0"
-                        Text="{Binding LargeImageLabel, Mode=TwoWay}" />
+                        Text="{Binding LargeImageLabel, Mode=TwoWay}"
+                        Watermark="Large image label" />
                     <ToolTip.Tip>
                         <Label Content="Large image label" />
                     </ToolTip.Tip>
@@ -65,9 +66,10 @@
                         MaxLength="128"
                         MaxLines="1"
                         Padding="0"
-                        Text="{Binding SmallImageLabel, Mode=TwoWay}" />
+                        Text="{Binding SmallImageLabel, Mode=TwoWay}"
+                        Watermark="Small image label" />
                     <ToolTip.Tip>
-                        <Label Content="Small image text" />
+                        <Label Content="Small image label" />
                     </ToolTip.Tip>
                 </Label>
             </Grid>
@@ -82,25 +84,101 @@
                 </Label>
 
                 <Label Classes="PreviewText">
-                    <TextBox Text="{Binding Details, Mode=TwoWay}" />
+                    <TextBox
+                        AcceptsReturn="False"
+                        AcceptsTab="False"
+                        MaxLength="128"
+                        MaxLines="1"
+                        Text="{Binding Details, Mode=TwoWay}"
+                        Watermark="Details" />
                     <ToolTip.Tip>
                         <Label Content="Details label" />
                     </ToolTip.Tip>
                 </Label>
 
                 <Label Classes="PreviewText">
-                    <TextBox Text="{Binding State, Mode=TwoWay}" />
+                    <TextBox
+                        AcceptsReturn="False"
+                        AcceptsTab="False"
+                        MaxLength="128"
+                        MaxLines="1"
+                        Text="{Binding State, Mode=TwoWay}"
+                        Watermark="State" />
                     <ToolTip.Tip>
                         <Label Content="State label" />
                     </ToolTip.Tip>
                 </Label>
+
             </StackPanel>
+
+            <Separator
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="1" />
+
+            <Grid
+                ColumnDefinitions="*, Auto"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="2">
+                <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Classes="PreviewText">
+                                    <TextBox
+                                        AcceptsReturn="False"
+                                        AcceptsTab="False"
+                                        MaxLength="32"
+                                        MaxLines="1"
+                                        Text="{Binding Label, Mode=TwoWay}"
+                                        Watermark="Button label" />
+                                    <ToolTip.Tip>
+                                        <Label Content="Button label" />
+                                    </ToolTip.Tip>
+                                </Label>
+                                <Label Classes="PreviewText" Grid.Column="1">
+                                    <TextBox
+                                        AcceptsReturn="False"
+                                        AcceptsTab="False"
+                                        MaxLength="512"
+                                        MaxLines="1"
+                                        Text="{Binding URL, Mode=TwoWay}"
+                                        Watermark="URL label" />
+                                    <ToolTip.Tip>
+                                        <Label Content="URL label" />
+                                    </ToolTip.Tip>
+                                </Label>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Grid.Column="1" Orientation="Vertical">
+                    <Button
+                        Classes="RPCButton"
+                        Command="{Binding AddButtonCmd}"
+                        Content="Add"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{Binding CanAdd}" />
+                    <Button
+                        Classes="RPCButton"
+                        Command="{Binding RemoveButtonCmd}"
+                        Content="Remove"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{Binding CanRemove}" />
+                </StackPanel>
+            </Grid>
+
+            <Separator
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="3" />
 
             <Grid
                 ColumnDefinitions="*, *, *"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Grid.Row="1">
+                Grid.Row="4">
                 <Button
                     Classes="RPCButton"
                     Command="{Binding ResetPreviewCmd}"

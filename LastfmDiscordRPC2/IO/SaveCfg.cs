@@ -1,4 +1,5 @@
 using System;
+using LastfmDiscordRPC2.Models;
 using Newtonsoft.Json;
 using static LastfmDiscordRPC2.DataTypes.SaveVars;
 
@@ -34,11 +35,5 @@ public record SaveCfg
         [JsonProperty] public string LargeImageLabel { get; set; } = DefaultLargeImageLabel;
         [JsonProperty] public string SmallImageLabel { get; set; } = DefaultSmallImageLabel;
         [JsonProperty] public RPCButton[] UserButtons { get; set; } = { new RPCButton() };
-    }
-
-    public record RPCButton
-    {
-        [JsonProperty] public string URL { get; set; } = DefaultButtonURL;
-        [JsonProperty] public string Label { get; set; } = DefaultButtonLabel;
     }
 }
