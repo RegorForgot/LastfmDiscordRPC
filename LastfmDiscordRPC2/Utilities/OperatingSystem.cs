@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace LastfmDiscordRPC2;
+namespace LastfmDiscordRPC2.Utilities;
 
 public static class OperatingSystem
 {

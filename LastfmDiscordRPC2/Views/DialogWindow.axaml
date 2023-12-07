@@ -10,13 +10,24 @@
     WindowStartupLocation="CenterScreen"
     x:Class="LastfmDiscordRPC2.Views.DialogWindow"
     xmlns="https://github.com/avaloniaui"
+    xmlns:dataTypes="clr-namespace:LastfmDiscordRPC2.DataTypes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <StackPanel HorizontalAlignment="Center">
-        <TextBlock
-            HorizontalAlignment="Center"
-            Name="Text"
-            Text="Hi" />
-        <Button Content="Ok" Name="Ok" />
+        <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{x:Static dataTypes:PresenceParseString.StringList}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Label Content="{Binding Item1}" />
+                        <Label Content="{Binding Item2}" Grid.Column="1" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button
+            Content="Ok"
+            Height="50"
+            HorizontalAlignment="Stretch"
+            Name="Ok" />
     </StackPanel>
 </Window>

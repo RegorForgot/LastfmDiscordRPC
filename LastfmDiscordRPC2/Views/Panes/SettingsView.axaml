@@ -1,13 +1,8 @@
 <UserControl
     x:Class="LastfmDiscordRPC2.Views.Panes.SettingsView"
     xmlns="https://github.com/avaloniaui"
-    xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
     xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <UserControl.Resources>
-        <converters:LoginTextConverter x:Key="LoginTextConverter" />
-    </UserControl.Resources>
 
     <Design.DataContext>
         <panes:SettingsViewModel />
@@ -15,6 +10,9 @@
 
     <Grid RowDefinitions="*,Auto">
         <StackPanel Grid.Row="0">
+            <Label Classes="Heading" Content="Settings" />
+            <Label Classes="Text" />
+
             <ToggleSwitch
                 Command="{Binding LaunchOnStartupCmd}"
                 CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}"
@@ -40,13 +38,12 @@
 
             <StackPanel Height="50" Orientation="Horizontal">
                 <TextBox
-                    AcceptsReturn="False"
+                    Classes="SingleLine"
                     Focusable="{Binding !Context.HasRichPresenceActivated}"
                     Height="30"
                     IsReadOnly="{Binding Context.HasRichPresenceActivated}"
                     MaxLength="21"
                     Text="{Binding AppID}"
-                    VerticalContentAlignment="Center"
                     Watermark="Discord ID"
                     Width="400" />
                 <Button
@@ -85,24 +82,20 @@
                 </Button>
             </StackPanel>
         </StackPanel>
+
         <StackPanel
             Grid.Row="1"
             HorizontalAlignment="Center"
             Orientation="Vertical">
             <Label
+                Classes="Error"
                 Content="⚠ Please enter a valid Discord App ID."
-                Foreground="Yellow"
-                HorizontalAlignment="Center"
                 IsVisible="{Binding !IsAppIDError}" />
             <Label
+                Classes="Error"
                 Content="⚠ Please enter a valid presence expiry time."
-                Foreground="Yellow"
-                HorizontalAlignment="Center"
                 IsVisible="{Binding !IsExpiryTimeError}" />
-            <ProgressBar
-                IsIndeterminate="True"
-                IsVisible="{Binding IsLoginInProgress}"
-                Width="40" />
+            <ProgressBar Classes="Loading" IsVisible="{Binding IsLoginInProgress}" />
         </StackPanel>
     </Grid>
 </UserControl>

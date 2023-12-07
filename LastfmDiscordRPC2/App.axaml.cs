@@ -41,7 +41,7 @@ public class App : Application
         _desktop.MainWindow?.Show();
     }
     
-    private void MainItem_OnClick(object? sender, EventArgs e)
+    private void OpenItem_OnClick(object? sender, EventArgs e)
     {
         TrayIcon_OnClicked(sender, e);
     }

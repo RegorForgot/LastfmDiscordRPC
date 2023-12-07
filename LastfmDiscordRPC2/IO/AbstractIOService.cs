@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using static LastfmDiscordRPC2.Utilities.URIOpen;
+using OperatingSystem = LastfmDiscordRPC2.Utilities.OperatingSystem;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace LastfmDiscordRPC2.IO;

@@ -97,22 +97,22 @@ public class PreviewConfigControlViewModel : AbstractControlViewModel, ISettable
         State = DefaultState;
         LargeImageLabel = DefaultLargeImageLabel;
         SmallImageLabel = DefaultSmallImageLabel;
-        Buttons = new ObservableCollection<RPCButton>(
-            DefaultUserButtons.Select(button =>
-                {
-                    button.Action = UpdateCanSave;
-                    return button;
-                }
-            )
-        );
+        Buttons = new ObservableCollection<RPCButton>
+        {
+            new RPCButton
+            {
+                Action = UpdateCanSave
+            }
+        };
         SavePreview();
+        UpdateCanSave();
         UpdateButtonAddRemove();
     }
 
     private void RemoveButton()
     {
         Buttons.RemoveAt(Buttons.Count - 1);
-        this.RaisePropertyChanged(nameof(CanSave));
+        UpdateCanSave();
         UpdateButtonAddRemove();
     }
 

@@ -4,38 +4,11 @@
     xmlns:controls="clr-namespace:LastfmDiscordRPC2.ViewModels.Controls"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <UserControl.Styles>
-        <Style Selector="Button.RPCButton">
-            <Setter Property="Height" Value="50" />
-            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-        </Style>
-        <Style Selector="Label.HeadingText">
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="FontWeight" Value="Bold" />
-        </Style>
-        <Style Selector="TextBox.PreviewText">
-            <Setter Property="FontSize" Value="20" />
-        </Style>
-        <Style Selector="ToolTip Label">
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-    </UserControl.Styles>
-
     <Design.DataContext>
         <controls:PreviewConfigControlViewModel />
     </Design.DataContext>
 
-    <Border
-        Background="#60606060"
-        ClipToBounds="True"
-        CornerRadius="5"
-        HorizontalAlignment="Stretch"
-        Margin="10"
-        Padding="0">
+    <Border Classes="PresenceContainer">
         <Grid
             ColumnDefinitions="200,*"
             HorizontalAlignment="Stretch"
@@ -45,12 +18,8 @@
 
                 <Label Grid.Row="0">
                     <TextBox
-                        AcceptsReturn="False"
-                        AcceptsTab="False"
-                        Margin="20,20,10,10"
+                        Classes="SingleLine"
                         MaxLength="128"
-                        MaxLines="1"
-                        Padding="0"
                         Text="{Binding LargeImageLabel, Mode=TwoWay}"
                         Watermark="Large image label" />
                     <ToolTip.Tip>
@@ -60,12 +29,8 @@
 
                 <Label Grid.Row="1">
                     <TextBox
-                        AcceptsReturn="False"
-                        AcceptsTab="False"
-                        Margin="20,20,10,10"
+                        Classes="SingleLine"
                         MaxLength="128"
-                        MaxLines="1"
-                        Padding="0"
                         Text="{Binding SmallImageLabel, Mode=TwoWay}"
                         Watermark="Small image label" />
                     <ToolTip.Tip>
@@ -79,16 +44,14 @@
                 Grid.Row="0"
                 VerticalAlignment="Center">
 
-                <Label Classes="HeadingText">
+                <Label Classes="Heading">
                     <TextBlock Text="Last.fm" TextTrimming="CharacterEllipsis" />
                 </Label>
 
-                <Label Classes="PreviewText">
+                <Label Classes="Text">
                     <TextBox
-                        AcceptsReturn="False"
-                        AcceptsTab="False"
+                        Classes="SingleLine"
                         MaxLength="128"
-                        MaxLines="1"
                         Text="{Binding Details, Mode=TwoWay}"
                         Watermark="Details" />
                     <ToolTip.Tip>
@@ -96,19 +59,16 @@
                     </ToolTip.Tip>
                 </Label>
 
-                <Label Classes="PreviewText">
+                <Label Classes="Text">
                     <TextBox
-                        AcceptsReturn="False"
-                        AcceptsTab="False"
+                        Classes="SingleLine"
                         MaxLength="128"
-                        MaxLines="1"
                         Text="{Binding State, Mode=TwoWay}"
                         Watermark="State" />
                     <ToolTip.Tip>
                         <Label Content="State label" />
                     </ToolTip.Tip>
                 </Label>
-
             </StackPanel>
 
             <Separator
@@ -125,24 +85,21 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="*, Auto">
-                                <Label Classes="PreviewText">
+                                <Label Classes="Text">
                                     <TextBox
-                                        AcceptsReturn="False"
-                                        AcceptsTab="False"
+                                        Classes="SingleLine"
                                         MaxLength="32"
-                                        MaxLines="1"
                                         Text="{Binding Label, Mode=TwoWay}"
                                         Watermark="Button label" />
                                     <ToolTip.Tip>
                                         <Label Content="Button label" />
                                     </ToolTip.Tip>
                                 </Label>
-                                <Label Classes="PreviewText" Grid.Column="1">
+
+                                <Label Classes="Text" Grid.Column="1">
                                     <TextBox
-                                        AcceptsReturn="False"
-                                        AcceptsTab="False"
+                                        Classes="SingleLine"
                                         MaxLength="512"
-                                        MaxLines="1"
                                         Text="{Binding URL, Mode=TwoWay}"
                                         Watermark="URL label" />
                                     <ToolTip.Tip>
@@ -153,18 +110,17 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
                 <StackPanel Grid.Column="1" Orientation="Vertical">
                     <Button
-                        Classes="RPCButton"
+                        Classes="UIButton"
                         Command="{Binding AddButtonCmd}"
                         Content="Add"
-                        HorizontalAlignment="Stretch"
                         IsEnabled="{Binding CanAdd}" />
                     <Button
-                        Classes="RPCButton"
+                        Classes="UIButton"
                         Command="{Binding RemoveButtonCmd}"
                         Content="Remove"
-                        HorizontalAlignment="Stretch"
                         IsEnabled="{Binding CanRemove}" />
                 </StackPanel>
             </Grid>
@@ -180,23 +136,20 @@
                 Grid.ColumnSpan="2"
                 Grid.Row="4">
                 <Button
-                    Classes="RPCButton"
+                    Classes="UIButton"
                     Command="{Binding ResetPreviewCmd}"
-                    Content="Reset"
-                    HorizontalAlignment="Stretch" />
+                    Content="Reset" />
                 <Button
-                    Classes="RPCButton"
+                    Classes="UIButton"
                     Command="{Binding SavePreviewCmd}"
                     Content="Save"
                     Grid.Column="1"
-                    HorizontalAlignment="Stretch"
                     IsEnabled="{Binding CanSave}" />
                 <Button
-                    Classes="RPCButton"
+                    Classes="UIButton"
                     Command="{Binding VarDialogCmd}"
                     Content="View variables"
-                    Grid.Column="2"
-                    HorizontalAlignment="Stretch" />
+                    Grid.Column="2" />
             </Grid>
         </Grid>
     </Border>

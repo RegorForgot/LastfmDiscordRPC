@@ -11,6 +11,7 @@ using LastfmDiscordRPC2.ViewModels.Update;
 using ReactiveUI;
 using static System.Text.RegularExpressions.Regex;
 using static LastfmDiscordRPC2.DataTypes.SaveVars;
+using OperatingSystem = LastfmDiscordRPC2.Utilities.OperatingSystem;
 
 namespace LastfmDiscordRPC2.ViewModels.Panes;
 
@@ -27,7 +28,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewMode
     private string _appID;
     private TimeSpan _presenceExpiryTime;
 
-    [RegularExpression($"{AppIDRegExp}", ErrorMessage = "Please enter a valid Discord App ID.")]
     public string AppID
     {
         get => _appID;

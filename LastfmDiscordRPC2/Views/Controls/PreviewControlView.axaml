@@ -1,5 +1,5 @@
 <UserControl
-    IsVisible="{Binding IsReady}"
+    IsVisible="{Binding IsVisible}"
     x:Class="LastfmDiscordRPC2.Views.Controls.PreviewControlView"
     xmlns="https://github.com/avaloniaui"
     xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
@@ -8,23 +8,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <UserControl.Styles>
-        <Style Selector="Button.RPCButton">
-            <Setter Property="Height" Value="50" />
-            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Style Selector="Image">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Stretch" Value="UniformToFill" />
+            <Setter Property="UseLayoutRounding" Value="True" />
+            <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
-        <Style Selector="Label.HeadingText">
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="FontWeight" Value="Bold" />
+        <Style Selector="Button.ImageButton">
+            <Setter Property="Margin" Value="20,20,10,10" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="ClipToBounds" Value="True" />
         </Style>
-        <Style Selector="Label.PreviewText">
-            <Setter Property="FontSize" Value="20" />
-        </Style>
-        <Style Selector="ToolTip Label">
-            <Setter Property="FontSize" Value="14" />
+        <Style Selector="Border.ImageBorder">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Margin" Value="0" />
         </Style>
     </UserControl.Styles>
 
@@ -32,45 +32,23 @@
         <controls:PreviewControlViewModel />
     </Design.DataContext>
 
-    <Border
-        Background="#60606060"
-        ClipToBounds="True"
-        CornerRadius="5"
-        HorizontalAlignment="Stretch"
-        Margin="10"
-        Padding="0">
+    <Border Classes="PresenceContainer">
         <Grid
             ColumnDefinitions="200,*"
             HorizontalAlignment="Stretch"
-            RowDefinitions="200,Auto,Auto">
+            RowDefinitions="200,Auto">
 
             <Grid ColumnDefinitions="*,40" RowDefinitions="*,40">
-
                 <Button
-                    Background="Transparent"
-                    ClipToBounds="True"
+                    Classes="ImageButton"
                     Command="{Binding OpenArtCmd}"
                     CommandParameter="{Binding LargeImage.URL}"
-                    CornerRadius="5"
-                    Cursor="Hand"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Margin="20,20,10,10"
-                    Padding="0">
-                    <Border
-                        Background="Transparent"
-                        ClipToBounds="True"
-                        CornerRadius="5"
-                        Padding="0">
-                        <Image
-                            HorizontalAlignment="Center"
-                            Margin="0"
-                            Stretch="UniformToFill"
-                            UseLayoutRounding="True"
-                            VerticalAlignment="Top"
-                            asyncImageLoader:ImageLoader.Source="{Binding LargeImage.URL}" />
+                    Grid.RowSpan="2">
+                    <Border Classes="ImageBorder">
+                        <Image asyncImageLoader:ImageLoader.Source="{Binding LargeImage.URL}" />
                         <ToolTip.Tip>
                             <Label Content="{Binding LargeImage.Label}" />
                         </ToolTip.Tip>
@@ -78,20 +56,11 @@
                 </Button>
 
                 <Border
-                    Background="Transparent"
-                    ClipToBounds="True"
+                    Classes="ImageBorder"
                     CornerRadius="20"
                     Grid.Column="1"
-                    Grid.Row="1"
-                    Margin="0"
-                    Padding="0">
-                    <Image
-                        HorizontalAlignment="Center"
-                        Margin="0"
-                        Stretch="UniformToFill"
-                        UseLayoutRounding="True"
-                        VerticalAlignment="Top"
-                        asyncImageLoader:ImageLoader.Source="{Binding SmallImage.URL}" />
+                    Grid.Row="1">
+                    <Image asyncImageLoader:ImageLoader.Source="{Binding SmallImage.URL}" />
                     <ToolTip.Tip>
                         <Label Content="{Binding SmallImage.Label}" />
                     </ToolTip.Tip>
@@ -103,45 +72,38 @@
                 Grid.Row="0"
                 VerticalAlignment="Center">
 
-                <Label Classes="HeadingText">
-                    <TextBlock Text="Last.fm" TextTrimming="CharacterEllipsis" />
+                <Label Classes="Heading">
+                    <TextBlock Text="Last.fm" />
                 </Label>
 
-                <Label Classes="PreviewText">
-                    <TextBlock Text="{Binding Details}" TextTrimming="CharacterEllipsis" />
+                <Label Classes="Text">
+                    <TextBlock Text="{Binding Details}" />
                     <ToolTip.Tip>
                         <Label Content="{Binding Details}" />
                     </ToolTip.Tip>
                 </Label>
 
-                <Label Classes="PreviewText">
-                    <TextBlock Text="{Binding State}" TextTrimming="CharacterEllipsis" />
+                <Label Classes="Text">
+                    <TextBlock Text="{Binding State}" />
                     <ToolTip.Tip>
                         <Label Content="{Binding State}" />
                     </ToolTip.Tip>
                 </Label>
             </StackPanel>
 
-            <Separator
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Grid.Row="1" />
-
-
             <StackPanel
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Grid.Row="2"
+                Grid.Row="1"
                 Margin="10,0,10,10">
                 <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button
-                                Classes="RPCButton"
+                                Classes="UIButton"
                                 Command="{Binding Source={x:Static command:URIOpen.OpenURICmd}}"
                                 CommandParameter="{Binding URL}"
-                                Content="{Binding Label}"
-                                Cursor="Hand" />
+                                Content="{Binding Label}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

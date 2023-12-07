@@ -9,17 +9,19 @@
         <panes:PresenceConfigViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid RowDefinitions="Auto,Auto, *">
+        <StackPanel>
+            <Label Classes="Heading" Content="Presence" />
+            <Label Classes="Text" />
+        </StackPanel>
         <controls:PreviewConfigControlView
             DataContext="{Binding PreviewConfigControlViewModel}"
-            IsEnabled="{Binding !Context.IsRichPresenceActivated}"
-            Margin="0" />
-        <Label
-            Content="⚠ Please enter a valid button link."
-            Foreground="Yellow"
             Grid.Row="1"
-            HorizontalAlignment="Center"
-            IsVisible="{Binding !PreviewConfigControlViewModel.CanSave}"
-            VerticalAlignment="Bottom" />
+            IsEnabled="{Binding !Context.IsRichPresenceActivated}" />
+        <Label
+            Classes="Error"
+            Content="⚠ Please enter a valid button link."
+            Grid.Row="2"
+            IsVisible="{Binding !PreviewConfigControlViewModel.CanSave}" />
     </Grid>
 </UserControl>

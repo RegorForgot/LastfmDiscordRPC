@@ -2,62 +2,50 @@
     x:Class="LastfmDiscordRPC2.Views.Panes.HomeView"
     xmlns="https://github.com/avaloniaui"
     xmlns:controls="clr-namespace:LastfmDiscordRPC2.Views.Controls"
-    xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
     xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <UserControl.Styles>
-        <Style Selector="Button.Presence">
-            <Setter Property="Height" Value="50" />
-            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-        </Style>
-    </UserControl.Styles>
-
-    <UserControl.Resources>
-        <converters:SetPresenceConverter x:Key="SetPresenceConverter" />
-    </UserControl.Resources>
 
     <Design.DataContext>
         <panes:HomeViewModel />
     </Design.DataContext>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-            <Button
-                Classes="Presence"
-                Command="{Binding SetPresence}"
-                CommandParameter="{Binding Context.IsRichPresenceActivated}"
-                Content="{Binding Context.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
-                Cursor="Hand">
-                <Button.IsEnabled>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                        <Binding Path="!IsCoolDown" />
-                        <Binding Path="Context.IsLoggedIn" />
-                    </MultiBinding>
-                </Button.IsEnabled>
-            </Button>
+    <Grid RowDefinitions="Auto, Auto,*,Auto">
+        <StackPanel>
+            <Label Classes="Heading" Content="Home" />
+            <Label Classes="Text" />
         </StackPanel>
-        <StackPanel Grid.Row="1">
-            <controls:PreviewControlView DataContext="{Binding PreviewControlViewModel}" Margin="0" />
+        <Button
+            Classes="UIButton"
+            Command="{Binding SetPresence}"
+            CommandParameter="{Binding Context.IsRichPresenceActivated}"
+            Content="{Binding Context.IsRichPresenceActivated, Converter={StaticResource SetPresenceConverter}}"
+            Grid.Row="1">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{x:Static BoolConverters.And}">
+                    <Binding Path="!IsCoolDown" />
+                    <Binding Path="Context.IsLoggedIn" />
+                </MultiBinding>
+            </Button.IsEnabled>
+        </Button>
+
+        <StackPanel Grid.Row="2">
+            <controls:PreviewControlView DataContext="{Binding PreviewControlViewModel}" />
         </StackPanel>
-        <StackPanel
-            Grid.Row="2"
-            HorizontalAlignment="Center"
-            Orientation="Vertical">
+
+        <StackPanel Grid.Row="3" Orientation="Vertical">
             <Label
                 Classes="Error"
                 Content="Please log in to set the discord presence."
-                HorizontalAlignment="Center"
                 IsVisible="{Binding !Context.IsLoggedIn}" />
+
+            <ProgressBar Classes="Loading">
+                <ProgressBar.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <Binding Path="Context.IsRichPresenceActivated" />
+                        <Binding Path="!PreviewControlViewModel.IsVisible" />
+                    </MultiBinding>
+                </ProgressBar.IsVisible>
+            </ProgressBar>
         </StackPanel>
     </Grid>
 </UserControl>

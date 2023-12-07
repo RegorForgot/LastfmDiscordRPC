@@ -1,7 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
 using LastfmDiscordRPC2.IO;
-using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.ViewModels.Controls;
 using static LastfmDiscordRPC2.DataTypes.PresenceParseString;
 
@@ -17,5 +16,4 @@ public struct SaveVars
     internal const string DefaultButtonLabel = $"{PlayCount} plays";
     internal const string DefaultButtonURL = $"https://www.last.fm/music/{ArtistName}/_/{TrackName}";
     internal static readonly TimeSpan DefaultExpiryTime = new TimeSpan(1, 0, 0);
-    internal static readonly RPCButton[] DefaultUserButtons = { new RPCButton() };
 }

@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using LastfmDiscordRPC2.Utilities;
 
 namespace LastfmDiscordRPC2.Views;
 

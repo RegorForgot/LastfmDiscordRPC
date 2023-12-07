@@ -94,7 +94,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
     private RichPresence GetRichPresence(TrackResponse response)
     {
-        _previewControlViewModel.IsReady = true;
+        _previewControlViewModel.IsVisible = true;
         Track track = response.RecentTracks.Tracks[0];
         
         if (track.NowPlaying.State == "true")
@@ -110,8 +110,8 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
             }
         }
         
-        DiscordRPC.Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
-            button => new DiscordRPC.Button
+        Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
+            button => new Button
             {
                 Label = this.GetParsedString(response, button.Label, ByteCount.ButtonLabel),
                 Url = this.GetParsedLink(response, button.URL, ByteCount.ButtonLink)
@@ -160,9 +160,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
     public void ClearPresence()
     {
-        _previewControlViewModel.IsReady = false;
-        _previewControlViewModel.ClearAll();
-   
+        _previewControlViewModel.IsVisible = false;
         _client?.ClearPresence();
     }
 
