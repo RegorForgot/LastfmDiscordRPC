@@ -80,6 +80,7 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
         {
             _loggingService.Error("Connection to discord failed. Check if your Discord app is open.");
             IsReady = false;
+            _client.Deinitialize();
         };
         _client.OnConnectionEstablished += (_, _) =>
         {

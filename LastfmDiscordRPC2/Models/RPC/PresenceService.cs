@@ -60,10 +60,20 @@ public sealed class PresenceService : IPresenceService
 
     private async Task PresenceLoop(SaveCfg saveSnapshot)
     {
+        int count = 0;
         try
         {
             while (await _timer.WaitForNextTickAsync(_timerCancellationTokenSource.Token).ConfigureAwait(false))
             {
+                if (count++ < 3 && !_discordClient.IsReady)
+                {
+                    if (count == 3)
+                    {
+                        UnsetPresence();
+                    }
+                    continue;
+                }
+                count = 0;
                 try
                 {
                     TrackResponse response = await _lastfmService.GetRecentTracks(saveSnapshot.UserAccount.Username);
@@ -131,8 +141,8 @@ public sealed class PresenceService : IPresenceService
 
     private void ClearPresence()
     {
-        _discordClient.ClearPresence();
         _context.IsRichPresenceActivated = false;
+        _discordClient.ClearPresence();
     }
 
     private bool HandleError(Exception e)
