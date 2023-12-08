@@ -12,7 +12,6 @@
     <Grid RowDefinitions="Auto, Auto,*,Auto">
         <StackPanel>
             <Label Classes="Heading" Content="Home" />
-            <Label Classes="Text" />
         </StackPanel>
         <Button
             Classes="UIButton"

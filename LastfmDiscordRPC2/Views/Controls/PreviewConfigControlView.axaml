@@ -14,9 +14,10 @@
             HorizontalAlignment="Stretch"
             RowDefinitions="200,Auto,Auto,Auto,Auto">
 
-            <Grid RowDefinitions="*,40">
+            <Grid RowDefinitions="*,50">
 
-                <Label Grid.Row="0">
+                <Label Margin="10,10,0,0"
+                       Grid.Row="0">
                     <TextBox
                         Classes="SingleLine"
                         MaxLength="128"
@@ -27,7 +28,7 @@
                     </ToolTip.Tip>
                 </Label>
 
-                <Label Grid.Row="1">
+                <Label Grid.Row="1" Margin="10,0,0,10">
                     <TextBox
                         Classes="SingleLine"
                         MaxLength="128"
@@ -44,11 +45,11 @@
                 Grid.Row="0"
                 VerticalAlignment="Center">
 
-                <Label Classes="Heading">
+                <Label Classes="LastfmHeading">
                     <TextBlock Text="Last.fm" TextTrimming="CharacterEllipsis" />
                 </Label>
 
-                <Label Classes="Text">
+                <Label Classes="Text" Margin="0,0,10,0">
                     <TextBox
                         Classes="SingleLine"
                         MaxLength="128"
@@ -59,7 +60,7 @@
                     </ToolTip.Tip>
                 </Label>
 
-                <Label Classes="Text">
+                <Label Classes="Text" Margin="0,0,10,0">
                     <TextBox
                         Classes="SingleLine"
                         MaxLength="128"
@@ -77,15 +78,15 @@
                 Grid.Row="1" />
 
             <Grid
-                ColumnDefinitions="*, Auto"
+                ColumnDefinitions="4*, *"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="2">
-                <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}">
+                <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}" VerticalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="*, Auto">
-                                <Label Classes="Text">
+                            <Grid ColumnDefinitions="200, *">
+                                <Label Classes="Text" Margin="10,0,0,0">
                                     <TextBox
                                         Classes="SingleLine"
                                         MaxLength="32"
@@ -111,7 +112,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <StackPanel Grid.Column="1" Orientation="Vertical">
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5,0,5,0">
                     <Button
                         Classes="UIButton"
                         Command="{Binding AddButtonCmd}"
@@ -134,7 +135,8 @@
                 ColumnDefinitions="*, *, *"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Grid.Row="4">
+                Grid.Row="4"
+                Margin="5,0,5,5">
                 <Button
                     Classes="UIButton"
                     Command="{Binding ResetPreviewCmd}"

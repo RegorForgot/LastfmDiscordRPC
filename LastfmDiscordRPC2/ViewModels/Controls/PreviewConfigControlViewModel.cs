@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
+using DiscordRPC;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Models;
 using LastfmDiscordRPC2.ViewModels.Update;
@@ -99,10 +100,7 @@ public class PreviewConfigControlViewModel : AbstractControlViewModel, ISettable
         SmallImageLabel = DefaultSmallImageLabel;
         Buttons = new ObservableCollection<RPCButton>
         {
-            new RPCButton
-            {
-                Action = UpdateCanSave
-            }
+            new RPCButton (UpdateCanSave)
         };
         SavePreview();
         UpdateCanSave();
@@ -131,11 +129,8 @@ public class PreviewConfigControlViewModel : AbstractControlViewModel, ISettable
         LargeImageLabel = _saveCfgIOService.SaveCfg.UserRPCCfg.LargeImageLabel;
         SmallImageLabel = _saveCfgIOService.SaveCfg.UserRPCCfg.SmallImageLabel;
         Buttons = new ObservableCollection<RPCButton>(
-            _saveCfgIOService.SaveCfg.UserRPCCfg.UserButtons.Select(button =>
-                {
-                    button.Action = UpdateCanSave;
-                    return button;
-                }
+            _saveCfgIOService.SaveCfg.UserRPCCfg.UserButtons.Select(
+                button => new RPCButton(button, UpdateCanSave)
             )
         );
     }

@@ -23,9 +23,11 @@
             <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
         </Style>
         <Style Selector="Button">
-            <Setter Property="Margin" Value="5,5,5,5" />
+            <Setter Property="FontSize" Value="18" />
             <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
         <Style Selector="Border">
             <Setter Property="ClipToBounds" Value="True" />
@@ -35,24 +37,34 @@
         <Style Selector="TimePicker">
             <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
         </Style>
+        <Style Selector="ToggleSwitch">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+        </Style>
         <Style Selector="Button.UIButton">
-            <Setter Property="Height" Value="50" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Height" Value="45" />
+            <Setter Property="Margin" Value="5" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
         <Style Selector="Label.Error">
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="Foreground" Value="Yellow" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
         <Style Selector="Label.Heading">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="5,5,0,0" />
+        </Style>
+        <Style Selector="Label.LastfmHeading">
             <Setter Property="FontSize" Value="24" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
         <Style Selector="Label.Text">
-            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+        <Style Selector="Label.SubText">
+            <Setter Property="FontSize" Value="15" />
         </Style>
         <Style Selector="Border.PresenceContainer">
             <Setter Property="Background" Value="#40A0A0A0" />

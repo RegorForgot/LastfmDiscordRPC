@@ -15,8 +15,8 @@
             Classes="Text"
             Content="LastfmDiscordRPC"
             FontWeight="Bold" />
-        <Label Classes="Text" Content="Version 2.0.0" />
-        <Label Classes="Text" Content="©️ 2023 RegorForgot" />
+        <Label Classes="SubText" Content="Version 2.0.0" />
+        <Label Classes="SubText" Content="©️ 2023 RegorForgot" />
         <Button
             Command="{Binding OpenGithubCmd}"
             CommandParameter="{Binding GithubPage}"

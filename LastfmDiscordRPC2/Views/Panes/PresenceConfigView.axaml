@@ -10,10 +10,7 @@
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,Auto, *">
-        <StackPanel>
-            <Label Classes="Heading" Content="Presence" />
-            <Label Classes="Text" />
-        </StackPanel>
+        <Label Classes="Heading" Content="Presence" />
         <controls:PreviewConfigControlView
             DataContext="{Binding PreviewConfigControlViewModel}"
             Grid.Row="1"

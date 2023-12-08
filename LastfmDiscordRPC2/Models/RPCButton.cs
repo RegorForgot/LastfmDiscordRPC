@@ -54,9 +54,16 @@ public record RPCButton : ReactiveRecord
     {
         Action = null;
     }
-
-    public RPCButton(Action? action)
+    
+    public RPCButton(Action action)
     {
+        Action = action;
+    }
+    
+    public RPCButton(RPCButton toClone, Action action)
+    {
+        URL = toClone.URL;
+        Label = toClone.Label;
         Action = action;
     }
 }

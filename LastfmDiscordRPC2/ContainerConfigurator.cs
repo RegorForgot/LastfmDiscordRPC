@@ -44,6 +44,8 @@ public static class ContainerConfigurator
         builder.RegisterType<LastfmAPIService>().AsSelf().SingleInstance();
         
         builder.RegisterType<SignatureAPIService>().As<ISignatureAPIService>().SingleInstance();
+        // builder.RegisterType<SignatureLocalAPIService>().As<ISignatureAPIService>().SingleInstance();
+        // builder.RegisterType< *YOUR CLASS HERE * >().As<ISecretKey>().SingleInstance();
 
         builder.RegisterType<DiscordClient>().As<IDiscordClient>().SingleInstance();
         builder.RegisterType<PresenceService>().As<IPresenceService>().SingleInstance();

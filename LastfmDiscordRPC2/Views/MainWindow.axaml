@@ -26,16 +26,30 @@
             <Setter Property="Width" Value="75" />
             <Setter Property="Height" Value="75" />
             <Setter Property="CornerRadius" Value="15" />
-            <Setter Property="Margin" Value="0,0,0,10" />
+            <Setter Property="Margin" Value="0,5,0,5" />
+            <Setter Property="Padding" Value="0" />
         </Style>
         <Style Selector="PathIcon">
             <Setter Property="Width" Value="30" />
             <Setter Property="Height" Value="30" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.2" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
         </Style>
         <Style Selector="Border.PageButton TextBlock">
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="15"></Setter>
+            <Setter Property="Height" Value="20"/>
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
         </Style>
         <Style Selector="Border.PageButton StackPanel">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -46,6 +60,14 @@
         </Style>
         <Style Selector="TabItem:selected Border.PageButton">
             <Setter Property="Background" Value="#40A0A0A0" />
+        </Style>
+        <Style Selector="TabItem:selected Border.PageButton TextBlock">
+            <Setter Property="RenderTransform" Value="translateY(10px)"/>
+            <Setter Property="Opacity" Value="0"/>
+        </Style>
+        <Style Selector="TabItem:selected Border.PageButton PathIcon">
+            <Setter Property="Foreground" Value="{DynamicResource SystemAccentColor}" />
+            <Setter Property="RenderTransform" Value="translateY(10px)"/>
         </Style>
         <Style Selector="TabItem Border.PageContent">
             <Setter Property="Background" Value="#40A0A0A0" />
@@ -75,7 +97,9 @@
                     <Border Classes="PageButton">
                         <StackPanel>
                             <PathIcon Data="{StaticResource content_settings_regular}" />
-                            <TextBlock Text="Presence" />
+                            <TextBlock>
+                                <TextBlock.Text>Presence</TextBlock.Text>
+                            </TextBlock>
                         </StackPanel>
                     </Border>
                 </TabItem.Header>
