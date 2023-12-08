@@ -6,11 +6,11 @@
 
     <UserControl.Styles>
         <Style Selector="Button.SettingsButton">
-            <Setter Property="Margin" Value="10,0,0,0"/>
-            <Setter Property="Width" Value="80"/>
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="Width" Value="80" />
         </Style>
     </UserControl.Styles>
-    
+
     <Design.DataContext>
         <panes:SettingsViewModel />
     </Design.DataContext>
@@ -48,8 +48,8 @@
                         Content="{Binding LoginMessage}" Classes="Text"
                         HorizontalAlignment="Left"
                         Margin="10,0,0,0"
-                        VerticalAlignment="Center" 
-                        VerticalContentAlignment="Center"/>
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center" />
                 </StackPanel>
             </StackPanel>
 
@@ -68,13 +68,13 @@
                         Text="{Binding AppID}"
                         Watermark="Discord ID" />
                     <Button
-                    Classes="SettingsButton"
+                        Classes="SettingsButton"
                         Grid.Column="1"
                         Command="{Binding SaveAppIDCmd}"
                         Content="Save"
                         IsEnabled="{Binding !IsAppIDError}" />
                     <Button
-                    Classes="SettingsButton"
+                        Classes="SettingsButton"
                         Grid.Column="2"
                         Command="{Binding ResetAppIDCmd}"
                         Content="Reset" />
@@ -82,7 +82,11 @@
             </StackPanel>
 
             <StackPanel Margin="0,5,0,10">
-                <Label Classes="SubHeading" Content="Deactivate Presence When Inactive" />
+                <Label Classes="SubHeading" Content="Deactivate Presence When Inactive">
+                    <ToolTip.Tip>
+                        <Label Content="Inactive when no song is playing and presence is active for specified time" />
+                    </ToolTip.Tip>
+                </Label>
                 <StackPanel
                     IsEnabled="{Binding !Context.IsRichPresenceActivated}">
                     <ToggleSwitch
@@ -108,13 +112,13 @@
                                 IsEnabled="{Binding !Context.IsRichPresenceActivated}"
                                 SelectedTime="{Binding PresenceExpiryTime, Mode=TwoWay}" />
                             <Button
-                            Classes="SettingsButton"
+                                Classes="SettingsButton"
                                 Grid.Column="1"
                                 Command="{Binding SaveExpiryTimeCmd}"
                                 Content="Save"
                                 IsEnabled="{Binding !IsExpiryTimeError}" />
                             <Button
-                            Classes="SettingsButton"
+                                Classes="SettingsButton"
                                 Grid.Column="2"
                                 Command="{Binding ResetExpiryTimeCmd}"
                                 Content="Reset" />
