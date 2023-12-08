@@ -48,13 +48,12 @@ public sealed class PresenceService : IPresenceService
     public async Task SetPresence()
     {
         _timerCancellationTokenSource = new CancellationTokenSource();
-        _presenceStartedTime = DateTimeOffset.Now;
         _exceptionCount = 0;
         SaveCfg saveSnapshot = _saveCfgService.GetSaveSnapshot();
 
         _isFirstSuccess = true;
         _discordClient.Initialize(saveSnapshot);
-        await Task.Delay(1000);
+        _presenceStartedTime = DateTimeOffset.Now;
         await PresenceLoop(saveSnapshot);
     }
 
@@ -92,7 +91,7 @@ public sealed class PresenceService : IPresenceService
                     }
                 }
 
-                PresenceExpiry(saveSnapshot.UserRPCCfg.ExpiryTime);
+                PresenceExpiry(saveSnapshot.UserRPCCfg.ExpiryMode,saveSnapshot.UserRPCCfg.ExpiryTime);
             }
         }
         catch (OperationCanceledException)
@@ -167,14 +166,19 @@ public sealed class PresenceService : IPresenceService
         }
     }
 
-    private void PresenceExpiry(TimeSpan sleepTime)
+    private void PresenceExpiry(bool expiryMode, TimeSpan expiryTime)
     {
+        if (!expiryMode)
+        {
+            return;
+        }
+        
         DateTimeOffset currentTime = DateTimeOffset.Now;
 
         TimeSpan timeSincePresenceStarted = currentTime - _presenceStartedTime;
         TimeSpan timeSinceLastScrobble = currentTime - _lastfmService.LastScrobbleTime;
 
-        bool expired = timeSincePresenceStarted > sleepTime && timeSinceLastScrobble > sleepTime;
+        bool expired = timeSincePresenceStarted > expiryTime && timeSinceLastScrobble > expiryTime;
         if (expired)
         {
             _timerCancellationTokenSource.Cancel();

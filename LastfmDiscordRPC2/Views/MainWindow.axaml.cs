@@ -16,7 +16,7 @@ public partial class MainWindow : Window
         
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
 
-        if (OperatingSystem.IsWindows11)
+        if (RuntimeLocator.IsWindows11)
         {
             Background = new SolidColorBrush(Colors.Transparent);
         }

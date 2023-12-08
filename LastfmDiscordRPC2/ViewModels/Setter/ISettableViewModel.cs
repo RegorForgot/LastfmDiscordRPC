@@ -1,4 +1,4 @@
-﻿namespace LastfmDiscordRPC2.ViewModels.Update;
+﻿namespace LastfmDiscordRPC2.ViewModels.Setter;
 
 public interface ISettableViewModel
 {

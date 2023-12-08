@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using LastfmDiscordRPC2.ViewModels.Panes;
-using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels;
 

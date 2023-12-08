@@ -29,11 +29,12 @@ public record SaveCfg
     public record RPCCfg
     {
         [JsonProperty] public string AppID { get; set; } = DefaultAppID;
-        [JsonProperty] public TimeSpan ExpiryTime { get; set; } = DefaultExpiryTime;
         [JsonProperty] public string Details { get; set; } = DefaultDetails;
         [JsonProperty] public string State { get; set; } = DefaultState;
         [JsonProperty] public string LargeImageLabel { get; set; } = DefaultLargeImageLabel;
         [JsonProperty] public string SmallImageLabel { get; set; } = DefaultSmallImageLabel;
         [JsonProperty] public RPCButton[] UserButtons { get; set; } = { new RPCButton() };
+        [JsonProperty] public bool ExpiryMode { get; set; } = DefaultExpiryMode;
+        [JsonProperty] public TimeSpan ExpiryTime { get; set; } = DefaultExpiryTime;
     }
 }

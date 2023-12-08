@@ -1,7 +1,7 @@
 <Window
-    Height="520"
+    Height="550"
     Icon="/Assets/icon.ico"
-    MinHeight="520"
+    MinHeight="550"
     MinWidth="800"
     Title="LastfmDiscordRPC2"
     Width="800"
@@ -72,12 +72,12 @@
         <Style Selector="TabItem Border.PageContent">
             <Setter Property="Background" Value="#40A0A0A0" />
             <Setter Property="CornerRadius" Value="15" />
-            <Setter Property="Margin" Value="0" />
+            <Setter Property="Margin" Value="0,5,0,0" />
             <Setter Property="Padding" Value="5" />
         </Style>
     </Window.Styles>
 
-    <Grid Margin="0,15,0,12">
+    <Grid Margin="0,10,0,12">
         <TabControl Margin="0" TabStripPlacement="Left">
             <TabItem>
                 <TabItem.Header>

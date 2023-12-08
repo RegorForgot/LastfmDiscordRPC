@@ -14,8 +14,7 @@
             HorizontalAlignment="Stretch"
             RowDefinitions="200,Auto,Auto,Auto,Auto">
 
-            <Grid RowDefinitions="*,50">
-
+            <Grid RowDefinitions="*,Auto">
                 <Label Margin="10,10,0,0"
                        Grid.Row="0">
                     <TextBox
@@ -30,7 +29,7 @@
 
                 <Label Grid.Row="1" Margin="10,0,0,10">
                     <TextBox
-                        Classes="SingleLine"
+                        Classes="SingleLine SingleLineSize"
                         MaxLength="128"
                         Text="{Binding SmallImageLabel, Mode=TwoWay}"
                         Watermark="Small image label" />
@@ -45,13 +44,13 @@
                 Grid.Row="0"
                 VerticalAlignment="Center">
 
-                <Label Classes="LastfmHeading">
+                <Label Classes="SubHeading">
                     <TextBlock Text="Last.fm" TextTrimming="CharacterEllipsis" />
                 </Label>
 
                 <Label Classes="Text" Margin="0,0,10,0">
                     <TextBox
-                        Classes="SingleLine"
+                        Classes="SingleLine SingleLineSize"
                         MaxLength="128"
                         Text="{Binding Details, Mode=TwoWay}"
                         Watermark="Details" />
@@ -62,7 +61,7 @@
 
                 <Label Classes="Text" Margin="0,0,10,0">
                     <TextBox
-                        Classes="SingleLine"
+                        Classes="SingleLine SingleLineSize"
                         MaxLength="128"
                         Text="{Binding State, Mode=TwoWay}"
                         Watermark="State" />
@@ -88,7 +87,7 @@
                             <Grid ColumnDefinitions="200, *">
                                 <Label Classes="Text" Margin="10,0,0,0">
                                     <TextBox
-                                        Classes="SingleLine"
+                                        Classes="SingleLine SingleLineSize"
                                         MaxLength="32"
                                         Text="{Binding Label, Mode=TwoWay}"
                                         Watermark="Button label" />
@@ -99,7 +98,7 @@
 
                                 <Label Classes="Text" Grid.Column="1">
                                     <TextBox
-                                        Classes="SingleLine"
+                                        Classes="SingleLine SingleLineSize"
                                         MaxLength="512"
                                         Text="{Binding URL, Mode=TwoWay}"
                                         Watermark="URL label" />

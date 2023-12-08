@@ -2,8 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using DiscordRPC;
 using DiscordRPC.Exceptions;
 using LastfmDiscordRPC2.DataTypes;

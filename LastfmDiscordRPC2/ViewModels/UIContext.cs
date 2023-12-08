@@ -1,6 +1,6 @@
 ﻿using System;
 using LastfmDiscordRPC2.IO;
-using LastfmDiscordRPC2.ViewModels.Update;
+using LastfmDiscordRPC2.ViewModels.Setter;
 using ReactiveUI;
 
 namespace LastfmDiscordRPC2.ViewModels;

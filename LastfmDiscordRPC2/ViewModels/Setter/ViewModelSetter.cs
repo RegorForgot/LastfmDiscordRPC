@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LastfmDiscordRPC2.ViewModels.Update;
+namespace LastfmDiscordRPC2.ViewModels.Setter;
 
 public class ViewModelSetter : IViewModelSetter
 {

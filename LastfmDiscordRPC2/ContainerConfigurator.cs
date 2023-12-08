@@ -7,7 +7,7 @@ using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Panes;
-using LastfmDiscordRPC2.ViewModels.Update;
+using LastfmDiscordRPC2.ViewModels.Setter;
 using LastfmDiscordRPC2.Views;
 
 namespace LastfmDiscordRPC2;

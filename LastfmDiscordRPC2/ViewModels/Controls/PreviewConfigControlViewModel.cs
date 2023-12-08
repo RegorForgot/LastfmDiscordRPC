@@ -1,10 +1,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
-using DiscordRPC;
 using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Models;
-using LastfmDiscordRPC2.ViewModels.Update;
+using LastfmDiscordRPC2.ViewModels.Setter;
 using LastfmDiscordRPC2.Views;
 using ReactiveUI;
 using static LastfmDiscordRPC2.DataTypes.SaveVars;

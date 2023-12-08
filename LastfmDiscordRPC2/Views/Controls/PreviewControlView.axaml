@@ -72,7 +72,7 @@
                 Grid.Row="0"
                 VerticalAlignment="Center">
 
-                <Label Classes="LastfmHeading">
+                <Label Classes="SubHeading">
                     <TextBlock Text="Last.fm" />
                 </Label>
 

@@ -40,24 +40,30 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
                             </Grid.ColumnDefinitions>
-                            <Label Content="{Binding Item1}" Classes="Text" FontWeight="Bold" Margin="0,2,0,2"
-                                   Background="#80808080" ClipToBounds="True" CornerRadius="5"
-                                   HorizontalContentAlignment="Right"
-                                   FontFamily="Consolas"
-                                   Padding="0,6,5,0"/>
+                            <Label
+                                Background="#80808080" 
+                                Classes="Text" 
+                                ClipToBounds="True" 
+                                CornerRadius="5"
+                                Content="{Binding Item1}" 
+                                FontFamily="Consolas"
+                                FontWeight="Bold" 
+                                HorizontalContentAlignment="Right"
+                                Margin="0,2,0,2"
+                                Padding="0,6,5,0" />
                             <Label Content="{Binding Item2}" Grid.Column="1" Classes="Text" Margin="5,2,5,2" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
             <Button
-                Grid.Row="2"
                 Content="OK"
+                Grid.Row="2"
                 Height="50"
-                Margin="10"
                 HorizontalAlignment="Stretch"
+                Margin="10"
                 Name="Ok" />
         </Grid>
     </Border>

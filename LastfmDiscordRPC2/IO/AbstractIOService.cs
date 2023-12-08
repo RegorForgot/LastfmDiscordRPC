@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
+using LastfmDiscordRPC2.Utilities;
 using static LastfmDiscordRPC2.Utilities.URIOpen;
-using OperatingSystem = LastfmDiscordRPC2.Utilities.OperatingSystem;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace LastfmDiscordRPC2.IO;
@@ -16,11 +16,11 @@ public abstract class AbstractIOService
     static AbstractIOService()
     {
         SaveFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        SaveFolder += OperatingSystem.CurrentOS switch
+        SaveFolder += RuntimeLocator.CurrentOS switch
         {
-            DataTypes.OperatingSystem.Windows => @"/AppData/Local/LastfmDiscordRPC",
-            DataTypes.OperatingSystem.Linux => @"/.LastfmDiscordRPC",
-            DataTypes.OperatingSystem.OSX => @"/Library/Application Support/LastfmDiscordRPC",
+            DataTypes.OSRuntimes.Windows => @"/AppData/Local/LastfmDiscordRPC",
+            DataTypes.OSRuntimes.Linux => @"/.LastfmDiscordRPC",
+            DataTypes.OSRuntimes.OSX => @"/Library/Application Support/LastfmDiscordRPC",
             _ => ""
         };
         

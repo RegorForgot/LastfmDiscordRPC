@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using LastfmDiscordRPC2.DataTypes;
 
 namespace LastfmDiscordRPC2.Utilities;
 
-public static class OperatingSystem
+public static class RuntimeLocator
 {
-    public static DataTypes.OperatingSystem CurrentOS { get; }
+    public static OSRuntimes CurrentOS { get; }
     public static bool IsWindows11 { get; }
 
-    static OperatingSystem()
+    static RuntimeLocator()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            CurrentOS = DataTypes.OperatingSystem.OSX;
+            CurrentOS = OSRuntimes.OSX;
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            CurrentOS = DataTypes.OperatingSystem.Linux;
+            CurrentOS = OSRuntimes.Linux;
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            CurrentOS = DataTypes.OperatingSystem.Windows;
+            CurrentOS = OSRuntimes.Windows;
             IsWindows11 = Environment.OSVersion.Version.Build >= 22000;
         }
         else
