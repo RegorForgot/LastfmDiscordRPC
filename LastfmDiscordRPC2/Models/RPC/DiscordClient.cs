@@ -174,7 +174,6 @@ public sealed class DiscordClient : IDiscordClient
         
         try
         {
-            Console.Write("Disposed");
             _client.ClearPresence();
             _client.Deinitialize();
             _client.Dispose();
