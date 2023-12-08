@@ -19,7 +19,6 @@ class Program
         {
             return;
         }
-        GCSettings.LatencyMode = GCLatencyMode.Batch;
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }

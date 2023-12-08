@@ -14,7 +14,7 @@ using LastfmDiscordRPC2.ViewModels.Controls;
 
 namespace LastfmDiscordRPC2.Models.RPC;
 
-public sealed class DiscordClient : IDisposable, IDiscordClient
+public sealed class DiscordClient : IDiscordClient
 {
     private const string PauseIconURL = "https://i.imgur.com/AOYINL0.png";
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
@@ -165,13 +165,16 @@ public sealed class DiscordClient : IDisposable, IDiscordClient
 
     public void Dispose()
     {
-        if (_client is null)
+        GC.SuppressFinalize(this);
+
+        if (_client == null)
         {
             return;
         }
-
+        
         try
         {
+            Console.Write("Disposed");
             _client.ClearPresence();
             _client.Deinitialize();
             _client.Dispose();
