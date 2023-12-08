@@ -40,7 +40,7 @@
             </Setter>
         </Style>
         <Style Selector="Border.PageButton TextBlock">
-            <Setter Property="FontSize" Value="15"></Setter>
+            <Setter Property="FontSize" Value="15"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />

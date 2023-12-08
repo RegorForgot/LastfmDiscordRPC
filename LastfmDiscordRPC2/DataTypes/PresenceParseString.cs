@@ -19,7 +19,7 @@ public static class PresenceParseString
             new Tuple<string, string>(ArtistName, "Name of current artist"),
             new Tuple<string, string>(AlbumName, "Name of current album (blank if none)"),
             new Tuple<string, string>(PlayCount, "User's scrobble count"),
-            new Tuple<string, string>(CurrentState, "Whether track is currently playing (blank if stopped)"),
+            new Tuple<string, string>(CurrentState, "Track playing state (blank if stopped)"),
             new Tuple<string, string>(Timestamp, "Time since last play (blank if playing)")
         };
 }

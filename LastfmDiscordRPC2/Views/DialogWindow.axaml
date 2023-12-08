@@ -1,33 +1,64 @@
 <Window
     CanResize="False"
-    Height="400"
+    Height="350"
     Icon="/Assets/icon.ico"
     IsVisible="False"
-    MinHeight="400"
-    MinWidth="250"
+    MinHeight="350"
+    MinWidth="525"
     Title="PreviewVariables"
-    Width="250"
+    Width="525"
     WindowStartupLocation="CenterScreen"
     x:Class="LastfmDiscordRPC2.Views.DialogWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:dataTypes="clr-namespace:LastfmDiscordRPC2.DataTypes"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <StackPanel HorizontalAlignment="Center">
-        <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{x:Static dataTypes:PresenceParseString.StringList}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid ColumnDefinitions="*, Auto">
-                        <Label Content="{Binding Item1}" />
-                        <Label Content="{Binding Item2}" Grid.Column="1" />
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <Button
-            Content="Ok"
-            Height="50"
-            HorizontalAlignment="Stretch"
-            Name="Ok" />
-    </StackPanel>
+    <Window.Styles>
+        <Style Selector="Border.PageContent">
+            <Setter Property="Background" Value="#40A0A0A0" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Margin" Value="12,12,12,12" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+    </Window.Styles>
+
+    <Border Classes="PageContent">
+        <Grid RowDefinitions="Auto,*, Auto" HorizontalAlignment="Stretch">
+            <Label Grid.Row="0"
+                   Content="Presence Variables"
+                   Margin="10,5,0,0"
+                   Classes="Heading" />
+            <ItemsControl
+                Grid.Row="1"
+                Margin="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                ItemsSource="{x:Static dataTypes:PresenceParseString.StringList}"
+                Grid.IsSharedSizeScope="True">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="{Binding Item1}" Classes="Text" FontWeight="Bold" Margin="0,2,0,2"
+                                   Background="#80808080" ClipToBounds="True" CornerRadius="5"
+                                   HorizontalContentAlignment="Right"
+                                   FontFamily="Consolas"
+                                   Padding="0,6,5,0"/>
+                            <Label Content="{Binding Item2}" Grid.Column="1" Classes="Text" Margin="5,2,5,2" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button
+                Grid.Row="2"
+                Content="OK"
+                Height="50"
+                Margin="10"
+                HorizontalAlignment="Stretch"
+                Name="Ok" />
+        </Grid>
+    </Border>
 </Window>
