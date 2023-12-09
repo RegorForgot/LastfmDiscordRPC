@@ -70,7 +70,7 @@ If you find issues or have suggestions, feel free to start an issue or create a 
       (including Spotify) have this issue occasionally as well.
 
 
-<h2>Contributors
+## Contributors
 
 <a href="https://github.com/RegorForgot"><img src="https://images.weserv.nl/?url=https://avatars.githubusercontent.com/u/55347112?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d" title="Regor"></a>
     <a href="https://github.com/razyness"><img src="https://images.weserv.nl/?url=https://avatars.githubusercontent.com/u/97766343?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d" title="razyness"></a>
