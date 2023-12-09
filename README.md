@@ -8,8 +8,8 @@
 </div>
 
 
-Light mode               | Dark mode              |
-| ----------------------- | ---------------------- |
+| Light mode                        | Dark mode              |
+|-----------------------------------|:-----------------------|
 | ![Light mode](./assets/light.png) | ![Dark mode](./assets/dark.png) |
 
 
@@ -18,9 +18,10 @@ Light mode               | Dark mode              |
 > [!IMPORTANT]
 > **Please note:** This application requires the [.NET 7 runtime environment](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
 
-Download the [latest release](https://github.com/RegorForgot/LastfmDiscordRPC/releases/latest), log in with your Last.fm account and start the rich presence service.
+Download the [latest release](https://github.com/RegorForgot/LastfmDiscordRPC/releases/latest), log in with your Last.fm account and start the rich presence service. 
 
-<h2>Supported Platforms</h2>
+## Supported Platforms
+
 - x64 Windows
 - x64 Linux
 - ARM MacOS (M Silicon)
@@ -74,9 +75,8 @@ If you find issues or have suggestions, feel free to start an issue or create a 
     <a href="https://github.com/razyness"><img src="https://images.weserv.nl/?url=https://avatars.githubusercontent.com/u/97766343?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d" title="razyness"></a>
     <a href="https://github.com/crygup"><img src="https://images.weserv.nl/?url=https://avatars.githubusercontent.com/u/65101093?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d" title="crygup"></a>
 
-<hr>
+## Libraries and Assets
 
-<h2>Libraries and Assets</h2>
 - [Avalonia](https://https://github.com/AvaloniaUI/Avalonia) + Avalonia.Fluent icon library
 - [discord-rpc-csharp](https://github.com/Lachee/discord-rpc-csharp/)
 - [Autofac](https://github.com/autofac/Autofac)
