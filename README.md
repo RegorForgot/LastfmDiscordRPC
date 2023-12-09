@@ -1,58 +1,86 @@
-﻿# Last.fm Discord Rich Presence
-[![Codacy Badge](https://img.shields.io/codacy/grade/e0da00a962b5448cbd888887b9f9a77f)](https://www.codacy.com/gh/RegorForgotTheirPassword/LastfmDiscordRPC/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RegorForgotTheirPassword/LastfmDiscordRPC&amp;utm_campaign=Badge_Grade)
+﻿<div align="center">
+
+![maybe a banner](./assets/banner.png)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e0da00a962b5448cbd888887b9f9a77f)](https://app.codacy.com/gh/RegorForgotTheirPassword/LastfmDiscordRPC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 ![Downloads](https://img.shields.io/github/downloads/regorforgot/lastfmdiscordrpc/total)
-
-![Presence](https://raw.githubusercontent.com/RegorForgotTheirPassword/LastfmDiscordRPC/master/Screenshots/Presence.png)
-
-![Program](https://raw.githubusercontent.com/RegorForgotTheirPassword/LastfmDiscordRPC/master/Screenshots/Program.png)
-
-A simple Windows-only* application that sets your Discord presence to your last played track on Last.fm!
-
-## Usage
-
-Simply download the release of your choice, enter your username, and set the presence!
-
-**Note:** For the non-self contained releases **(recommended)**, .NET 6 Desktop Runtime must be installed on your computer
-
-[Download .NET 6 x64 Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x64-installer)
+<h3>A simple cross-platform application that allows you to set a rich presence on your Discord account from your Last.fm profile.</h3>
+</div>
 
 
-## Customisation
+Light mode               | Dark mode              |
+| ----------------------- | ---------------------- |
+| ![Light mode](./assets/light.png) | ![Dark mode](./assets/dark.png) |
 
-Thanks to [curiositIy](https://github.com/curiositIy/) for writing the section below!
 
-### **Setting your own Last.fm API key**
+## Getting Started
 
-You can use the default Last.fm API key by simply clicking "Load defaults", but if any problems (such as rate-limiting) arise, you can always use yor own.
+> [!IMPORTANT]
+> **Please note:** This application requires the [.NET 7 runtime environment](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
 
-Head over to [last.fm/api/account/create](https://www.last.fm/api/account/create) and create an API account.
+Download the [latest release](https://github.com/RegorForgot/LastfmDiscordRPC/releases/latest), log in with your Last.fm account and start the rich presence service.
 
-Don't worry about making it serious, simply name it "Discord RPC" or similar and then click **Submit**. You don't need to give callback URL or application homepage.
+<h2>Supported Platforms</h2>
+- x64 Windows
+- x64 Linux
+- ARM MacOS (M Silicon)
+- x64 MacOS
 
-Now copy and paste the **API Key** given to you into the program.
+## Customization
 
-### **Making your own Discord app and ID**
+### **Edit rich presence configuration**
+You can use the preset settings, or edit as required in the `Presence` tab.
 
-Head over to [discord.com/developers/applications](https://discord.com/developers/applications) and click the button that says **New application** in the top right.
+| Presence Variables     | Description                                   |
+| ---------------------- | --------------------------------------------- |
+| {TrackName}            | Name of the current track                     |
+| {ArtistName}           | Name of the current artist                    |
+| {AlbumName}            | Name of the current album (blank if none)     |
+| {Playcount}            | User's scrobble count                         |
+| {Playing}              | Track playing state (blank if stopped)        |
+| {TimeSincePlayed}      | Time since last played (blank if not playing) |
 
-Name it whatever you'd like, but this name will be the one that will be used on the presence's title:
 
-![discord app name example](https://raw.githubusercontent.com/RegorForgotTheirPassword/LastfmDiscordRPC/master/Screenshots/PresenceName.png)
+### **Adjusting Presence Expiry Timer**
 
-Once you create the application you should be brought the application page, if not look for it in the menu and click on it.
+You can customize your presence and set an expiry timer within the application settings. This timer will deactivate the presence
+after a period of presence and scrobbling inactivity which can be adjusted as required.
 
-Finally, look for the text that says **Application ID**, there will be an ID below that, either copy that directly or click the **Copy** button. You can now paste this into the program!
+![Settings panel](./assets/settings.png)
+
+## Advanced customization
+
+### **Creating Custom Discord App and ID**
+
+To rename the highlighted text, create a new application on discord's [developer portal](https://discord.com/developers/applications), name it, and copy the Application ID to paste into the `Discord App ID` field in the settings.
+
+![Discord App Name Example](./assets/PresenceName.png)
 
 ## Contributing
 
-If you find any issues or have any suggestions, feel free to start an issue or create a pull request!
+If you find issues or have suggestions, feel free to start an issue or create a pull request.
 
-## Libraries and assets
+### Known issues
 
-- [Github Logo](https://github-media-downloads.s3.amazonaws.com/GitHub-Mark.zip)
-- [Last.fm Logo](https://www.last.fm/static/images/lastfm_avatar_twitter.png)
+- **Stuck Presence after Disabling:**
+    - Occasionally, the presence may remain visible for a short period of time after disabling it (including closing the application entirely).
+    This is not an issue which is easily resolved and it is not local to this application. Other applications with rich presences
+      (including Spotify) have this issue occasionally as well.
+
+
+<h2>Contributors
+
+<a href="https://github.com/RegorForgot"><img src="https://images.weserv.nl/?url=https://avatars.githubusercontent.com/u/55347112?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d" title="Regor"></a>
+    <a href="https://github.com/razyness"><img src="https://images.weserv.nl/?url=https://avatars.githubusercontent.com/u/97766343?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d" title="razyness"></a>
+    <a href="https://github.com/crygup"><img src="https://images.weserv.nl/?url=https://avatars.githubusercontent.com/u/65101093?v=4&h=50&w=50&fit=cover&mask=circle&maxage=7d" title="crygup"></a>
+
+<hr>
+
+<h2>Libraries and Assets</h2>
+- [Avalonia](https://https://github.com/AvaloniaUI/Avalonia) + Avalonia.Fluent icon library
 - [discord-rpc-csharp](https://github.com/Lachee/discord-rpc-csharp/)
-- [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
+- [Autofac](https://github.com/autofac/Autofac)
 - [RestSharp](https://github.com/restsharp/RestSharp)
-- [WpfAnimatedGif](https://github.com/XamlAnimatedGif/WpfAnimatedGif/)
-- [InnoSetup](https://github.com/jrsoftware/issrc)
+- [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
+- [AsyncImageLoader.Avalonia](https://github.com/AvaloniaUtils/AsyncImageLoader.Avalonia)
+- [Last.fm Logo](https://www.last.fm/static/images/lastfm_avatar_twitter.png)

@@ -37,7 +37,6 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6"/>
         <PackageReference Include="DiscordRichPresence" Version="1.2.1.24"/>
-        <PackageReference Include="HyperText.Avalonia" Version="2.0.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16"/>
     </ItemGroup>
