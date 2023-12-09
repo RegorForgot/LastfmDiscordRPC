@@ -1,0 +1,157 @@
+<UserControl
+    x:Class="LastfmDiscordRPC2.Views.Controls.PreviewConfigControlView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:LastfmDiscordRPC2.ViewModels.Controls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.DataContext>
+        <controls:PreviewConfigControlViewModel />
+    </Design.DataContext>
+
+    <Border Classes="PresenceContainer">
+        <Grid
+            ColumnDefinitions="200,*"
+            HorizontalAlignment="Stretch"
+            RowDefinitions="200,Auto,Auto,Auto,Auto">
+
+            <Grid RowDefinitions="*,Auto">
+                <Label Margin="10,10,0,0"
+                       Grid.Row="0">
+                    <TextBox
+                        Classes="SingleLine"
+                        MaxLength="128"
+                        Text="{Binding LargeImageLabel, Mode=TwoWay}"
+                        Watermark="Large image label" />
+                    <ToolTip.Tip>
+                        <Label Content="Large image label" />
+                    </ToolTip.Tip>
+                </Label>
+
+                <Label Grid.Row="1" Margin="10,0,0,10">
+                    <TextBox
+                        Classes="SingleLine SingleLineSize"
+                        MaxLength="128"
+                        Text="{Binding SmallImageLabel, Mode=TwoWay}"
+                        Watermark="Small image label" />
+                    <ToolTip.Tip>
+                        <Label Content="Small image label" />
+                    </ToolTip.Tip>
+                </Label>
+            </Grid>
+
+            <StackPanel
+                Grid.Column="1"
+                Grid.Row="0"
+                VerticalAlignment="Center">
+
+                <Label Classes="SubHeading">
+                    <TextBlock Text="Last.fm" TextTrimming="CharacterEllipsis" />
+                </Label>
+
+                <Label Classes="Text" Margin="0,0,10,0">
+                    <TextBox
+                        Classes="SingleLine SingleLineSize"
+                        MaxLength="128"
+                        Text="{Binding Details, Mode=TwoWay}"
+                        Watermark="Details" />
+                    <ToolTip.Tip>
+                        <Label Content="Details label" />
+                    </ToolTip.Tip>
+                </Label>
+
+                <Label Classes="Text" Margin="0,0,10,0">
+                    <TextBox
+                        Classes="SingleLine SingleLineSize"
+                        MaxLength="128"
+                        Text="{Binding State, Mode=TwoWay}"
+                        Watermark="State" />
+                    <ToolTip.Tip>
+                        <Label Content="State label" />
+                    </ToolTip.Tip>
+                </Label>
+            </StackPanel>
+
+            <Separator
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="1" />
+
+            <Grid
+                ColumnDefinitions="4*, *"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="2">
+                <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}" VerticalAlignment="Center">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="200, *">
+                                <Label Classes="Text" Margin="10,0,0,0">
+                                    <TextBox
+                                        Classes="SingleLine SingleLineSize"
+                                        MaxLength="32"
+                                        Text="{Binding Label, Mode=TwoWay}"
+                                        Watermark="Button label" />
+                                    <ToolTip.Tip>
+                                        <Label Content="Button label" />
+                                    </ToolTip.Tip>
+                                </Label>
+
+                                <Label Classes="Text" Grid.Column="1">
+                                    <TextBox
+                                        Classes="SingleLine SingleLineSize"
+                                        MaxLength="512"
+                                        Text="{Binding URL, Mode=TwoWay}"
+                                        Watermark="URL label" />
+                                    <ToolTip.Tip>
+                                        <Label Content="URL label" />
+                                    </ToolTip.Tip>
+                                </Label>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5,0,5,0">
+                    <Button
+                        Classes="UIButton"
+                        Command="{Binding AddButtonCmd}"
+                        Content="Add"
+                        IsEnabled="{Binding CanAdd}" />
+                    <Button
+                        Classes="UIButton"
+                        Command="{Binding RemoveButtonCmd}"
+                        Content="Remove"
+                        IsEnabled="{Binding CanRemove}" />
+                </StackPanel>
+            </Grid>
+
+            <Separator
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="3" />
+
+            <Grid
+                ColumnDefinitions="*, *, *"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Grid.Row="4"
+                Margin="5,0,5,5">
+                <Button
+                    Classes="UIButton"
+                    Command="{Binding ResetPreviewCmd}"
+                    Content="Reset" />
+                <Button
+                    Classes="UIButton"
+                    Command="{Binding SavePreviewCmd}"
+                    Content="Save"
+                    Grid.Column="1"
+                    IsEnabled="{Binding CanSave}" />
+                <Button
+                    Classes="UIButton"
+                    Command="{Binding VarDialogCmd}"
+                    Content="View variables"
+                    Grid.Column="2" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

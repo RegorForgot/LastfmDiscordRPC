@@ -1,0 +1,152 @@
+<UserControl
+    x:Class="LastfmDiscordRPC2.Views.Panes.SettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Styles>
+        <Style Selector="Button.SettingsButton">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="Width" Value="80" />
+        </Style>
+    </UserControl.Styles>
+
+    <Design.DataContext>
+        <panes:SettingsViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*, Auto">
+        <StackPanel Grid.Row="0" Margin="5,0,5,0" Grid.IsSharedSizeScope="True">
+            <Label Classes="Heading" Content="Settings" Margin="0,5,0,0" />
+
+            <StackPanel IsVisible="{Binding StartUpVisible}" Margin="0,5,0,10">
+                <Label Classes="SubHeading" Content="Launch on Startup" />
+                <ToggleSwitch
+                    Command="{Binding LaunchOnStartupCmd}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}"
+                    FontSize="18"
+                    IsChecked="{Binding IsStartUpChecked}" />
+            </StackPanel>
+
+            <StackPanel Margin="0,5,0,10">
+                <Label Classes="SubHeading" Content="Last.fm Account" />
+                <StackPanel Orientation="Horizontal">
+                    <Button
+                        Command="{Binding LastfmLoginCmd}"
+                        CommandParameter="{Binding !Context.IsLoggedIn}"
+                        Content="{Binding !Context.IsLoggedIn, Converter={StaticResource LoginTextConverter}}"
+                        VerticalAlignment="Stretch"
+                        Width="80">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{x:Static BoolConverters.And}">
+                                <Binding Path="!IsLoginInProgress" />
+                                <Binding Path="!Context.IsRichPresenceActivated" />
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                    <Label
+                        Content="{Binding LoginMessage}" Classes="Text"
+                        HorizontalAlignment="Left"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel IsEnabled="{Binding !Context.HasRichPresenceActivated}" Margin="0,5,0,10">
+                <Label Classes="SubHeading" Content="Discord App ID" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300" SharedSizeGroup="B" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="C" />
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="D" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        Classes="SingleLine SingleLineSize"
+                        MaxLength="21"
+                        Text="{Binding AppID}"
+                        Watermark="Discord ID" />
+                    <Button
+                        Classes="SettingsButton"
+                        Grid.Column="1"
+                        Command="{Binding SaveAppIDCmd}"
+                        Content="Save"
+                        IsEnabled="{Binding !IsAppIDError}" />
+                    <Button
+                        Classes="SettingsButton"
+                        Grid.Column="2"
+                        Command="{Binding ResetAppIDCmd}"
+                        Content="Reset" />
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Margin="0,5,0,10">
+                <Label Classes="SubHeading" Content="Deactivate Presence When Inactive">
+                    <ToolTip.Tip>
+                        <Label Content="Inactive when no song is playing and presence is active for specified time" />
+                    </ToolTip.Tip>
+                </Label>
+                <StackPanel
+                    IsEnabled="{Binding !Context.IsRichPresenceActivated}">
+                    <ToggleSwitch
+                        Command="{Binding SetExpiryModeCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}"
+                        FontSize="18"
+                        IsChecked="{Binding ExpiryMode}" />
+                    <StackPanel IsVisible="{Binding ExpiryMode}">
+                        <Label
+                            Classes="Text"
+                            Content="Inactivity Time (hh:mm)"
+                            FontWeight="Bold"
+                            Margin="0,5,0,0" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="300" SharedSizeGroup="B" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="C" />
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="D" />
+                            </Grid.ColumnDefinitions>
+                            <TimePicker
+                                ClockIdentifier="24HourClock"
+                                HorizontalAlignment="Stretch"
+                                IsEnabled="{Binding !Context.IsRichPresenceActivated}"
+                                SelectedTime="{Binding PresenceExpiryTime, Mode=TwoWay}" />
+                            <Button
+                                Classes="SettingsButton"
+                                Grid.Column="1"
+                                Command="{Binding SaveExpiryTimeCmd}"
+                                Content="Save"
+                                IsEnabled="{Binding !IsExpiryTimeError}" />
+                            <Button
+                                Classes="SettingsButton"
+                                Grid.Column="2"
+                                Command="{Binding ResetExpiryTimeCmd}"
+                                Content="Reset" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            Orientation="Vertical">
+            <Label
+                Classes="Error"
+                Content="⚠ Please enter a valid Discord App ID."
+                IsVisible="{Binding IsAppIDError}" />
+            <Label
+                Classes="Error"
+                Content="⚠ Please enter a valid presence expiry time.">
+                <Label.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <Binding Path="IsExpiryTimeError" />
+                        <Binding Path="ExpiryMode" />
+                    </MultiBinding>
+                </Label.IsVisible>
+            </Label>
+            <ProgressBar Classes="Loading" IsVisible="{Binding IsLoginInProgress}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

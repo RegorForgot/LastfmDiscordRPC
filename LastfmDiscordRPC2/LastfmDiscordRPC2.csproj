@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <ApplicationIcon>Assets/icon.ico</ApplicationIcon>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**"/>
+        <None Remove=".gitignore"/>
+        <Compile Remove="Assets\SecretKey.cs"/>
+        <None Include="Assets\SecretKey.cs"/>
+        <Compile Update="Views\Panes\PresenceConfigView.axaml.cs">
+            <DependentUpon>PresenceConfigView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\DialogWindow.axaml.cs">
+            <DependentUpon>DialogWindow.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <TrimmerRootDescriptor Include="Roots.xml"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.2.1"/>
+        <PackageReference Include="Autofac" Version="7.1.0"/>
+        <PackageReference Include="Avalonia" Version="11.0.6"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.6"/>
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6"/>
+        <PackageReference Include="DiscordRichPresence" Version="1.2.1.24"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Views\MainWindow.axaml.cs">
+            <DependentUpon>MainWindowView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\Panes\SettingsView.axaml.cs">
+            <DependentUpon>SettingsView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Panes\HomeView.axaml.cs">
+            <DependentUpon>HomeView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Panes\AboutView.axaml.cs">
+            <DependentUpon>AboutView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Remove="IO\RichPresenceCfgIO.cs"/>
+        <Compile Update="Views\Controls\PreviewControlView.cs">
+            <DependentUpon>PreviewControlView.axaml</DependentUpon>
+        </Compile>
+        <Compile Update="Views\Controls\PreviewControlView.axaml.cs">
+            <DependentUpon>HomeView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Controls\PreviewConfigControlView.axaml.cs">
+            <DependentUpon>PreviewSettingControlView.axaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AvaloniaXaml Remove="Views\Control\PresencePreviewControl.axaml"/>
+    </ItemGroup>
+</Project>

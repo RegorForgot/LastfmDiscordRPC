@@ -1,0 +1,25 @@
+<UserControl
+    x:Class="LastfmDiscordRPC2.Views.Panes.PresenceConfigView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:controls="clr-namespace:LastfmDiscordRPC2.Views.Controls"
+    xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Design.DataContext>
+        <panes:PresenceConfigViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*, Auto">
+        <StackPanel>
+            <Label Classes="Heading" Content="Presence" />
+            <controls:PreviewConfigControlView
+                DataContext="{Binding PreviewConfigControlViewModel}"
+                IsEnabled="{Binding !Context.IsRichPresenceActivated}" />
+        </StackPanel>
+        <Label
+            Classes="Error"
+            Content="⚠ Please enter a valid button link."
+            Grid.Row="1"
+            IsVisible="{Binding !PreviewConfigControlViewModel.CanSave}" />
+    </Grid>
+</UserControl>
