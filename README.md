@@ -1,10 +1,11 @@
 ﻿<div align="center">
 
-![maybe a banner](./assets/banner.png)
+![Banner](./assets/banner.png)
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e0da00a962b5448cbd888887b9f9a77f)](https://app.codacy.com/gh/RegorForgotTheirPassword/LastfmDiscordRPC/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 ![Downloads](https://img.shields.io/github/downloads/regorforgot/lastfmdiscordrpc/total)
 <h3>A simple cross-platform application that allows you to set a rich presence on your Discord account from your Last.fm profile.</h3>
+<h4>Made with AvaloniaUI</h4>
 </div>
 
 
