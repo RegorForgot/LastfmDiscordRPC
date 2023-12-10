@@ -6,6 +6,7 @@
 
     <Application.Resources>
         <FontFamily x:Key="Source Sans Pro">avares://LastfmDiscordRPC2/Assets/Fonts#Source Sans Pro</FontFamily>
+        <FontFamily x:Key="Inconsolata">avares://LastfmDiscordRPC2/Assets/Fonts#Inconsolata</FontFamily>
         <converters:LoginTextConverter x:Key="LoginTextConverter" />
         <converters:SetPresenceConverter x:Key="SetPresenceConverter" />
     </Application.Resources>

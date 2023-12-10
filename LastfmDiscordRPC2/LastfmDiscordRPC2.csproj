@@ -12,7 +12,6 @@
         <AvaloniaResource Include="Assets\**"/>
         <None Remove=".gitignore"/>
         <Compile Remove="Assets\SecretKey.cs"/>
-        <None Include="Assets\SecretKey.cs"/>
         <Compile Update="Views\Panes\PresenceConfigView.axaml.cs">
             <DependentUpon>PresenceConfigView.axaml</DependentUpon>
             <SubType>Code</SubType>

@@ -27,7 +27,7 @@
                 AcceptsReturn="True"
                 DataContext="{Binding LoggingControlViewModel}"
                 Focusable="False"
-                FontFamily="Consolas"
+                FontFamily="{StaticResource Inconsolata}"
                 FontSize="15"
                 Height="200"
                 IsReadOnly="True"
