@@ -28,3 +28,5 @@ cd ..\osx-x64
 
 cd ..\win8-x64
 7z.exe a -tzip ..\win8-x64.zip .\publish\LastfmDiscordRPC2.exe
+
+pause
