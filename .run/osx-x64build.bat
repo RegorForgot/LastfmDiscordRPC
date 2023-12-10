@@ -1,1 +1,0 @@
-dotnet publish -r osx-x64 --self-contained false -c Release -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -p:UseAppHost=true
