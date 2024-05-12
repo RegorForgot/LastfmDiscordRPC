@@ -11,8 +11,8 @@ public sealed class SignatureAPIService : ISignatureAPIService
 
     public SignatureAPIService()
     {
-        APIRestClient = new RestClient(@"https://lastfmdiscordrpc2.000webhostapp.com/");
-        APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.0");
+        APIRestClient = new RestClient(@"https://lastfmdiscordrpcauth.vercel.app/api/auth");
+        APIRestClient.AddDefaultHeader("User-Agent", "LastfmDiscordRPC 2.0.2");
     }
     
     public async Task<string> GetSignature(string message)
