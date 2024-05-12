@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.RPC;
 using LastfmDiscordRPC2.ViewModels;
@@ -27,13 +28,14 @@ public class App : Application
     {
         _lifetimeScope = ContainerConfigurator.Configure().BeginLifetimeScope();
         MainViewModel mainViewModel = _lifetimeScope.Resolve<MainViewModel>();
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             _desktop = desktop;
             _desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
             _desktop.MainWindow = new MainWindow(mainViewModel);
-            
-            
+
+
             // Yes, I know this is not ideal.
             _lifetimeScope.Disposer.AddInstanceForDisposal(_lifetimeScope.Resolve<IDiscordClient>());
             _lifetimeScope.Disposer.AddInstanceForDisposal(_lifetimeScope.Resolve<ISignatureAPIService>());
@@ -63,6 +65,5 @@ public class App : Application
     private void ExitItem_OnClick(object? sender, EventArgs e)
     {
         _desktop?.Shutdown();
-
     }
 }

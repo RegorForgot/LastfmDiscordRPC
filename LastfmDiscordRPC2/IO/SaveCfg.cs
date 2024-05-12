@@ -17,6 +17,7 @@ public record SaveCfg
 
     [JsonProperty] public Account UserAccount { get; set; } = new Account();
     [JsonProperty] public RPCCfg UserRPCCfg { get; set; } = new RPCCfg();
+    [JsonProperty] public bool CloseToTray { get; set; } = DefaultCloseToTray;
 
     public record Account
     {

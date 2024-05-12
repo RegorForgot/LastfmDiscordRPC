@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using LastfmDiscordRPC2.IO;
 using LastfmDiscordRPC2.Utilities;
 using LastfmDiscordRPC2.ViewModels;
 using LastfmDiscordRPC2.ViewModels.Panes;
@@ -12,7 +13,6 @@ public partial class MainWindow : Window
     public MainWindow(MainViewModel? dataContext)
     {
         InitializeComponent();
-
         
         TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
 
@@ -31,15 +31,7 @@ public partial class MainWindow : Window
                 control.DataContext = viewModel;
             }
         }
-
-        WindowStateProperty.Changed.AddClassHandler<Window>((window, args) =>
-        {
-            if (window == this && window.PlatformImpl != null && (WindowState)(args.NewValue ?? WindowState.Maximized) == WindowState.Minimized)
-            {
-                Hide();
-            }
-        });
-
+        
         IsVisibleProperty.Changed.AddClassHandler<Window>((window, args) =>
         {
             if (window == this && window.PlatformImpl != null && (bool)args.NewValue)
@@ -47,5 +39,15 @@ public partial class MainWindow : Window
                 WindowState = WindowState.Normal;
             }
         });
+    }
+
+    protected override void OnClosing(WindowClosingEventArgs e)
+    {
+        if (DataContext is not MainViewModel { IoService.SaveCfg.CloseToTray: true })
+        {
+            return;
+        }
+        e.Cancel = true;
+        Hide();
     }
 }

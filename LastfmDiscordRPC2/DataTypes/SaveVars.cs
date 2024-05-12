@@ -12,6 +12,7 @@ public struct SaveVars
     internal const string DefaultSmallImageLabel = $"{Timestamp}{CurrentState}";
     internal const string DefaultButtonLabel = $"{PlayCount} scrobbles";
     internal const string DefaultButtonURL = $"https://www.last.fm/music/{ArtistName}/_/{TrackName}";
+    internal const bool DefaultCloseToTray = false;
     internal const bool DefaultExpiryMode = false;
     internal static readonly TimeSpan DefaultExpiryTime = new TimeSpan(1, 0, 0);
 }

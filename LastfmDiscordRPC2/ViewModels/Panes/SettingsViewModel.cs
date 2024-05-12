@@ -22,6 +22,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewMode
     private bool _isStartUpChecked;
     private bool _isLoginInProgress;
     private bool _expiryMode;
+    private bool _closeToTray;
     private bool _isAppIDError;
     private bool _isExpiryTimeError;
     
@@ -40,6 +41,12 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewMode
         }
     }
 
+    public bool CloseToTray
+    {
+        get => _closeToTray;
+        set => this.RaiseAndSetIfChanged(ref _closeToTray, value);
+    }
+    
     public bool IsStartUpChecked
     {
         get => _isStartUpChecked;
@@ -93,6 +100,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewMode
     public ReactiveCommand<bool, Unit> LaunchOnStartupCmd { get; }
     public ReactiveCommand<bool, Unit> LastfmLoginCmd { get; }
     public ReactiveCommand<bool, Unit> SetExpiryModeCmd { get; }
+    public ReactiveCommand<bool, Unit> SetCloseToTrayCmd { get; }
     public ReactiveCommand<Unit, Unit> SaveAppIDCmd { get; }
     public ReactiveCommand<Unit, Unit> ResetAppIDCmd { get; }
     public ReactiveCommand<Unit, Unit> ResetExpiryTimeCmd { get; }
@@ -120,6 +128,7 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewMode
         LaunchOnStartupCmd = ReactiveCommand.Create<bool>(SetLaunchOnStartup);
         LastfmLoginCmd = ReactiveCommand.CreateFromTask<bool>(SetLastfmLogin);
         SetExpiryModeCmd = ReactiveCommand.Create<bool>(SetExpiryMode);
+        SetCloseToTrayCmd = ReactiveCommand.Create<bool>(SetCloseToTray);
         SaveAppIDCmd = ReactiveCommand.Create(SaveDiscordAppID);
         ResetAppIDCmd = ReactiveCommand.Create(ResetDiscordAppID);
         ResetExpiryTimeCmd = ReactiveCommand.Create(ResetExpiryTime);
@@ -159,6 +168,13 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewMode
         SaveExpiryTime();
     }
 
+    private void SetCloseToTray(bool closeToTray)
+    {
+        CloseToTray = closeToTray;
+        _saveCfgService.SaveCfg.CloseToTray = closeToTray;
+        _saveCfgService.SaveConfigData();
+    }
+    
     private static void SetLaunchOnStartup(bool startUpValue)
     {
         WinRegistry.SetRegistry(startUpValue);
@@ -224,5 +240,6 @@ public sealed class SettingsViewModel : AbstractPaneViewModel, ISettableViewMode
         AppID = _saveCfgService.SaveCfg.UserRPCCfg.AppID;
         ExpiryMode = _saveCfgService.SaveCfg.UserRPCCfg.ExpiryMode;
         PresenceExpiryTime = _saveCfgService.SaveCfg.UserRPCCfg.ExpiryTime;
+        CloseToTray = _saveCfgService.SaveCfg.CloseToTray;
     }
 }
