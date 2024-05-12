@@ -9,6 +9,7 @@
         <FontFamily x:Key="Inconsolata">avares://LastfmDiscordRPC2/Assets/Fonts#Inconsolata</FontFamily>
         <converters:LoginTextConverter x:Key="LoginTextConverter" />
         <converters:SetPresenceConverter x:Key="SetPresenceConverter" />
+        <converters:LovedConverter x:Key="LovedConverter" />
     </Application.Resources>
 
     <Application.Styles>

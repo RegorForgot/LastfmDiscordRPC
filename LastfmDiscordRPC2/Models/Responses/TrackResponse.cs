@@ -36,10 +36,11 @@ public record Track
     [JsonProperty("@attr")] public TrackNowPlaying NowPlaying { get; init; } = new TrackNowPlaying();
     [JsonProperty("date")] public PlayDate Date { get; init; } = new PlayDate();
     [JsonProperty("image")] public List<AlbumImage> Images { get; init; } = new List<AlbumImage>(4);
+    [JsonProperty("loved")] public string Loved { get; init; } = "0";
 
     public record TrackArtist
     {
-        [JsonProperty("#text")] public string Name { get; init; } = Empty;
+        [JsonProperty("name")] public string Name { get; init; } = Empty;
     }
 
     public record TrackAlbum

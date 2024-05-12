@@ -34,7 +34,7 @@
 
     <Border Classes="PresenceContainer">
         <Grid
-            ColumnDefinitions="200,*"
+            ColumnDefinitions="200,*,Auto"
             HorizontalAlignment="Stretch"
             RowDefinitions="200,Auto">
 
@@ -91,9 +91,22 @@
                 </Label>
             </StackPanel>
 
+            <Grid
+                Grid.Column="2"
+                Grid.Row="0"
+                IsEnabled="{Binding !IsCoolDown}"
+                Margin="5,5,5,5">
+                <Button
+                    Classes="UIButton"
+                    Command="{Binding LoveTrackCmd}"
+                    Content="{Binding IsTrackLoved, Converter={StaticResource LovedConverter}}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center" />
+            </Grid>
+
             <StackPanel
                 Grid.Column="0"
-                Grid.ColumnSpan="2"
+                Grid.ColumnSpan="3"
                 Grid.Row="1"
                 Margin="5,0,5,5">
                 <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}">

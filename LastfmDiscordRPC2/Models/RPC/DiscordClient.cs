@@ -20,7 +20,7 @@ public sealed class DiscordClient : IDiscordClient
     private const string PlayIconURL = "https://i.imgur.com/wvTxH0t.png";
 
     private DiscordRpcClient? _client;
-    
+
     private readonly LoggingService _loggingService;
     private readonly PreviewControlViewModel _previewControlViewModel;
     private readonly LastfmAPIService _lastfmService;
@@ -42,7 +42,7 @@ public sealed class DiscordClient : IDiscordClient
     public void Initialize(SaveCfg saveCfg)
     {
         _saveSnapshot = saveCfg;
-        
+
         if (_client is not null && _client.IsInitialized)
         {
             return;
@@ -53,7 +53,7 @@ public sealed class DiscordClient : IDiscordClient
         _client = new DiscordRpcClient(_saveSnapshot.UserRPCCfg.AppID);
         _client.Logger = _loggingService;
         _client.Initialize();
-        
+
         SetEventHandlers();
     }
 
@@ -95,7 +95,7 @@ public sealed class DiscordClient : IDiscordClient
     {
         _previewControlViewModel.IsVisible = true;
         Track track = response.RecentTracks.Tracks[0];
-        
+
         if (track.NowPlaying.State == "true")
         {
             _lastfmService.LastScrobbleTime = DateTimeOffset.Now;
@@ -108,7 +108,7 @@ public sealed class DiscordClient : IDiscordClient
                 _lastfmService.LastScrobbleTime = DateTimeOffset.FromUnixTimeSeconds(unixLastScrobbleTime);
             }
         }
-        
+
         Button[] buttons = _saveSnapshot.UserRPCCfg.UserButtons.Select(
             button => new Button
             {
@@ -121,7 +121,7 @@ public sealed class DiscordClient : IDiscordClient
         {
             Details = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.Details, ByteCount.Default),
             State = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.State, ByteCount.Default),
-            Assets = new Assets
+            Assets = new DiscordRPC.Assets
             {
                 LargeImageKey = IsNullOrEmpty(track.Album.Name) ? Track.DefaultSingleCover : track.Images[3].URL,
                 LargeImageText = this.GetParsedString(response, _saveSnapshot.UserRPCCfg.LargeImageLabel, ByteCount.Default),
@@ -132,15 +132,17 @@ public sealed class DiscordClient : IDiscordClient
         };
     }
 
-    private void SetPreview(RichPresence presence)
+    private void SetPreview(RichPresence presence, TrackResponse trackResponse)
     {
+        _previewControlViewModel.CurrentTrack = trackResponse;
+        _previewControlViewModel.IsTrackLoved = trackResponse.RecentTracks.Tracks[0].Loved == "1";
         _previewControlViewModel.State = presence.State;
         _previewControlViewModel.Details = presence.Details;
         _previewControlViewModel.LargeImage.Label = presence.Assets.LargeImageText;
         _previewControlViewModel.LargeImage.URL = presence.Assets.LargeImageKey;
         _previewControlViewModel.SmallImage.Label = presence.Assets.SmallImageText;
         _previewControlViewModel.SmallImage.URL = presence.Assets.SmallImageKey;
-        _previewControlViewModel.Buttons = 
+        _previewControlViewModel.Buttons =
             new ObservableCollection<RPCButton>(presence.Buttons.ToList().Select(
                 button => new RPCButton
                 {
@@ -153,7 +155,7 @@ public sealed class DiscordClient : IDiscordClient
     public void SetPresence(TrackResponse response)
     {
         RichPresence presence = GetRichPresence(response);
-        SetPreview(presence);
+        SetPreview(presence, response);
         _client?.SetPresence(presence);
     }
 
@@ -171,7 +173,7 @@ public sealed class DiscordClient : IDiscordClient
         {
             return;
         }
-        
+
         try
         {
             _client.ClearPresence();
