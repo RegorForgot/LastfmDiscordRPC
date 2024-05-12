@@ -1,47 +1,47 @@
 <UserControl
-  x:Class="LastfmDiscordRPC2.Views.Panes.AboutView"
-  xmlns="https://github.com/avaloniaui"
-  xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    x:Class="LastfmDiscordRPC2.Views.Panes.AboutView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:panes="clr-namespace:LastfmDiscordRPC2.ViewModels.Panes"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <Design.DataContext>
-    <panes:AboutViewModel />
-  </Design.DataContext>
+    <Design.DataContext>
+        <panes:AboutViewModel />
+    </Design.DataContext>
 
-  <StackPanel>
-    <Label Classes="Heading" Content="About" />
-    <StackPanel Margin="5,0,5,0">
-      <Label
-        Classes="Text"
-        Content="LastfmDiscordRPC"
-        FontWeight="Bold" />
-      <Label Classes="Text" Content="Version 2.1.0" />
-      <Label Classes="Text" Content="©️ 2024 RegorForgot" />
-      <Button
-        Command="{Binding OpenGithubCmd}"
-        CommandParameter="{Binding GithubPage}"
-        Content="Github repository link"
-        Margin="0,10,10,10" />
-      <Label
-        Classes="SubHeading"
-        Content="Log"
-        Margin="0,5,0,5" />
-      <TextBox
-        AcceptsReturn="True"
-        DataContext="{Binding LoggingControlViewModel}"
-        Focusable="False"
-        FontFamily="{StaticResource Inconsolata}"
-        FontSize="15"
-        Height="200"
-        IsReadOnly="True"
-        Text="{Binding ConsoleText, Mode=TwoWay}"
-        TextChanged="RPCConsoleOnTextChanged"
-        TextWrapping="Wrap" />
-      <Button
-        Command="{Binding OpenFolderCmd}"
-        Content="Open data folder"
-        HorizontalAlignment="Right"
-        Margin="10,10,0,10" />
+    <StackPanel>
+        <Label Classes="Heading" Content="About" />
+        <StackPanel Margin="5,0,5,0">
+            <Label
+                Classes="Text"
+                Content="LastfmDiscordRPC"
+                FontWeight="Bold" />
+            <Label Classes="Text" Content="Version 2.1.0" />
+            <Label Classes="Text" Content="©️ 2024 RegorForgot" />
+            <Button
+                Command="{Binding OpenGithubCmd}"
+                CommandParameter="{Binding GithubPage}"
+                Content="Github repository link"
+                Margin="0,10,10,10" />
+            <Label
+                Classes="SubHeading"
+                Content="Log"
+                Margin="0,5,0,5" />
+            <TextBox
+                AcceptsReturn="True"
+                DataContext="{Binding LoggingControlViewModel}"
+                Focusable="False"
+                FontFamily="{StaticResource Inconsolata}"
+                FontSize="15"
+                Height="200"
+                IsReadOnly="True"
+                Text="{Binding ConsoleText, Mode=TwoWay}"
+                TextChanged="RPCConsoleOnTextChanged"
+                TextWrapping="Wrap" />
+            <Button
+                Command="{Binding OpenFolderCmd}"
+                Content="Open data folder"
+                HorizontalAlignment="Right"
+                Margin="10,10,0,10" />
+        </StackPanel>
     </StackPanel>
-  </StackPanel>
 </UserControl>

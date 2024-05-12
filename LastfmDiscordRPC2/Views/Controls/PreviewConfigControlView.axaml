@@ -15,8 +15,7 @@
             RowDefinitions="200,Auto,Auto,Auto,Auto">
 
             <Grid RowDefinitions="*,Auto">
-                <Label Margin="10,10,0,0"
-                       Grid.Row="0">
+                <Label Grid.Row="0" Margin="10,10,0,0">
                     <TextBox
                         Classes="SingleLine"
                         MaxLength="128"
@@ -81,7 +80,10 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Grid.Row="2">
-                <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding Buttons}" VerticalAlignment="Center">
+                <ItemsControl
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding Buttons}"
+                    VerticalAlignment="Center">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="200, *">
@@ -111,7 +113,10 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5,0,5,0">
+                <StackPanel
+                    Grid.Column="1"
+                    Margin="5,0,5,0"
+                    Orientation="Vertical">
                     <Button
                         Classes="UIButton"
                         Command="{Binding AddButtonCmd}"

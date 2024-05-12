@@ -1,115 +1,115 @@
 <Application
-  x:Class="LastfmDiscordRPC2.App"
-  xmlns="https://github.com/avaloniaui"
-  xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    x:Class="LastfmDiscordRPC2.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:converters="clr-namespace:LastfmDiscordRPC2.Converters"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <Application.Resources>
-    <FontFamily x:Key="Source Sans Pro">avares://LastfmDiscordRPC2/Assets/Fonts#Source Sans Pro</FontFamily>
-    <FontFamily x:Key="Inconsolata">avares://LastfmDiscordRPC2/Assets/Fonts#Inconsolata</FontFamily>
-    <converters:LoginTextConverter x:Key="LoginTextConverter" />
-    <converters:SetPresenceConverter x:Key="SetPresenceConverter" />
-  </Application.Resources>
+    <Application.Resources>
+        <FontFamily x:Key="Source Sans Pro">avares://LastfmDiscordRPC2/Assets/Fonts#Source Sans Pro</FontFamily>
+        <FontFamily x:Key="Inconsolata">avares://LastfmDiscordRPC2/Assets/Fonts#Inconsolata</FontFamily>
+        <converters:LoginTextConverter x:Key="LoginTextConverter" />
+        <converters:SetPresenceConverter x:Key="SetPresenceConverter" />
+    </Application.Resources>
 
-  <Application.Styles>
-    <FluentTheme />
-    <Style Selector="Label">
-      <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-    </Style>
-    <Style Selector="TextBlock">
-      <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-    </Style>
-    <Style Selector="TextBox">
-      <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-      <Setter Property="FontSize" Value="16" />
-    </Style>
-    <Style Selector="TextBox.SingleLineSize">
-      <Setter Property="Height" Value="36" />
-    </Style>
-    <Style Selector="Button">
-      <Setter Property="FontSize" Value="16" />
-      <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-      <Setter Property="Cursor" Value="Hand" />
-      <Setter Property="VerticalContentAlignment" Value="Center" />
-      <Setter Property="HorizontalContentAlignment" Value="Center" />
-    </Style>
-    <Style Selector="Border">
-      <Setter Property="ClipToBounds" Value="True" />
-      <Setter Property="CornerRadius" Value="5" />
-      <Setter Property="Padding" Value="0" />
-    </Style>
-    <Style Selector="TimePicker">
-      <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-      <Setter Property="FontSize" Value="16" />
-      <Setter Property="Height" Value="36" />
-    </Style>
-    <Style Selector="ToggleSwitch">
-      <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
-    </Style>
-    <Style Selector="Button.UIButton">
-      <Setter Property="Height" Value="45" />
-      <Setter Property="Margin" Value="5" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-    </Style>
-    <Style Selector="Label.Error">
-      <Setter Property="FontSize" Value="15" />
-      <Setter Property="Foreground" Value="Yellow" />
-      <Setter Property="VerticalAlignment" Value="Bottom" />
-      <Setter Property="HorizontalAlignment" Value="Center" />
-    </Style>
-    <Style Selector="Label.Heading">
-      <Setter Property="FontSize" Value="28" />
-      <Setter Property="FontWeight" Value="Bold" />
-      <Setter Property="Margin" Value="5,5,0,0" />
-    </Style>
-    <Style Selector="Label.SubHeading">
-      <Setter Property="FontSize" Value="21" />
-      <Setter Property="FontWeight" Value="Bold" />
-    </Style>
-    <Style Selector="Label.Text">
-      <Setter Property="FontSize" Value="16" />
-    </Style>
-    <Style Selector="Border.PresenceContainer">
-      <Setter Property="Background" Value="#40A0A0A0" />
-      <Setter Property="HorizontalAlignment" Value="Stretch" />
-      <Setter Property="Margin" Value="5" />
-    </Style>
-    <Style Selector="ProgressBar.Loading">
-      <Setter Property="IsIndeterminate" Value="True" />
-      <Setter Property="Width" Value="50" />
-    </Style>
-    <Style Selector="ToolTip Label">
-      <Setter Property="FontSize" Value="14" />
-    </Style>
-    <Style Selector="TextBox.SingleLine">
-      <Setter Property="AcceptsReturn" Value="False" />
-      <Setter Property="AcceptsTab" Value="False" />
-      <Setter Property="MaxLines" Value="1" />
-      <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-    <StyleInclude Source="/Assets/Icons.axaml" />
-  </Application.Styles>
+    <Application.Styles>
+        <FluentTheme />
+        <Style Selector="Label">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="TextBox.SingleLineSize">
+            <Setter Property="Height" Value="36" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border">
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="TimePicker">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Height" Value="36" />
+        </Style>
+        <Style Selector="ToggleSwitch">
+            <Setter Property="FontFamily" Value="{StaticResource 'Source Sans Pro'}" />
+        </Style>
+        <Style Selector="Button.UIButton">
+            <Setter Property="Height" Value="45" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="Label.Error">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="Foreground" Value="Yellow" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Label.Heading">
+            <Setter Property="FontSize" Value="28" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="5,5,0,0" />
+        </Style>
+        <Style Selector="Label.SubHeading">
+            <Setter Property="FontSize" Value="21" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style Selector="Label.Text">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <Style Selector="Border.PresenceContainer">
+            <Setter Property="Background" Value="#40A0A0A0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+        <Style Selector="ProgressBar.Loading">
+            <Setter Property="IsIndeterminate" Value="True" />
+            <Setter Property="Width" Value="50" />
+        </Style>
+        <Style Selector="ToolTip Label">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style Selector="TextBox.SingleLine">
+            <Setter Property="AcceptsReturn" Value="False" />
+            <Setter Property="AcceptsTab" Value="False" />
+            <Setter Property="MaxLines" Value="1" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <StyleInclude Source="/Assets/Icons.axaml" />
+    </Application.Styles>
 
-  <TrayIcon.Icons>
-    <TrayIcons>
-      <TrayIcon
-        Clicked="TrayIcon_OnClicked"
-        Icon="Assets/icon.ico"
-        ToolTipText="LastfmDiscordRPC2">
-        <TrayIcon.Menu>
-          <NativeMenu>
-            <NativeMenuItem
-              Header="LastfmDiscordRPC2"
-              Icon="Assets/icon.ico"
-              IsEnabled="False" />
-            <NativeMenuItemSeparator />
-            <NativeMenuItem Click="OpenItem_OnClick" Header="Open" />
-            <NativeMenuItem Click="ExitItem_OnClick" Header="Exit" />
-          </NativeMenu>
-        </TrayIcon.Menu>
-      </TrayIcon>
-    </TrayIcons>
-  </TrayIcon.Icons>
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon
+                Clicked="TrayIcon_OnClicked"
+                Icon="Assets/icon.ico"
+                ToolTipText="LastfmDiscordRPC2">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem
+                            Header="LastfmDiscordRPC2"
+                            Icon="Assets/icon.ico"
+                            IsEnabled="False" />
+                        <NativeMenuItemSeparator />
+                        <NativeMenuItem Click="OpenItem_OnClick" Header="Open" />
+                        <NativeMenuItem Click="ExitItem_OnClick" Header="Exit" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
 
 </Application>

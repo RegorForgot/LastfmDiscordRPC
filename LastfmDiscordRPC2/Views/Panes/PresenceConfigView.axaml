@@ -12,9 +12,7 @@
     <Grid RowDefinitions="*, Auto">
         <StackPanel>
             <Label Classes="Heading" Content="Presence" />
-            <controls:PreviewConfigControlView
-                DataContext="{Binding PreviewConfigControlViewModel}"
-                IsEnabled="{Binding !Context.IsRichPresenceActivated}" />
+            <controls:PreviewConfigControlView DataContext="{Binding PreviewConfigControlViewModel}" IsEnabled="{Binding !Context.IsRichPresenceActivated}" />
         </StackPanel>
         <Label
             Classes="Error"
