@@ -25,7 +25,7 @@ Download the [latest release](https://github.com/RegorForgot/LastfmDiscordRPC/re
 
 - x64 Windows
 - x64 Linux
-- ARM MacOS (M Silicon)
+- ~~ARM MacOS (M Silicon)~~ Indefinitely on hold
 - x64 MacOS
 
 ## Customization
