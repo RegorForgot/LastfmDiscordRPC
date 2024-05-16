@@ -5,7 +5,9 @@
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
-        <ApplicationIcon>Assets/icon.ico</ApplicationIcon>
+        <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+        <IsPackable>false</IsPackable>
+        <AssemblyVersion>2.1.1</AssemblyVersion>
     </PropertyGroup>
     
     <ItemGroup>
@@ -28,16 +30,16 @@
 
     <ItemGroup>
         <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.2.1"/>
-        <PackageReference Include="Autofac" Version="7.1.0"/>
-        <PackageReference Include="Avalonia" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.6"/>
+        <PackageReference Include="Autofac" Version="7.1.0" />
+        <PackageReference Include="Avalonia" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6"/>
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6"/>
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
         <PackageReference Include="DiscordRichPresence" Version="1.2.1.24"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="RestSharp" Version="110.2.1-alpha.0.16"/>
+        <PackageReference Include="RestSharp" Version="110.0.0" />
     </ItemGroup>
 
     <ItemGroup>
