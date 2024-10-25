@@ -24,7 +24,7 @@ public sealed class SignatureAPIService : ISignatureAPIService
 
         request.AddParameter("application/json", json, ParameterType.RequestBody);
         request.RequestFormat = DataFormat.Json;
-        request.Timeout = 20000;
+        request.Timeout = TimeSpan.FromSeconds(20);
 
         RestResponse response = await APIRestClient.ExecuteAsync(request);
         if (response.Content != null)

@@ -1,9 +1,9 @@
 dotnet publish -r linux-x64 --self-contained false -c Release -p:IncludeAllContentForSelfExtract=true -p:UseAppHost=true
 dotnet publish -r osx-arm64 --self-contained false -c Release -p:IncludeAllContentForSelfExtract=true -p:UseAppHost=true
 dotnet publish -r osx-x64 --self-contained false -c Release -p:IncludeAllContentForSelfExtract=true -p:UseAppHost=true
-dotnet publish -r win8-x64 --self-contained false -c Release -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+dotnet publish -r win-x64 --self-contained false -c Release -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 
-cd LastfmDiscordRPC2\bin\Release\net7.0
+cd LastfmDiscordRPC2\bin\Release\net8.0
 del linux-x64.tar.gz
 del osx-arm64.tar.gz
 del osx-x64.tar.gz
@@ -26,7 +26,7 @@ cd ..\osx-x64
 7z.exe rn ..\osx-x64.tar publish LastfmDiscordRPC2
 7z.exe a -tgzip -sdel ..\osx-x64.tar.gz ..\osx-x64.tar
 
-cd ..\win8-x64
-7z.exe a -tzip ..\win8-x64.zip .\publish\LastfmDiscordRPC2.exe
+cd ..\win-x64
+7z.exe a -tzip ..\win-x64.zip .\publish\LastfmDiscordRPC2.exe
 
 pause

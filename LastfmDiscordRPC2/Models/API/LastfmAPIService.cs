@@ -34,7 +34,7 @@ public sealed class LastfmAPIService : IAPIService
         request.AddParameter("format", "json");
         request.AddParameter("method", "auth.gettoken");
         request.AddParameter("api_key", LastfmAPIKey);
-        request.Timeout = 20000;
+        request.Timeout = TimeSpan.FromSeconds(10);
 
         RestResponse response = await APIRestClient.ExecuteAsync(request).ConfigureAwait(false);
         return GetResponse<TokenResponse>(response);
@@ -52,7 +52,7 @@ public sealed class LastfmAPIService : IAPIService
         request.AddParameter("token", token);
         request.AddParameter("api_key", LastfmAPIKey);
         request.AddParameter("api_sig", signature);
-        request.Timeout = 10000;
+        request.Timeout = TimeSpan.FromSeconds(10);
 
         using (PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(5)))
         {
@@ -91,7 +91,7 @@ public sealed class LastfmAPIService : IAPIService
         request.AddParameter("api_sig", signature);
         request.AddParameter("track", track.Name);
         request.AddParameter("artist", track.Artist.Name);
-        request.Timeout = 20000;
+        request.Timeout = TimeSpan.FromSeconds(10);
 
         RestResponse response = await APIRestClient.PostAsync(request).ConfigureAwait(false);
         
@@ -108,7 +108,7 @@ public sealed class LastfmAPIService : IAPIService
         request.AddParameter("user", username);
         request.AddParameter("api_key", LastfmAPIKey);
         request.AddParameter("extended", "1");
-        request.Timeout = 20000;
+        request.Timeout = TimeSpan.FromSeconds(10);
 
         RestResponse response = await APIRestClient.ExecuteAsync(request).ConfigureAwait(false);
 
