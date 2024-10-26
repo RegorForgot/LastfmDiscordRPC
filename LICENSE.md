@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2023 RegorForgot
+Copyright (c) 2024 RegorForgot
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

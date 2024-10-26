@@ -7,7 +7,7 @@ cd LastfmDiscordRPC2\bin\Release\net8.0
 del linux-x64.tar.gz
 del osx-arm64.tar.gz
 del osx-x64.tar.gz
-del win8-x64.zip
+del win-x64.zip
 
 cd linux-x64
 7z.exe a -ttar ..\linux-x64.tar publish\*

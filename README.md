@@ -17,7 +17,7 @@
 ## Getting Started
 
 > [!IMPORTANT]
-> **Please note:** This application requires the [.NET 7 runtime environment](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
+> **Please note:** This application requires the [.NET 8 runtime environment](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
 
 Download the [latest release](https://github.com/RegorForgot/LastfmDiscordRPC/releases/latest), log in with your Last.fm account and start the rich presence service. 
 
@@ -25,7 +25,7 @@ Download the [latest release](https://github.com/RegorForgot/LastfmDiscordRPC/re
 
 - x64 Windows
 - x64 Linux
-- ~~ARM MacOS (M Silicon)~~ Indefinitely on hold
+- ARM MacOS (M Silicon)
 - x64 MacOS
 
 ## Customization
@@ -64,10 +64,12 @@ If you find issues or have suggestions, feel free to start an issue or create a 
 
 ### Known issues
 
-- **Stuck Presence after Disabling:**
-    - Occasionally, the presence may remain visible for a short period of time after disabling it (including closing the application entirely).
+- **~~Stuck Presence after Disabling:~~**
+    - ~~Occasionally, the presence may remain visible for a short period of time after disabling it (including closing the application entirely).
     This is not an issue which is easily resolved and it is not local to this application. Other applications with rich presences
-      (including Spotify) have this issue occasionally as well.
+      (including Spotify) have this issue occasionally as well.~~
+    - It seems that this issue is mostly resolved ever since Discord updated their rich presences in the past few
+        months.
 
 
 ## Contributors
