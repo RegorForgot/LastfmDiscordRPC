@@ -9,6 +9,7 @@ using LastfmDiscordRPC2.Logging;
 using LastfmDiscordRPC2.Models.API;
 using LastfmDiscordRPC2.Models.Responses;
 using LastfmDiscordRPC2.ViewModels;
+using Newtonsoft.Json;
 
 namespace LastfmDiscordRPC2.Models.RPC;
 
@@ -91,7 +92,7 @@ public sealed class PresenceService : IPresenceService
                     }
                 }
 
-                PresenceExpiry(saveSnapshot.UserRPCCfg.ExpiryMode,saveSnapshot.UserRPCCfg.ExpiryTime);
+                PresenceExpiry(saveSnapshot.UserRPCCfg.ExpiryMode, saveSnapshot.UserRPCCfg.ExpiryTime);
             }
         }
         catch (OperationCanceledException)
@@ -107,6 +108,7 @@ public sealed class PresenceService : IPresenceService
         {
             _loggingService.Info("No tracks found for user.");
             UnsetPresence();
+            return;
         }
 
         if (_isFirstSuccess)
@@ -150,18 +152,24 @@ public sealed class PresenceService : IPresenceService
         {
             case LastfmException exception:
             {
-                _loggingService.Error("Last.fm {0}", exception.Message);
+                _loggingService.Error($"Last.fm {exception.Message}");
                 _exceptionCount++;
                 return exception.ErrorCode is LastfmErrorCode.Temporary or LastfmErrorCode.OperationFail && IsRetry;
             }
             case HttpRequestException requestException:
             {
-                _loggingService.Error("HTTP {0}: {1}", requestException.StatusCode ?? 0, requestException.Message);
+                _loggingService.Error($"HTTP {requestException.StatusCode ?? 0}: {requestException.Message}");
+                _exceptionCount++;
+                return IsRetry;
+            }
+            case JsonReaderException readerException:
+            {
+                _loggingService.Error($"Malformed JSON received\n{readerException.Message}");
                 _exceptionCount++;
                 return IsRetry;
             }
             default:
-                _loggingService.Error("Unhandled exception! Please report to developers\n{0}\n{1}", e.Message, e.StackTrace ?? Empty);
+                _loggingService.Error($"Unhandled exception! Please report to developers\n{e.Message}\n{e.StackTrace ?? Empty}");
                 return false;
         }
     }
@@ -172,7 +180,7 @@ public sealed class PresenceService : IPresenceService
         {
             return;
         }
-        
+
         DateTimeOffset currentTime = DateTimeOffset.Now;
 
         TimeSpan timeSincePresenceStarted = currentTime - _presenceStartedTime;
