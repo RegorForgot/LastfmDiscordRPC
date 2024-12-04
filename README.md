@@ -80,7 +80,7 @@ If you find issues or have suggestions, feel free to start an issue or create a 
 
 ## Libraries and Assets
 
-- [Avalonia](https://https://github.com/AvaloniaUI/Avalonia) + Avalonia.Fluent icon library
+- [Avalonia](https://github.com/AvaloniaUI/Avalonia) + Avalonia.Fluent icon library
 - [discord-rpc-csharp](https://github.com/Lachee/discord-rpc-csharp/)
 - [Autofac](https://github.com/autofac/Autofac)
 - [RestSharp](https://github.com/restsharp/RestSharp)
